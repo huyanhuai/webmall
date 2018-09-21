@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的代理</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <link rel="stylesheet" href="static/css/package.css">
+    <style>
+        #mescroll {
+            height: auto !important;
+            position: fixed;
+            top: 3.8rem;
+            bottom: 0;
+        }
+
+
+    </style>
+</head>
+<body>
+<header class="forbidScrollIos">
+    <div class="sd-banner">
+        <div class="nav">
+            <img src="static/img/goods/return@2x.png" alt="" class="return" onclick="returnBack()">
+        </div>
+        <div class="business">
+            <div class="bus-img">
+                <img src="" alt="" class="shop-headimg">
+            </div>
+            <p id="businessName" class="bus-title">杭州同游科技有限公司</p>
+        </div>
+        <div class="shop-tab">
+            <div class="tab-btn active" data-tabIndex="0">
+                <img src="static/img/represent/already_yes.png" alt="" class="tab1">
+                <img src="static/img/represent/already_no.png" alt="" class="tab2">
+                已代理产品
+            </div>
+            <div class="tab-btn" data-tabIndex="1">
+                <img src="static/img/represent/never_no.png" alt="" class="tab1">
+                <img src="static/img/represent/never_yes.png" alt="" class="tab2">
+                未代理产品
+            </div>
+        </div>
+    </div>
+    <div id="tabMenu">
+        <div class="tab-type active" data-tabIndex="0">景区</div>
+        <div class="tab-type" data-tabIndex="1">酒店</div>
+    </div>
+</header>
+<main>
+    <div class="mescroll" id="mescroll" style="z-index: 200;">
+        <div class="shop-content content" id="already">
+        </div>
+        <div class="shop-content content" id="never" style="display: none;">
+        </div>
+    </div>
+</main>
+<!--海报-->
+<div id="shareImgBox">
+    <div id="shareImg">
+        <img src="" alt="" crossOrigin="anonymous">
+        <!--<div id="qrcode"></div>-->
+    </div>
+    <div id="shareQCode">
+        <div class="shareQ-left">
+            <img src="" alt="" id="shareHeadImg" crossOrigin="anonymous">
+            <span id="shareName"></span>
+            <span>邀您同游</span>
+        </div>
+        <div class="shareQ-right">
+            <div id="qrcode"></div>
+            <p>扫描二维码，立即购买</p>
+        </div>
+        <!--<span>微信扫一扫即可购买</span>-->
+    </div>
+</div>
+<!--海报加载-->
+<div id="loading" style="background-color: rgba(0,0,0,.7);">
+    <p style="color: #fff">海报生成中......</p>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="static/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="static/js/qrcode.min.js?ver=20110905"></script>
+
+<script>
+    var businessUserId, userId, userInfo;
+    var already=true,never=false,scenic=true,hotel=false;
+    $(function () {
+        businessUserId = GetQueryString("businessUserId");
+        userId = GetQueryString("userId");
+        console.log(businessUserId, userId);
+        userInfo = JSON.parse(getSess("userInfo"));
+        //获取商家头像
+        publicAjaxToken(baseAjaxUrl + "/ty_api/business/agent/user/getInfoByUserId", "POST", {
+            "businessUserId": businessUserId
+        }, getHeadImgCall);
+        //获取已代理的景区产品
+        var url = baseAjaxUrl + "/ty_api/user/product/queryAlreadyAgentProduct";
+        var data = {"directProxy": 1, "businessUserId": businessUserId};
+        upLoading(url, data, getAlreadyScenicCall, false);
+    });
+
+    //获取商家头像的回调
+    function getHeadImgCall(res) {
+        if (res.errorCode == 200) {
+            $(".shop-headimg").attr("src", baseImgUrl + res.data.headImg + "_small.jpg");
+            $("#businessName").html(res.data.enterpriseName);
+        }
+    }
+
+    /*景区系列*/
+    //获取已代理的景区产品
+    function alreadyScenic() {
+        var url = baseAjaxUrl + "/ty_api/user/product/queryAlreadyAgentProduct";
+        var data = {"directProxy": 1, "businessUserId": businessUserId};
+        upLoading(url, data, getAlreadyScenicCall, true);
+    }
+    //获取未代理的景区产品
+    function neverScenic() {
+        var url = baseAjaxUrl + "/ty_api/user/product/queryCanAgentProduct";
+        var data = {"directProxy": 1, "businessUserId": businessUserId};
+        upLoading(url, data, getNeverScenicCall, true);
+    }
+    //获取我已代理的景区产品的回调
+    function getAlreadyScenicCall(data) {
+        var listDom = $("#already");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <a href="goods.html?productId=' + data[i].productId + '&clientId=' + userId + '">\n' +
+                '       <div class="shop-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '       </div>\n' +
+                '       <div class="shop-middle">\n' +
+                '           <p>' + data[i].productName + '</p>\n' +
+                '           <p class="shop-commission">最高可得：￥<span>' + data[i].commission + '</span></p>\n' +
+                '           <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '       </div>\n' +
+                '   </a>\n' +
+                '       <div class="shop-right">\n' +
+                '       <span id="changeType" class="share" data-coverImg="' + data[i].coverImg + '" data-pid="' + data[i].productId + '" onclick="shareFn(this)">推广</span>' +
+                '       <span onclick="changeProductType(this,' + data[i].productId + ')" data-status="cancel">取消代理</span> \n' +
+                '       </div>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+    //获取未代理的景区产品的回调
+    function getNeverScenicCall(data) {
+        var listDom = $("#never");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <div class="shop-left">\n' +
+                '       <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '   </div>\n' +
+                '   <div class="shop-middle">\n' +
+                '       <p>' + data[i].productName + '</p>\n' +
+                '       <p class="shop-commission">最高可得：￥<span>' + data[i].commission + '</span></p>\n' +
+                '       <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '   </div>\n' +
+                '   <div class="shop-right">\n' +
+                '       <span id="changeType" onclick="changeProductType(this,\'' + data[i].productId + '\')" data-status="ok">代理</span>' +
+                // '           未代理\n' +
+                '   </div>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+    //未代理-》选择代理景区产品
+    function changeProductType(e, productId) {
+        var status = $(e).attr("data-status");
+        if (status == "cancel") {
+            //询问框
+            layer.open({
+                content: '您确定要取消代理吗？'
+                , btn: ['不要', '确定']
+                , no: function (index) {
+                    publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/insert", "POST", {"productId": productId}, changeTypeCall);
+                    layer.close(index);
+                }
+            });
+        } else {
+            publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/insert", "POST", {"productId": productId}, changeTypeCall);
+        }
+    }
+    //选择的状态回调
+    function changeTypeCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //获取我已代理的产品
+            clearDown();
+            alreadyScenic();
+            //获取未代理的产品
+            clearDown();
+            neverScenic();
+        } else {
+            layMessage(res.message);
+        }
+    }
+
+
+    /*酒店系列*/
+    //获取已代理的酒店产品
+    function alreadyHotel() {
+        var url = baseAjaxUrl + "/ty_api/user/hotel/queryAlreadyAgentHotel";
+        var data = {"businessUserId": businessUserId};
+        upLoading(url, data, getAlreadyHotelCall, true);
+    }
+    //获取未代理的酒店产品
+    function neverHotel() {
+        var url = baseAjaxUrl + "/ty_api/user/hotel/queryCanAgentHotel";
+        var data = {"businessUserId": businessUserId};
+        upLoading(url, data, getNeverHotelCall, true);
+    }
+    //获取我已代理的酒店产品的回调
+    function getAlreadyHotelCall(data) {
+        console.log(data);
+        var listDom = $("#already");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <a href="/hotel/hotelDetail.html?hotelId=' + data[i].hotelId + '&clientId=' + userId + '">\n' +
+                '       <div class="shop-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '       </div>\n' +
+                '       <div class="shop-middle">\n' +
+                '           <p>' + data[i].hotelName + '</p>\n' +
+                '           <p class="shop-commission">最高可得：￥<span>' + data[i].maxCommission + '</span></p>\n' +
+                '           <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '       </div>\n' +
+                '   </a>\n' +
+                '       <div class="shop-right">\n' +
+                '       <span id="changeType" class="share" data-coverImg="' + data[i].coverImg + '" data-pid="' + data[i].productId + '" onclick="shareFn(this)">推广</span>' +
+                '       <span onclick="changeHotelType(this,' + data[i].hotelId + ')" data-status="cancel">取消代理</span> \n' +
+                '       </div>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+    //获取未代理的酒店产品的回调
+    function getNeverHotelCall(data) {
+        var listDom = $("#never");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <div class="shop-left">\n' +
+                '       <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '   </div>\n' +
+                '   <div class="shop-middle">\n' +
+                '       <p>' + data[i].hotelName + '</p>\n' +
+                '       <p class="shop-commission">最高可得：￥<span>' + data[i].maxCommission + '</span></p>\n' +
+                '       <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '   </div>\n' +
+                '   <div class="shop-right">\n' +
+                '       <span id="changeType" onclick="changeHotelType(this,\'' + data[i].hotelId + '\')" data-status="ok">代理</span>' +
+                // '           未代理\n' +
+                '   </div>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+    //未代理-》选择代理酒店产品
+    function changeHotelType(e, hotelId) {
+        var status = $(e).attr("data-status");
+        if (status == "cancel") {
+            //询问框
+            layer.open({
+                content: '您确定要取消代理吗？'
+                , btn: ['不要', '确定']
+                , no: function (index) {
+                    publicAjaxToken(baseAjaxUrl + "/ty_api/user/hotel/insert", "POST", {"hotelId": hotelId}, changeHotelTypeCall);
+                    layer.close(index);
+                }
+            });
+        } else {
+            publicAjaxToken(baseAjaxUrl + "/ty_api/user/hotel/insert", "POST", {"hotelId": hotelId}, changeHotelTypeCall);
+        }
+    }
+    //选择的状态回调
+    function changeHotelTypeCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            layMessage(res.message);
+            changeFlagFn();
+        } else {
+            layMessage(res.message);
+        }
+    }
+
+
+
+
+    function shareFn(e) {
+        $("#qrcode").html('');
+        var coverImg = $(e).attr("data-coverImg");
+        var productId = $(e).attr("data-pid");
+
+        if (coverImg == 'null' || coverImg == '') {
+            layMessage("商家未上传产品海报图片，无法生成分享海报");
+            return false;
+        }
+        //商家图片
+        $("#shareImg img").attr("src", baseImgUrl + coverImg + ".jpg");
+        var shareUrl = oneselfUrl + "goods.html?clientId=" + userId + "&type=PRODUCT_CODE_URL" + "&productId=" + productId;
+        //海报的二维码
+        var qrcode = new QRCode('qrcode', {
+            text: shareUrl,
+            width: 80,
+            height: 80,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.L
+        });
+
+        var headImg = baseImgUrl + userInfo.headImg + ".jpg";
+        $("#shareName").html("[" + userInfo.nickName + "]");
+        $("#shareHeadImg").attr("src", headImg);
+
+        htmlCanvas();
+        publicAjaxToken(baseAjaxUrl + "/ty_api/agent/count/update", "POST", {
+            "type": "POSTER",
+        }, getAgentCall);
+    }
+    function getAgentCall(res) {
+        if (res.errorCode == 200) {
+            console.log("yes");
+        }else{
+            console.log("no");
+        }
+    }
+
+    //代理未代理tab栏切换显示
+    $(".tab-btn").each(function (i, v) {
+        $(v).click(function () {
+            $(".tab-btn").removeClass("active");
+            $(v).addClass("active");
+            var tabIndex = $(v).attr("data-tabIndex");
+            if (tabIndex == "0") {
+                $(".tab1").show();
+                $(".tab2").hide();
+                already=true;
+                never=false;
+                changeFlagFn();
+            } else if (tabIndex == "1") {
+                $(".tab2").show();
+                $(".tab1").hide();
+                already=false;
+                never=true;
+                changeFlagFn();
+            }
+        })
+    });
+    //景区酒店tab栏切换显示
+    $(".tab-type").each(function (i, v) {
+        $(v).click(function () {
+            $(".tab-type").removeClass("active");
+            $(v).addClass("active");
+            var tabIndex = $(v).attr("data-tabIndex");
+            if (tabIndex == "0") {
+                scenic=true;
+                hotel=false;
+                changeFlagFn();
+            } else if (tabIndex == "1") {
+                scenic=false;
+                hotel=true;
+                changeFlagFn();
+            }
+        })
+    });
+
+
+    //改变状态决定请求方式
+    function changeFlagFn() {
+        if(already&&scenic){
+            clearDown();
+            alreadyScenic();
+            $(".shop-content").eq(1).hide();
+            $(".shop-content").eq(0).show();
+        }else if(never&&scenic){
+            clearDown();
+            neverScenic();
+            $(".shop-content").eq(1).show();
+            $(".shop-content").eq(0).hide();
+        }else if(already&&hotel){
+            clearDown();
+            alreadyHotel();
+            $(".shop-content").eq(1).hide();
+            $(".shop-content").eq(0).show();
+        }else if(never&&hotel){
+            clearDown();
+            neverHotel();
+            $(".shop-content").eq(1).show();
+            $(".shop-content").eq(0).hide();
+        }
+    }
+</script>

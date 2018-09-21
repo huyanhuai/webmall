@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代理店铺</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <style>
+        .shop-seting-box {
+            width: 100%;
+            background: #fff;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.24rem;
+        }
+
+        .shop-item {
+            width: 100%;
+            height: 1.2rem;
+            padding: 0 0.3rem;
+            border-bottom: 0.01rem solid #e5e5e5;
+        }
+
+        .shop-msg {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            font-family: PingFang-SC-Bold;
+            color: #494949;
+        }
+
+        #shopHeadImg {
+            width: 1rem;
+            height: 100%;
+            float: right;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            position: relative;
+        }
+
+        #shopHeadImg img {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
+
+        #shopHeadImg input {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        #shopName {
+            width: 80%;
+            height: 100%;
+            float: left;
+            text-align: right;
+            line-height: 1.2rem;
+            font-family: PingFang-SC-Bold;
+            color: #828282;
+        }
+
+        #shopBg {
+            width: 70%;
+            height: 100%;
+            float: right;
+            position: relative;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        #shopBg img {
+            width: 3.3rem;
+            height: 1.8rem;
+            border-radius: 0.06rem;
+        }
+
+        #shopBg input {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        footer {
+            width: 100%;
+            height: 0.82rem;
+            position: fixed;
+            bottom: 0;
+            background: #fff;
+        }
+
+        #lodbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            z-index: 200;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        代理店铺设置
+    </div>
+</header>
+<main>
+    <div class="shop-seting-box">
+        <div class="shop-item">
+            <div class="shop-msg">店铺头像</div>
+            <div id="shopHeadImg">
+                <img src="" alt="" id="headImg">
+                <input type="file" id="headInput">
+            </div>
+        </div>
+        <div class="shop-item">
+            <div class="shop-msg">店铺名称</div>
+            <input type="text" id="shopName" value="">
+        </div>
+        <div class="shop-item" style="height: 2.25rem;border-bottom: none;">
+            <div class="shop-msg">店铺背景图</div>
+            <div id="shopBg">
+                <img src="static/img/personal/background@2x.png" alt="" id="bgImg">
+                <input type="file" id="bgInput">
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="submit-btn" id="submitUserInfo">
+        保存设置
+    </div>
+</footer>
+<!--load-->
+<div id="lodbox">
+    <div id="loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var agentShopInfoId;
+    $(function () {
+        publicAjaxToken(baseAjaxUrl + "/ty_api/agent/shop/info/getShopInfo", "POST", {}, getShopInfoCall);
+
+        $("#headInput").change(function () {
+            var file = this.files[0];
+            if (file.size > 1024 * 1024 * 10) {
+                layMessage("图片超出限制，请重新上传！");
+                return false;
+            }
+            var formData = new FormData;
+            formData.append("agentInfo", file);
+            publicAjaxFormdata(baseAjaxUrl + "/ty_api/agent/user/info/uploadAgentImg", "POST", formData, submitHeadImgCall);
+        });
+        $("#bgInput").change(function () {
+            var file = this.files[0];
+            if (file.size > 1024 * 1024 * 10) {
+                layMessage("图片超出限制，请重新上传！");
+                return false;
+            }
+            var formData = new FormData;
+            formData.append("agentInfo", file);
+            publicAjaxFormdata(baseAjaxUrl + "/ty_api/agent/user/info/uploadAgentImg", "POST", formData, submitBgImgCall);
+        });
+
+        $("#submitUserInfo").click(function () {
+            $("#lodbox").show();
+            var shopName = $("#shopName").val();
+            var shopImg = $("#headImg").attr("data-img");
+            var shopBackgroundImg = $("#bgImg").attr("data-img");
+            publicAjaxToken(baseAjaxUrl + "/ty_api/agent/shop/info/setAgentShopInfo", "POST", {
+                "shopName": shopName,
+                "shopImg": shopImg,
+                "shopBackgroundImg": shopBackgroundImg,
+                "agentShopInfoId": agentShopInfoId
+            }, submitShopInfoCall)
+        });
+    });
+
+    /*回显数据的回调*/
+    function getShopInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            agentShopInfoId = res.data.agentShopInfoId;
+            $("#headImg").attr("src", baseImgUrl + res.data.shopImg + "_small.jpg");
+            $("#shopName").val(res.data.shopName);
+            if (res.data.shopBackgroundImg != null) {
+                $("#bgImg").attr("src", baseImgUrl + res.data.shopBackgroundImg + "_small.jpg");
+            }
+        }
+    }
+
+    /*上传图片的回调*/
+    function submitHeadImgCall(res) {
+        if (res.errorCode == 200) {
+            $("#headImg").attr("src", baseImgUrl + res.data + "_small.jpg");
+            $("#headImg").attr("data-img", res.data);
+        }
+    }
+
+    /*上传背景图片的回调*/
+    function submitBgImgCall(res) {
+        if (res.errorCode == 200) {
+            $("#bgImg").attr("src", baseImgUrl + res.data + "_small.jpg");
+            $("#bgImg").attr("data-img", res.data);
+        }
+    }
+
+    /*提交修改信息*/
+    function submitShopInfoCall(res) {
+        if (res.errorCode == 200) {
+            $("#lodbox").hide();
+            layMessage("修改信息成功");
+            setTimeout("returnBack()", 1000)
+        }
+    }
+</script>

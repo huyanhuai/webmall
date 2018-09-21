@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <style>
+        .ho-head {
+            margin: 0.2rem 0.3rem;
+            background: #fff;
+            border-radius: 0.05rem;
+            height: 3rem;
+            padding: 0 0.1rem;
+        }
+
+        .ho-item {
+            width: 100%;
+            height: 50%;
+            border-bottom: 0.01rem solid #eeeeee;
+            padding: 0.2rem;
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            position: relative;
+            padding-right: 0.5rem;
+        }
+
+        .ho-info {
+            width: 100%;
+            height: 50%;
+            padding: 0.2rem;
+            position: relative;
+        }
+
+        .ho-info-left {
+            width: 75%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+        }
+
+        .ho-info-right {
+            width: 25%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            -webkit-justify-content: center;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #959595;
+        }
+
+        .ho-info-right span {
+            color: #f79628;
+            font-size: 0.36rem;
+        }
+
+        #hotelName {
+            font-size: 0.3rem;
+        }
+
+        #hotelAdd {
+            color: #959595;
+        }
+
+        .ho-item img {
+            height: 0.4rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0.2rem;
+            margin: auto;
+        }
+
+        .ho-info p {
+            font-size: 0.26rem;
+            color: #494949;
+        }
+
+        .ho-user {
+            margin: 0.2rem 0.3rem;
+            background: #fff;
+            border-radius: 0.05rem;
+            /*height: 3rem;*/
+            padding: 0 0.1rem;
+        }
+
+        .user-msg {
+            width: 100%;
+            height: 0.8rem;
+            padding: 0 0.2rem;
+            font-size: 0.3rem;
+            border-bottom: 0.01rem solid #eee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .user-info {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0 0.2rem;
+        }
+
+        .user-item {
+            width: 100%;
+            height: 0.6rem;
+        }
+
+        .user-item span {
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #6c6c6c;
+        }
+
+        .user-item span:nth-child(1) {
+            width: 25%;
+            float: left;
+        }
+
+        .user-item span:nth-child(2) {
+            width: 75%;
+            float: left;
+        }
+
+        /*二维码*/
+        .qrcode-box {
+            width: 100%;
+            height: 4rem;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: center;
+            margin-top: 0.24rem;
+            position: relative;
+        }
+
+        .qrcode-box.active::after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #fff;
+            opacity: 0.5;
+            z-index: 20;
+        }
+
+        #ticketSuccess .alreadyLogo {
+            width: 1.38rem;
+            height: 1.23rem;
+            position: absolute;
+            top: 0;
+            right: 0.38rem;
+            z-index: 30;
+        }
+
+        .qrcode-box p {
+            font-size: 0.3rem;
+            color: #494949;
+        }
+
+        .qrcode {
+            width: 2.6rem;
+            height: 2.6rem;
+            background-color: rgba(125, 125, 125, 0.1);
+            border-radius: 0.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin-top: 0.2rem;
+        }
+
+        /*底部菜单*/
+        .order-menu {
+            width: 100%;
+            height: 0.8rem;
+            border-top: 0.01rem solid #d2d2d2;
+            position: fixed;
+            background: #ffffff;
+            bottom: 0;
+            z-index: 200;
+        }
+
+        .order-menu div {
+            width: 50%;
+            height: 100%;
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            color: #a5a5a5;
+            font-size: 0.3rem;
+        }
+
+        .order-menu::after {
+            content: '';
+            width: 0.03rem;
+            height: 0.45rem;
+            background-color: #d2d2d2;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        #lodbox {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            height: auto;
+            background: #fff;
+        }
+
+        .ho-tab, .ho-code {
+            display: none;
+            position: relative;
+        }
+
+        .order-menu {
+            display: none;
+        }
+
+        .alreadyLogo {
+            width: 1.38rem;
+            height: 1.23rem;
+            position: absolute;
+            top: 0;
+            right: 0.38rem;
+            z-index: 30;
+            display: none;
+        }
+
+        .ho-code.active::after {
+            content: '';
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #fff;
+            opacity: 0.5;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation" style="border-bottom: 0.01rem solid #eeeeee;">
+        <img src="../static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        订单详情
+    </div>
+</header>
+<main style="margin-bottom: 0.8rem;">
+    <section class="ho-head">
+        <div class="ho-item">
+            <p id="hotelName">行会走黄龙</p>
+            <p id="hotelAdd">这是地址哈哈哈</p>
+            <img src="../static/img/public/more@2x.png" alt="">
+        </div>
+        <div class="ho-info">
+            <div class="ho-info-left">
+                <p id="houseNmae">豪华大床房</p>
+                <p><span id="orderDate">6月32日-6月24日</span><span style="margin-left: 0.3rem;" id="dayNum">共一晚</span> *
+                    <span id="roomSum">一间</span></p>
+            </div>
+            <div class="ho-info-right">
+                ￥<span id="orderPrice">369</span>
+            </div>
+        </div>
+    </section>
+    <section class="ho-user">
+        <p class="user-msg">订单信息</p>
+        <ul class="user-info">
+            <li class="user-item">
+                <span>入住人</span>
+                <span id="userNmae">王思聪</span>
+            </li>
+            <li class="user-item">
+                <span>手机号</span>
+                <span id="userPhone">18335132251</span>
+            </li>
+            <li class="user-item">
+                <span>订单号</span>
+                <span id="orderNo">1234567898</span>
+            </li>
+            <li class="user-item">
+                <span>下单时间</span>
+                <span id="orderCreateDate">2018-12-12</span>
+            </li>
+            <li class="user-item">
+                <span>状态</span>
+                <span id="orderStatus"></span>
+            </li>
+        </ul>
+    </section>
+    <section class="ho-code">
+        <div class="qrcode-box">
+            <p>验票码 <span class="yanpiaoma"></span></p>
+            <div class="qrcode">
+                <div id="qrcode"></div>
+            </div>
+            <p id="checkTime"></p>
+            <img src="../static/img/ticket/yiyanpiao.png" alt="" class="alreadyLogo">
+        </div>
+    </section>
+</main>
+<footer>
+    <section class="ho-tab">
+        <div class="order-menu pay-success">
+            <div onclick="jumpGoods()">再来一单</div>
+            <div onclick="evaluation(this)">我要评论</div>
+        </div>
+        <div class="order-menu no-pay">
+            <div onclick="cancelOrder()">取消订单</div>
+            <div onclick="payMoney(this)">去付款</div>
+        </div>
+        <div class="order-menu comment-success">
+            <div onclick="jumpGoods()">再来一单</div>
+            <div onclick="catComment()">查看评论</div>
+        </div>
+    </section>
+
+</footer>
+
+<!--load-->
+<div id="lodbox">
+    <div id="loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/qrcode.min.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../static/js/history.js"></script>
+<script>
+    var hotelId, orderId, orderNo;
+    $(function () {
+        orderId = GetQueryString("orderId");
+        orderNo = GetQueryString("orderNo");
+        console.log(orderId);
+        publicAjaxToken(baseAjaxUrl + "/ty_api/order/getHotelOrderDetail", "POST", {"orderId": orderId}, getHotelOrderCall);
+
+        function getHotelOrderCall(res) {
+            console.log(res);
+            if (res.errorCode == 200) {
+                $("#lodbox").hide();
+                var data = res.data;
+                $("#hotelName").html(data.hotelName);
+                $("#hotelAdd").html(data.address);
+                $("#houseNmae").html(data.roomName);
+                $("#orderDate").html(timeTransformation(data.startDate, "date") + '-' + timeTransformation(data.endDate, "date"));
+                $("#dayNum").html("共" + data.dayNum + "晚");
+                $("#roomSum").html(data.roomSum + "间");
+                $("#orderPrice").html(data.orderPrice);
+                $("#userNmae").html(data.realname);
+                $("#userPhone").html(data.mobile);
+                $("#orderNo").html(data.orderNo);
+                $("#orderCreateDate").html(timeTransformation(data.createTime));
+                $(".order-menu").attr("data-orderNo", data.orderNo);
+                $(".yanpiaoma").html(res.data.checkCode);
+                hotelId = data.hotelId;
+
+                var hotelOrderStatus = data.status;
+                switch (hotelOrderStatus) {
+                    case "NON_PAY"://未付款
+                        $("#orderStatus").html("未付款");
+                        $(".ho-tab").show();
+                        $(".no-pay").show();
+                        break;
+                    case "CANCEL"://已取消
+                        $("#orderStatus").html("已取消");
+                        break;
+                    case "PAY_SUCCESS"://已付款/待验票   ???
+                        $("#orderStatus").html("未验票");
+                        $(".ho-code").show();
+                        var qrcode = new QRCode('qrcode', {
+                            text: JSON.stringify("codeMsgJson"),
+                            width: 130,
+                            height: 130,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.Q
+                        });
+                        break;
+                    case "TICKET_SUCCESS"://已验票  ????
+                        $("#orderStatus").html("已验票");
+                        $(".ho-code").show();
+                        var qrcode = new QRCode('qrcode', {
+                            text: JSON.stringify("codeMsgJson"),
+                            width: 130,
+                            height: 130,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.Q
+                        });
+                        $(".ho-tab").show();
+                        $(".pay-success").show();
+                        $(".ho-code").addClass("active");
+                        $(".alreadyLogo").show();
+                        break;
+                    case "COMMENT_SUCCESS"://已评价
+                        $("#orderStatus").html("已验票");
+                        $(".ho-code").show();
+                        var qrcode = new QRCode('qrcode', {
+                            text: JSON.stringify("codeMsgJson"),
+                            width: 130,
+                            height: 130,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.Q
+                        });
+                        $(".ho-tab").show();
+                        $(".comment-success").show();
+                        $(".ho-code").addClass("active");
+                        $(".alreadyLogo").show();
+                        break;
+                    case "REFUND_SUCCESS"://退款成功
+                        $("#orderStatus").html("已退款");
+                        break;
+                    case "INVALID_TICKET"://已过期
+                        $("#orderStatus").html("已过期");
+                        break;
+                }
+            }
+        }
+
+
+        $(".ho-head").click(function () {
+            location.href = "hotelDetail.html?hotelId=" + hotelId;
+        })
+    });
+
+    //取消订单
+    function cancelOrder() {
+        publicAjaxToken(baseAjaxUrl + '/ty_api/order/cancelOrder', "POST", {"orderId": orderId}, cancelOrderCall);
+    }
+
+    function cancelOrderCall(res) {
+        if (res.errorCode == 200) {
+            layMessage("订单取消成功");
+            location.reload();
+        }
+    }
+
+    //付款
+    function payMoney(e) {
+        wxConfigFn(orderNo, orderId, "hotel");
+    }
+
+    //进行评价
+    function evaluation() {
+        location.href = oneselfUrl + "/evaluation.html?orderId=" + orderId + "&orderType=HOTEL";
+    }
+
+    //查看评论
+    function catComment() {
+        location.href = oneselfUrl + "/myEvaluation.html";
+    }
+
+    //跳转商品页和再来一单
+    function jumpGoods() {
+        location.href = "hotelDetail.html?hotelId=" + hotelId;
+    }
+</script>

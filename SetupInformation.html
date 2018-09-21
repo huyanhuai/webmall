@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设置</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/personal.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+      #submit{
+            width: 95%;
+            height: 0.8rem;
+            position: fixed;
+            bottom: 0;
+            left: 2.5%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin-top: 0.5rem;
+            background: #47bfc5;
+            color: #fff;
+            font-size: 0.3rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+        <div class="navigation">
+            <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+            设置
+        </div>
+</header>
+<!--各项设置-->
+<main>
+    <ul class="select-menu">
+        <!-- <li class="menu-item" style="margin-top: 0.2rem;" id="clearCache">
+            <div class="menu-item-left">
+                <img src="static/img/personal/delete.png" alt="">
+            </div>
+            <a href="javascript:;" class="menu-item-right" style="border-bottom: none;">
+                清除缓存
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li> -->
+        <li class="menu-item" style="margin-top: 0.2rem;">
+            <div class="menu-item-left">
+                <img src="static/img/personal/opinion@2x.png" alt="">
+            </div>
+            <a href="feedback.html" class="menu-item-right" style="border-bottom: none;">
+                意见反馈
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item" style="margin-top: 0.2rem;">
+            <div class="menu-item-left">
+                <img src="static/img/personal/we.png" alt="">
+            </div>
+            <a href="aboutUs.html" class="menu-item-right" style="border-bottom: none;">
+                关于我们
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+    </ul>
+</main>
+<!--底部-->
+<footer>
+    <div id="submit" class="hidetag">退出登录</div>
+</footer>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script>
+    $(function () {
+       
+    });
+    $("#submit").click(function () {
+        delLocal("token");
+        window.location.href = "index.html";
+    });
+    $("#clearCache").click(function () {
+        layer.open({
+            content: '您确定要清除缓存吗？'
+            , btn: ['确定', '不要']
+            , yes: function (index) {
+                layer.close(index);
+                delLocal("token");
+                if (getLocal("token") == null) {
+                    layMessage("缓存已清除", 1)
+                }
+            }
+        });
+    })
+</script>

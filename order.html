@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的订单</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/order.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        #mescroll {
+            /*margin-bottom: 1rem;*/
+            width: 100%;
+            height: auto;
+            overflow: auto;
+            position: fixed;
+            top: 0.7rem;
+            bottom: 1rem;
+        }
+
+        .mescroll-totop {
+            bottom: 60px !important;
+        }
+    </style>
+</head>
+<body>
+<nav>
+    <div class="nav-menu forbidScrollIos">
+        <div class="nav-menu-item active">全部</div>
+        <div class="nav-menu-item">待付款</div>
+        <div class="nav-menu-item">待验票</div>
+        <div class="nav-menu-item">待评价</div>
+        <div class="nav-menu-item">已完成</div>
+    </div>
+</nav>
+<main>
+    <div class="mescroll mescroll-touch" id="mescroll">
+        <!--全部-->
+        <section class="container active content" id="allOrder">
+
+        </section>
+        <!--待付款-->
+        <section class="container content" id="payOrder">
+
+        </section>
+        <!--待验票-->
+        <section class="container content" id="checkOrder">
+
+        </section>
+        <!--待评价-->
+        <section class="container content" id="evaluationOrder">
+
+        </section>
+        <!--已完成-->
+        <section class="container content" id="completeOrder">
+
+        </section>
+    </div>
+    <form id="form1" action="" method="">
+        <input type="hidden" id="input1">
+    </form>
+</main>
+<!--底部-->
+<footer>
+    <ul class="foot">
+        <li class="foot-item">
+            <a href="index.html">
+                <div class="foot-img">
+                    <img src="static/img/index/homepage@2x.png" alt="">
+                </div>
+                <p class="foot-p">首页</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="order.html">
+                <div class="foot-img">
+                    <img src="static/img/index/order2@2x.png" alt="">
+                </div>
+                <p class="foot-p active">订单</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="representCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/endorsement@2x.png" alt="">
+                </div>
+                <p class="foot-p">代言</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="personalCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/personal@2x.png" alt="">
+                </div>
+                <p class="foot-p">我的</p>
+            </a>
+        </li>
+    </ul>
+</footer>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        // getToken();
+        var token = getLocal("token");
+        if(token == null || token == undefined){
+            layMessage("请先登录！");
+            setTimeout("openHtml();",1000);
+        }
+        var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+        var data = {};
+        upLoading(url, data, allOrderCall, false);
+    });
+    function openHtml() {
+        window.location.href = "login.html";
+    }
+    $(".nav-menu-item").each(function (i, v) {
+        $(v).click(function () {
+            $(v).addClass("active").siblings().removeClass("active");
+            $(".container").eq(i).addClass("active").siblings().removeClass("active");
+            switch (i) {
+                case 0:
+                    var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+                    var data = {};
+                    clearDown();
+                    upLoading(url, data, allOrderCall, true);
+                    break;
+                case 1:
+                    var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+                    var data = {"status": "NON_PAY"};
+                    clearDown();
+                    upLoading(url, data, payOrderCall, true);
+                    break;
+                case 2:
+                    var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+                    var data = {"status": "PAY_SUCCESS"};
+                    clearDown();
+                    upLoading(url, data, checkOrderCall, true);
+                    break;
+                case 3:
+                    var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+                    var data = {"status": "TICKET_SUCCESS"};
+                    clearDown();
+                    upLoading(url, data, evaluationOrderCall, true);
+                    break;
+                case 4:
+                    var url = baseAjaxUrl + "/ty_api/order/getAllOrderVersion2";
+                    var data = {"status": "COMMENT_SUCCESS"};
+                    clearDown();
+                    upLoading(url, data, completeOrderCall, true);
+                    break;
+            }
+        })
+    });
+
+
+    //全部订单的回调
+    function allOrderCall(data) {
+        console.log(data);
+
+        var listDom = $("#allOrder");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+
+            if (data[i].orderType == "HOTEL") {
+                innerHtml += returnHtml(data[i].hotelId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].hotelName, data[i].dayNum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            } else if (data[i].orderType == "NORMAL") {
+                innerHtml += returnHtml(data[i].productId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].packageName, data[i].buySum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            }
+
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //待付款订单的回调
+    function payOrderCall(data) {
+        var listDom = $("#payOrder");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].orderType == "HOTEL") {
+                innerHtml += returnHtml(data[i].hotelId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].hotelName, data[i].dayNum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            } else if (data[i].orderType == "NORMAL") {
+                innerHtml += returnHtml(data[i].productId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].packageName, data[i].buySum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            }
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //待验票订单的回调
+    function checkOrderCall(data) {
+        var listDom = $("#checkOrder");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].orderType == "HOTEL") {
+                innerHtml += returnHtml(data[i].hotelId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].hotelName, data[i].dayNum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            } else if (data[i].orderType == "NORMAL") {
+                innerHtml += returnHtml(data[i].productId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].packageName, data[i].buySum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            }
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //待评价订单的回调
+    function evaluationOrderCall(data) {
+        var listDom = $("#evaluationOrder");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].orderType == "HOTEL") {
+                innerHtml += returnHtml(data[i].hotelId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].hotelName, data[i].dayNum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            } else if (data[i].orderType == "NORMAL") {
+                innerHtml += returnHtml(data[i].productId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].packageName, data[i].buySum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            }
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //待付款订单的回调
+    function completeOrderCall(data) {
+        var listDom = $("#completeOrder");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].orderType == "HOTEL") {
+                innerHtml += returnHtml(data[i].hotelId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].hotelName, data[i].dayNum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            } else if (data[i].orderType == "NORMAL") {
+                innerHtml += returnHtml(data[i].productId, data[i].orderId, data[i].status, data[i].orderNo, data[i].createTime, data[i].pictureUrl, data[i].packageName, data[i].buySum, data[i].orderPrice, data[i].refundType, data[i].orderType);
+            }
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    // 支付
+    function payMoney(orderNo,orderId) {
+        var form1 = $("#form1");
+        var input = $("#input1") 
+        // 设置相应参数 
+        input.val(orderNo);
+        console.log(input.val());
+        input.attr("name","orderNo");
+        // 将该输入框插入到 form 中 
+        input.appendTo(form1); 
+        console.log(input);
+        // form 的提交方式 
+        form1.attr("method","post");
+        form1.attr("action", baseAjaxUrl + "/ty_api/pay/aliWebPay");
+        // form 提交路径 
+        // form1.action = baseAjaxUrl +  "/ty_api/pay/aliWebPay"; 
+        // 对该 form 执行提交 
+        form1.submit(); 
+    }
+
+
+    //封装ajax请求的
+    function returnHtml(productId, orderId, status, orderNo, createTime, pictureUrl, packageName, buySum, orderPrice, refundType, orderType) {
+        var orderHtml = '';
+        var innerHtml = '';
+        var bySumHtml = '';
+        var detailUrl;
+        switch (status) {
+            case "NON_PAY":
+                if (orderType == "HOTEL") {
+                    orderHtml +=
+                        '<div class="order-item-foot payment-order">\n' +
+                        '   <span onclick="cancelOrder(' + orderId + ')">取消订单</span>\n' +
+                        '   <span onclick="payMoney(' + orderNo + ',' + orderId + ',\'hotel\')">立即支付</span>\n' +
+                        '</div>';
+                } else if (orderType == "NORMAL") {
+                    orderHtml +=
+                        '<div class="order-item-foot payment-order">\n' +
+                        '   <span onclick="cancelOrder(' + orderId + ')">取消订单</span>\n' +
+                        '   <span onclick="payMoney(' + orderNo + ',' + orderId + ')">立即支付</span>\n' +
+                        '</div>';
+                }
+
+                break;
+            case "PAY_SUCCESS":
+                if (refundType == "NO_REFUND") {
+                    orderHtml +=
+                        '<div class="order-item-foot check-order">\n' +
+                        '   <span>概不退款</span>\n' +
+                        '</div>';
+                } else if (refundType == "REFUND") {
+                    orderHtml +=
+                        '<div class="order-item-foot check-order">\n' +
+                        '   <span onclick="refundToAccount(' + orderNo + ')">申请退款</span>\n' +
+                        '</div>';
+                }
+                break;
+            case "TICKET_SUCCESS":
+                orderHtml +=
+                    '<div class="order-item-foot evaluation-order">\n' +
+                    '   <span onclick="evaluation(\'' + orderId + '\',\'' + orderType + '\')">去评价</span>\n' +
+                    '</div>';
+                break;
+            case "COMMENT_SUCCESS":
+                orderHtml +=
+                    '<div class="order-item-foot complete-order">\n' +
+                    '   <span onclick="jumpGoods(\'' + productId + '\',\'' + orderType + '\')">再来一单</span>\n' +
+                    '</div>';
+                break;
+            case "CANCEL":
+                orderHtml +=
+                    '<div class="order-item-foot complete-order">\n' +
+                    '   <span>已取消</span>\n' +
+                    '</div>';
+                break;
+            case "REFUND_SUCCESS":
+                orderHtml +=
+                    '<div class="order-item-foot complete-order">\n' +
+                    '   <span>已退款</span>\n' +
+                    '</div>';
+                break;
+            case "INVALID_TICKET":
+                orderHtml +=
+                    '<div class="order-item-foot complete-order">\n' +
+                    '   <span>已失效</span>\n' +
+                    '</div>';
+                break;
+        }
+
+        if (orderType == "HOTEL") {
+            detailUrl = "hotel/hotelOrderDetail.html?orderId=" + orderId + "&orderNo=" + orderNo;
+            bySumHtml = '共<span>' + buySum + '</span>晚，实付<span>￥' + orderPrice + '</span>' ;
+        } else if (orderType == "NORMAL") {
+            detailUrl = "orderDetail.html?orderId=" + orderId + "&orderNo=" + orderNo;
+            bySumHtml = '共<span>' + buySum + '</span>件商品，实付<span>￥' + orderPrice + '</span>' ;
+        }
+
+        innerHtml += '<div class="order-item">\n' +
+            '            <a href="' + detailUrl + '">\n' +
+            '                <div class="order-item-head">\n' +
+            '                    <span class="order-number">订单号：' + orderNo + '</span>\n' +
+            '                    <span class="order-time">' + timeTransformation(createTime) + '</span>\n' +
+            '                </div>\n' +
+            '                <div class="order-item-con">\n' +
+            '                    <div class="order-item-con-head">\n' +
+            '                        <img src="static/img/public/shoppingmall@2x.png" alt="">\n' +
+            '                        同游商城\n' +
+            '                    </div>\n' +
+            '                    <div class="order-container">\n' +
+            '                        <div class="order-goods">\n' +
+            '                            <img src="' + baseImgUrl + pictureUrl + '_small.jpg" alt="">\n' +
+            '                        </div>\n' +
+            '                        <div class="order-item-right">\n' +
+            '                            <p class="order-product-name">' + packageName + '</p>\n' +
+            '                            <p class="all-order">\n' +
+                                            bySumHtml +
+            '                            </p>\n' +
+            '                        </div>\n' +
+            '                    </div>\n' +
+            '                </div>' +
+            '            </a>\n' +
+            '            ' + orderHtml + '' +
+            '        </div>';
+        return innerHtml;
+    }
+
+    //取消订单
+    function cancelOrder(orderId) {
+        layer.open({
+            content: '确定取消订单吗？'
+            , btn: ['取消', '确定']
+            , no: function (index) {
+                publicAjaxToken(baseAjaxUrl + '/ty_api/order/cancelOrder', "POST", {"orderId": orderId}, cancelOrderCall);
+                layer.close(index);
+            }
+        });
+    }
+
+    //取消订单回调
+    function cancelOrderCall(res) {
+        if (res.errorCode == 200) {
+            layMessage(res.message);
+            setTimeout("location.reload()", 1000);
+        } else {
+            layMessage(res.message);
+        }
+    }
+
+    //申请退款
+    function refundToAccount(orderNo) {
+        console.log(orderNo);
+        layer.open({
+            content: '退款金额将原路返回'
+            , btn: ['取消', '确定']
+            , no: function (index) {
+                publicAjaxToken(baseAjaxUrl + "/ty_api/wechatPay/wechatRefund", "POST", {"orderNo": orderNo}, refundCall);
+
+                function refundCall(res) {
+                    if (res.errorCode == 200) {
+                        layMessage("退款成功");
+                        setTimeout("location.reload()", 1000);
+                    } else {
+                        layMessage(res.message);
+                    }
+                }
+
+                layer.close(index);
+            }
+        });
+
+    }
+
+    /*去评价*/
+    function evaluation(orderId, orderType) {
+        location.href = "evaluation.html?orderId=" + orderId + "&orderType=" + orderType;
+    }
+
+    //跳转商品页和再来一单
+    function jumpGoods(productId, orderType) {
+        if (orderType == "HOTEL") {
+            location.href = "hotel/hotelDetail.html?hotelId=" + productId;
+        } else if (orderType == "NORMAL") {
+            location.href = "goods.html?productId=" + productId;
+        }
+
+    }
+</script>

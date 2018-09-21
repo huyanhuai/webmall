@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/represent.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        #qrcode1 {
+            margin: 0 auto;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .qrcode-box .layui-m-layercont {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        #mescroll {
+            position: fixed;
+            top: 2.8rem;
+            bottom: 0;
+            height: auto;
+        }
+
+        #indexMall {
+            width: 0.7rem;
+            height: 0.7rem;
+            border-radius: 50%;
+            background: #47bfc5;
+            position: fixed;
+            z-index: 600;
+            right: 11px;
+            bottom: 1rem;
+        }
+
+        #indexMall img {
+            width: 100%;
+            height: 100%;
+        }
+        .mescroll-totop {
+            bottom: 10px!important;
+        }
+
+        .shop-head{
+            width: 100%;
+            height: 2.8rem;
+        }
+
+        #shopNmae{
+            font-size: 0.3rem;
+            color: #fff;
+            position: absolute;
+            top: 0.2rem;
+            right: 0.3rem;
+            font-family: "Adobe 楷体 Std R";
+        }
+        .shopTop{
+            height: 2.6rem;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            background-size: 100%;
+            /*background: red;*/
+        }
+
+    </style>
+</head>
+<body>
+<header class="forbidScrollIos">
+    <div class='shopTop forbidScrollIos'>
+        <div id="shopNmae"></div>
+        <div class="shop-tab">
+            <div class="tab-btn active" data-tabIndex="0">
+                <img src="static/img/represent/already_yes.png" alt="" class="tab1">
+                <img src="static/img/represent/already_no.png" alt="" class="tab2">
+                景区
+            </div>
+            <div class="tab-btn" data-tabIndex="1">
+                <img src="static/img/represent/never_no.png" alt="" class="tab1">
+                <img src="static/img/represent/never_yes.png" alt="" class="tab2">
+                酒店
+            </div>
+        </div>
+    </div>
+
+</header>
+<main>
+
+    <div id="mescroll" class="mescroll">
+        <div class="shop-content content hot-con" style="margin: 0;">
+
+        </div>
+    </div>
+
+</main>
+<!--前往首页的悬浮窗-->
+<a id="indexMall" href="index.html">
+    <img src="static/img/public/indexMall.png" alt="">
+</a>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var clientId;
+    var starsLevel = 5;   //星星最高等级_评分
+    $(function () {
+        getToken();
+        clientId = GetQueryString("clientId");
+        // publicAjax(baseAjaxUrl + "/ty_api/user/getSimpleDetail", "POST", {"userId": clientId}, getUserInfoCall);
+        publicAjax(baseAjaxUrl + "/ty_api/agent/shop/info/getShopInfoByUserId", "POST", {"userId": clientId}, getUserInfoCall);
+        getRepresentScenic();
+
+    });
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //收藏数据
+            // $(".nicheng").html(res.data.shopName);
+            $("#shopNmae").html(res.data.shopName);
+            // $(".userImg").attr("src", baseImgUrl + res.data.shopImg + '_small.jpg');
+            var backgroundImg=baseImgUrl+res.data.shopBackgroundImg+'.jpg';
+            $(".shopTop").css("background-image","url("+backgroundImg+")");
+            // //判断角色类型
+            // if (res.data.isAgent == "1") {
+            //     // if (res.data.isSale == "1") {
+            //     //     $(".roleType").html("代理商 & 业务员");
+            //     // } else {
+            //     //     $(".roleType").html("代理商");
+            //     // }
+            //     $(".roleType").html("代理商");
+            // } else {
+            //     if (res.data.isSale == "1") {
+            //         $(".roleType").html("业务员");
+            //     } else {
+            //         $(".roleType").html("游客");
+            //     }
+            // }
+        }
+    }
+
+    //获取代言景区
+    function getRepresentScenic() {
+        var url = baseAjaxUrl + "/ty_api/product/getAgentShopProductList";
+        var data = {"userId": clientId};
+        upLoading(url, data, getRepresentScenicCall, false);
+    }
+    //获取代言景区的回调
+    function getRepresentScenicCall(data) {
+        var innerHtml = '';
+        var listDom = $(".hot-con");
+        for (var i = 0; i < data.length; i++) {
+            //循环标签
+            var tagInnerHtml = '';
+            var starsHtml = '';    //星星的img标签
+            if (data[i].tags[0] != null) {
+                for (var j = 0; j < data[i].tags.length; j++) {
+                    tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+                }
+            } else {
+                tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+            }
+
+            //星星评分
+            var solidStars = data[i].score;
+            var emptyStars = starsLevel - solidStars;
+            for (var j = 0; j < solidStars; j++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml +=
+                '<div class="hot-item">\n' +
+                '   <a href="goods.html?productId=' + data[i].productId + '&clientId='+clientId+'">\n' +
+                '       <div class="hot-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '        </div>\n' +
+                '       <div class="hot-right">\n' +
+                '           <div class="hot-p">\n' +
+                '               <p class="hot-title">' + data[i].productName + '</p>\n' +
+                '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                '               <p class="hot-stars">\n' +
+                '                   <span class="stars">' + starsHtml + '</span>\n' +
+                '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '               </p>\n' +
+                '               <p class="hot-detail">' + data[i].productAddress + '</p>\n' +
+                '           </div>\n' +
+                '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '       </div>\n' +
+                '       </div>\n' +
+                '   </a>\n' +
+                '</div>';
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+
+    //获取代言酒店
+    function getRepresentHotel() {
+        var url = baseAjaxUrl + "/ty_api/hotel/getAgentShopHotelList";
+        var data = {"userId": clientId};
+        upLoading(url, data, getRepresentHotelCall, false);
+    }
+    //获取代言酒店的回调
+    function getRepresentHotelCall(data) {
+        var innerHtml = '';
+        var listDom = $(".hot-con");
+        for (var i = 0; i < data.length; i++) {
+
+            // var tagInnerHtml = '';//循环标签
+            var starsHtml = '';    //星星的img标签
+            // if (data[i].tags[0] != null) {
+            //     for (var j = 0; j < data[i].tags.length; j++) {
+            //         tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+            //     }
+            // } else {
+            //     tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+            // }
+
+            //星星评分
+            var solidStars = data[i].score;
+            var emptyStars = starsLevel - solidStars;
+            for (var j = 0; j < data[i].score; j++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml +=
+                '<div class="hot-item">\n' +
+                '   <a href="/hotel/hotelDetail.html?hotelId=' + data[i].hotelId + '&clientId='+clientId+'">\n' +
+                '       <div class="hot-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '        </div>\n' +
+                '       <div class="hot-right">\n' +
+                '           <div class="hot-p">\n' +
+                '               <p class="hot-title">' + data[i].hotelName + '</p>\n' +
+                '               <p class="hot-tag"><p style="color:#ddd;">暂无标签</p></p>\n' +
+                '               <p class="hot-stars">\n' +
+                '                   <span class="stars">' + starsHtml + '</span>\n' +
+                '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '               </p>\n' +
+                '               <p class="hot-detail">' + data[i].address + '</p>\n' +
+                '           </div>\n' +
+                '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '       </div>\n' +
+                '       </div>\n' +
+                '   </a>\n' +
+                '</div>';
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //景区酒店tab栏切换显示
+    $(".tab-btn").each(function (i, v) {
+        $(v).click(function () {
+            $(".tab-btn").removeClass("active");
+            $(v).addClass("active");
+            var tabIndex = $(v).attr("data-tabIndex");
+            if (tabIndex == "0") {
+                $(".tab1").show();
+                $(".tab2").hide();
+                clearDown();
+                getRepresentScenic();
+            } else if (tabIndex == "1") {
+                $(".tab2").show();
+                $(".tab1").hide();
+                clearDown();
+                getRepresentHotel();
+            }
+        })
+    });
+</script>

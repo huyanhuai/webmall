@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商家列表</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <style>
+        #mescroll {
+            position: fixed;
+            top: 1.14rem;
+            bottom: 0;
+            height: auto !important;
+        }
+
+        .applyBtn {
+            width: 80%;
+            height: 0.4rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .shop-middle {
+            width: 62%;
+        }
+
+        .shop-right {
+            width: 18%;
+        }
+
+        .applyBtn, .viewBtn {
+            width: 100%;
+            height: 0.45rem;
+            background: #47bfc5;
+            color: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            border-radius: 0.05rem;
+        }
+        .alerdyBtn{
+            width: 100%;
+            height: 0.45rem;
+            color: #47bfc5;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .shop-middle p:first-child{
+            font-size: 0.28rem;
+            color: #5b5b5b;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp:2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        可代理商家
+    </div>
+</header>
+<main>
+    <div id="mescroll" class="mescroll">
+        <div class="shop-content content" style="margin: 0;">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    $(function () {
+        getToken();
+        //微信相关设置分享
+        // wxInitConfigFn(wxcallback);
+        function wxcallback(){
+            //微信分享
+            var shareData = {
+                title: "同游代理商申请入口", // 分享标题
+                desc: "同业高返，海量资源，物超所值，欢迎加入！", // 分享描述
+                link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: "http://image.tongyoutrip.com/static/logo.png", // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                trigger: function (res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+                },
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            };
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareTimeline(shareData);
+            wx.onMenuShareQQ(shareData);
+            wx.onMenuShareWeibo(shareData);
+            wx.onMenuShareQZone(shareData);
+        }
+
+        /*获取商家列表*/
+        var url = baseAjaxUrl + "/ty_api/business/user/info/getList";
+        var data = {};
+        upLoading(url, data, getMerchantsCall, false);
+    });
+
+    //获取代言产品
+    function getMerchantsCall(data) {
+        console.log(data);
+        var listDom = $(".shop-content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            var agentStatus='';
+            if(data[i].isProxy==1){
+                agentStatus+='<a href="javascript:;" class="alerdyBtn">已代理</a>';
+            }else{
+                agentStatus+='<a href="'+data[i].masterCodeUrl+'" class="applyBtn">申请代理</a>';
+            }
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <div class="shop-left">\n' +
+                '       <img src="'+baseImgUrl+data[i].headImg+'_small.jpg" alt="">\n' +
+                '   </div>\n' +
+                '   <div class="shop-middle">\n' +
+                '       <p>'+data[i].enterpriseName+'</p>\n' +
+                '       <p>'+data[i].specificAddress+'</p>\n' +
+                '   </div>\n' +
+                '   <div class="shop-right">\n' +
+                        agentStatus +
+                '       <a href="merchantsProductList.html?businessUserId='+data[i].businessUserId+'" class="viewBtn">查看商品</a>\n' +
+                '   </div>\n' +
+                '</div>\n'
+
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+</script>

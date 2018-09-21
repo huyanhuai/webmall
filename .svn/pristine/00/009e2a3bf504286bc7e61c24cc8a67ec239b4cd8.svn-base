@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的代理店铺</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/represent.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        #qrcode1 {
+            margin: 0 auto;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .qrcode-box .layui-m-layercont {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+        #mescroll{
+            position: fixed;
+            top: 3.4rem;
+            bottom: 0;
+            height: auto!important;
+        }
+
+        /*海报加载样式*/
+        #loading {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            /*display: flex;*/
+            /*display: -webkit-flex;*/
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            display: none;
+            z-index: 29891014;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        #loading p {
+            font-size: 0.3rem;
+            color: #fff;
+        }
+
+        /*子码*/
+        #shareImgBox {
+            width: 6.5rem;
+            height: 11rem;
+            background-size: 100%;
+            position: fixed;
+            z-index: -1;
+            top: 0;
+            display: none;
+        }
+        #childBg{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: -1;
+            margin: auto;
+        }
+        .user-info{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 4.3rem;
+            padding-left: 1.75rem;
+        }
+        .user-head{
+            width: 0.8rem;
+            height: 0.8rem;
+            float: left;
+            background: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .user-head img{
+            width: 100%;
+            height: 100%;
+        }
+        .user-right{
+            float: left;
+            margin-left: 0.2rem;
+            color: #fff;
+        }
+        .user-right p:first-child{
+            font-size: 0.24rem;
+        }
+        .user-right p:last-child{
+            font-size: 0.28rem;
+        }
+        .child-box{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            margin-top: 0.3rem;
+        }
+        .childQrcode{
+            width: 1.4rem;
+            height: 1.4rem;
+            background: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .child-box p{
+            color: #ffffff;
+            font-size: 0.28rem;
+            font-weight: bold;
+            margin-top: 0.1rem;
+            margin-left: 0.1rem;
+        }
+        .share-laybox .layui-m-layercont {
+            padding: 0!important;
+        }
+
+        .share-laybox {
+            width: 6.5rem;
+            height: 11rem;
+            background: #fff;
+        }
+
+        #posters {
+            width: 100%;
+            height: 11rem;
+        }
+
+        .daipoint{
+            width: 0.4rem;
+            height: 0.4rem;
+            border-radius: 50%;
+            position: absolute;
+            top: 62%;
+            left:62%;
+            margin: auto;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<header class="forbidScrollIos">
+    <div class='pTop'>
+        <div class='pTop-left'>
+            <img src="static/img/personal/userimg.png" alt="" class="userImg"/>
+            <img src="static/img/public/daiPoint.png" alt="" class="daipoint">
+        </div>
+        <div class='pTop-right'>
+            <div class='nicheng'>游客</div>
+            <div class='pnav'>
+                <!--< <span class="roleType">一级分销</span> >-->
+            </div>
+            <img src="static/img/myAgent/erweima.png" alt="" onclick="" id="erweima">
+        </div>
+    </div>
+    <div class="navigation agent-nav">
+        <img src="static/img/goods/return@2x.png" alt="" onclick="returnBack()">
+        <!--我的代理-->
+        <!--<div id="shopSetting">设置</div>-->
+        <img src="static/img/public/setting2.png" alt="" id="shopSetting" onclick="location.href='myAgentShopSetting.html'">
+    </div>
+</header>
+<main>
+    <div class="fengexian forbidScrollIos">
+        <img src="static/img/myAgent/recommend.png" alt="">
+        我的代理
+    </div>
+    <div id="mescroll" class="mescroll">
+        <div class="shop-content content" style="margin: 0;">
+
+        </div>
+    </div>
+</main>
+<!--海报加载-->
+<div id="loading" style="background-color: rgba(0,0,0,.7);">
+    <p style="color: #fff">海报生成中......</p>
+</div>
+<div id="shareImgBox">
+    <img src="static/img/public/childBg.png" alt="" id="childBg">
+    <div class="user-info">
+        <div class="user-head">
+            <img src="" alt="" id="userHead">
+        </div>
+        <div class="user-right">
+            <p id="usreName"></p>
+            <p>邀您成为同游代言人</p>
+        </div>
+    </div>
+    <div class="child-box">
+        <div class="childQrcode">
+            <div id="qrcode"></div>
+        </div>
+        <p>长按立即成为同游代言人</p>
+    </div>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="static/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="static/js/qrcode.min.js"></script>
+<script>
+    var childCode;
+    var userId;
+    $(function () {
+        getToken();
+        //获取用户信息
+        // publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+        publicAjaxToken(baseAjaxUrl + "/ty_api/agent/shop/info/getShopInfo", "POST", {}, getUserInfoCall);
+        //获取代理商子码
+        publicAjaxToken(baseAjaxUrl + "/ty_api/agent/user/info/getChildCode", "POST", {}, getChildCodeCall);
+        //获取我的商家列表
+        var url = baseAjaxUrl + "/ty_api/business/agent/user/queryAgentList";
+        var data = {};
+        upLoading(url, data, getShopListCall, false);
+    });
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //收藏数据
+            $(".nicheng").html(res.data.shopName);
+            $("#usreName").html(res.data.shopName);
+            $(".userImg").attr("src", baseImgUrl + res.data.shopImg + '_small.jpg');
+            $("#userHead").attr("src", baseImgUrl + res.data.shopImg + '_small.jpg');
+            var backgroundImg=baseImgUrl+res.data.shopBackgroundImg+'.jpg';
+            $(".pTop").css("background-image","url("+backgroundImg+")");
+            //判断角色类型
+            if (res.data.isAgent == "1") {
+                // if (res.data.isSale == "1") {
+                //     $(".roleType").html("代理商 & 业务员");
+                // } else {
+                //     $(".roleType").html("代理商");
+                // }
+                // $("#agentShow").css("display", "flex");
+                $(".daipoint").show();
+            } else {
+                if (res.data.isSale == "1") {
+                    $(".daipoint").show();
+                    // $(".roleType").html("业务员");
+                } else {
+                    // $(".roleType").html("游客");
+                    $(".daipoint").hide();
+                }
+            }
+            userId = res.data.userId;
+        }
+    }
+
+    //获取代理商子码的回调
+    function getChildCodeCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            childCode = res.data.info.CHILD_CODE_URL;
+            var qrcode = new QRCode('qrcode', {
+                text: childCode,
+                width: 65,
+                height: 65,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.L
+            });
+        }
+    }
+
+    //获取我的商家列表的回调
+    function getShopListCall(data) {
+        var listDom = $(".shop-content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            var status = '';
+            switch (data[i].status) {
+                case "SUCCESS":
+                    status = "已代理";
+                    break;
+                case "FAIL":
+                    status = "审核失败";
+                    break;
+                case "INIT":
+                    status = "审核中";
+                    break;
+            }
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <a href="myAgentShopDetail.html?businessUserId=' + data[i].businessUserId + '&userId=' + userId + '">\n' +
+                '       <div class="shop-left">\n' +
+                '           <img src="'+baseImgUrl+data[i].headImg+'_small.jpg" alt="">\n' +
+                '       </div>\n' +
+                '       <div class="shop-middle">\n' +
+                '           <p>' + data[i].enterpriseName + '</p>\n' +
+                '           <p>' + data[i].specificAddress + '</p>\n' +
+                '       </div>\n' +
+                '       <div class="shop-right">\n' +
+                '           ' + status + '\n' +
+                '       </div>\n' +
+                '   </a>\n' +
+                '</div>';
+
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+
+    $("#erweima").click(function () {
+        htmlCanvas();
+    })
+</script>

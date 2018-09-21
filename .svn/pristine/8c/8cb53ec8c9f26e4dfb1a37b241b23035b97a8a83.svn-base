@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商品页</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="static/css/goods.css">
+    <link rel="stylesheet" href="static/css/package.css">
+    <link rel="stylesheet" href="plug-in/swiper/swiper-4.2.0.min.css">
+    <style>
+
+        .ticket-info {
+            width: 100%;
+            height: 10rem;
+            background: #fff;
+            overflow-y: scroll;
+        }
+
+        .ticket-info-head {
+            padding-bottom: 0.2rem;
+            border-bottom: 0.01rem solid #e5e5e5;
+            background: #fff;
+        }
+
+        .ticket-provider {
+            margin-top: 0.2rem;
+        }
+
+        .ticket-info-name {
+            font-size: 0.3rem;
+            color: #2a2a2a;
+            margin-bottom: 0.2rem;
+        }
+
+        .ticket-info-box {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0.2rem 0;
+            margin-bottom: 1rem;
+        }
+
+        .ticket-provider-message {
+            width: 100%;
+            font-size: 0.26rem;
+            color: #7a7a7a;
+            text-align: justify;
+            line-height: 0.4rem;
+        }
+
+        .ticket-info-sure {
+            width: 100%;
+            height: 0.9rem;
+            background-color: #47bfc5;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            font-size: 0.36rem;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+
+        #loading p {
+            font-size: 0.3rem;
+            color: #0e0e0e;
+        }
+
+        /*图片轮播*/
+        .layui-m-layer * {
+            -webkit-box-sizing: border-box !important;
+            -moz-box-sizing: border-box !important;
+            box-sizing: border-box !important;
+        }
+
+        .layui-m-layercont {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+        }
+
+        .close {
+            margin-top: 1rem;
+        }
+
+        .goods-img .swiper-container {
+            width: 100%;
+            height: 40%;
+        }
+
+        .goods-img .swiper-pagination {
+            font-size: 0.3rem;
+            color: #fff;
+        }
+
+        .goods-img .swiper-slide img {
+            width: 100%;
+            height: 100%;
+        }
+
+        #indexMall {
+            right: 0;
+            left: 0.2rem;
+        }
+    </style>
+</head>
+<body>
+<main style="margin: 0;">
+    <div id="goodsCon">
+        <div class="banner">
+            <div class="nav">
+                <!-- <img src="static/img/goods/return@2x.png" alt="" class="return"> -->
+                <img src="static/img/goods/endorsement.png" alt="" class="share">
+                <img src="static/img/goods/collection@2x.png" alt="" class="collection" onclick="currentCollect(this)"
+                     id="currentCollectFlag">
+            </div>
+            <div class="swiper-container">
+                <div class="swiper-wrapper" id="goodsImg">
+
+                </div>
+            </div>
+        </div>
+        <div class="scenic-detail" >
+            <div class="scenic-detail-left">
+                <p>
+                    <img src="static/img/goods/scenicspot@2x.png" alt="">
+                    <span id="productBaseName"></span>
+                </p>
+                <p id="productBaseInfo"></p>
+            </div>
+            <div class="scenic-detail-right">
+                <a href="javascript:;">
+                    <img src="static/img/goods/details@2x.png" alt="">
+                </a>
+            </div>
+        </div>
+        <div class="scenic-address" id="navAddress">
+            <a href="javascript:;">
+                <img src="static/img/goods/address@2x.png" alt="" class="icon">
+                <span id="productBaseAdd"></span>
+                <img src="static/img/goods/details@2x.png" alt="" class="more">
+            </a>
+        </div>
+        <section id="package">
+            <div class="ticket-box">
+                <div class="ticket-head">
+                    <img src="static/img/goods/ticket@2x.png" alt="" class="icon">
+                    门票
+                    <img src="static/img/goods/shangla.png" alt="" class="arrow">
+                </div>
+                <div class="ticket-con">
+
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="recommend">
+                <div class="recommend-head">
+                    <a>同类推荐</a>
+                    <a href="" id="moreSimilar">
+                        更多
+                        <img src="static/img/goods/details@2x.png" alt="">
+                    </a>
+                </div>
+                <div class="recommend-con" id="similarProduct">
+
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="recommend">
+                <div class="recommend-head">
+                    <a>附近推荐</a>
+                    <a href="" id="moreNear">
+                        更多
+                        <img src="static/img/goods/details@2x.png" alt="">
+                    </a>
+                </div>
+                <div class="recommend-con" id="nearProduct">
+
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+<div id="shareImgBox">
+    <div id="shareImg">
+        <img src="" alt="" crossOrigin="anonymous">
+        <!--<div id="qrcode"></div>-->
+    </div>
+    <div id="shareQCode">
+        <div class="shareQ-left">
+            <img src="" alt="" id="shareHeadImg" crossOrigin="anonymous">
+            <span id="shareName"></span>
+            <span>邀您同游</span>
+        </div>
+        <div class="shareQ-right">
+            <div id="qrcode"></div>
+            <p>扫描二维码，立即购买</p>
+        </div>
+        <!--<span>微信扫一扫即可购买</span>-->
+    </div>
+</div>
+<!--海报加载-->
+<div id="loading" style="background-color: rgba(0,0,0,.7);">
+    <p style="color: #fff">海报生成中......</p>
+</div>
+<!--前往首页的悬浮窗-->
+<a id="indexMall" href="index.html" style="display: none">
+    <img src="static/img/public/indexMall.png" alt="">
+</a>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/swiper/swiper-4.2.0.min.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/history.js"></script>
+<script type="text/javascript" src="static/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="static/js/qrcode.min.js?ver=20110905"></script>
+
+<script>
+    var latitude, longitude, provinceName, address;
+    var productId;          //产品Id
+    var productCategoryId;  //产品分类id
+
+    //定义用来分享所用的变量
+    var sharProductName, sharProductTitle, sharPicture, shareUrl;
+    var coverImg;   //海报的图片
+
+    var clientId, endId;       //接受app传送过来的
+    var clientType;             //接受app传送过来的
+
+    var starsLevel = 5;   //星星最高等级_评分
+    var str = "您还未绑定手机号，分享将无法获取佣金，绑定后分享成交订单才有奖励可拿哦！请前往个人中心进行手机号绑定";
+    var token, isMobile = true;
+    $(function () {
+        //获取身份iid
+        clientId = GetQueryString("clientId");
+        console.log(clientId);
+        endId = GetQueryString("endId");
+        //获取身份
+        clientType = GetQueryString("clientType");
+        //获取产品Id
+        productId = GetQueryString("productId");
+
+        if (clientId != null) {
+            $("#indexMall").show();
+        }
+
+        if (clientType) {//这个是ios要嵌套的页面
+            // $("#clientHead").hide();
+            // $("#clientFoot").hide();
+        } else {//这是正常的
+        }
+
+
+        //地图点击导航
+        $("#navAddress").click(function () {
+            console.log(latitude);
+            console.log(longitude);
+        });
+
+        //获取轮播图
+        publicAjax(baseAjaxUrl + "/ty_api/product/picture/getListByProductId", "POST", {
+            "productId": productId,
+            "pageNum": 1,
+            "pageSize": 10
+        }, goodsSwiperCall);
+        //获取产品基础信息
+        publicAjax(baseAjaxUrl + "/ty_api/product/queryBaseInfoById", "POST", {
+            "productId": productId
+        }, productDetailCall);
+        //获取产品套餐
+        publicAjax(baseAjaxUrl + "/ty_api/product/package/getListByProductId", "POST", {
+            "productId": productId,
+            "pageNum": 1,
+            "pageSize": 3
+        }, productPackageCall);
+    });
+    //生成海报
+    $(".share").click(function () {
+        layer.open({
+            content: '请先关注“杭州同游”微信公众号'
+            ,btn: '我知道了'
+        });
+
+    })
+
+    //跳转景点详情
+    function jumpProductDetail() {
+        location.href = "productDetail.html?productId=" + productId;
+    }
+
+    //轮播内容的回调
+    function goodsSwiperCall(e) {
+        /*用于存放轮播内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            var pictureList = [];
+            sharPicture = baseImgUrl + data[0].pictureUrl + "_small.jpg";
+            for (var i = 0; i < data.length; i++) {
+
+                pictureList.push(data[i].pictureUrl);
+
+                innerHtml +=
+                    '<div class="swiper-slide">\n' +
+                    '   <img src="' + baseImgUrl + data[i].pictureUrl + '.jpg" alt="">\n' +
+                    '</div>\n';
+            }
+            pictureList = JSON.stringify(pictureList);
+            innerHtml += '<input type="text" value=\'' + pictureList + '\' style="display: none;" class="hht-picture">';
+            $(".swiper-wrapper").html(innerHtml);
+            lunbo();
+            pictureSwiper();
+        }
+    }
+
+    //产品基础信息的回调
+    function productDetailCall(e) {
+        /*用于存放内容*/
+        if (e.errorCode == 200) {
+            var data = e.data;
+            productCategoryId = data.productCategoryId;
+            console.log(data);
+            $("#productBaseName").text(data.productName);
+            $("#productBaseInfo").text(data.productTitle);
+            $("#productBaseAdd").text(data.address);
+
+            //分享海报相关——商家上传的海报图片
+            coverImg = data.coverImg;
+            var imgurl = baseImgUrl + data.coverImg + ".jpg";
+            $("#shareImg img").attr("src", imgurl);
+
+            latitude = data.latitude; // 纬度，浮点数，范围为90 ~ -90
+            longitude = data.longitude; // 经度，浮点数，范围为180 ~ -180。
+            provinceName = data.provinceName;
+            address = data.address;
+            sharProductName = data.productName;
+            sharProductTitle = data.productTitle;
+            //点击同类和附近的更多
+            // $("#moreSimilar").attr("href", "moreSimilarProduct.html?productCategoryId=" + productCategoryId + "&productId=" + productId);
+            // $("#moreNear").attr("href", "moreNearProduct.html?productId=" + productId);
+
+            //查看是否收藏
+        }
+
+        //获取同类推荐产品
+//        console.log(productCategoryId);
+        publicAjax(baseAjaxUrl + "/ty_api/product/queryProductByCategoryId", "POST", {
+            "productId": productId,
+            "longitude": longitude,
+            "latitude": latitude,
+            "productCategory": productCategoryId,
+            "pageNum": 1,
+            "pageSize": 3
+        }, similarProductCall);
+
+        //获取同类推荐产品
+        publicAjax(baseAjaxUrl + "/ty_api/product/queryByAddress", "POST", {
+            "productId": productId,
+            "longitude": longitude,
+            "latitude": latitude,
+            "pageNum": 1,
+            "pageSize": 3
+        }, nearProductCall);
+
+    }
+
+    //产品套餐的回调
+    function productPackageCall(e) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            for (var i = 0; i < data.length; i++) {
+                var refunds = '';
+                if (data[i].refundType == "NO_REFUND") {
+                    refunds = "概不退款";
+                } else {
+                    refunds = "条件退";
+                }
+                if (clientId == null) {
+                    var ticketFlag =
+                        '        <p class="ticket-flag">\n' +
+                        '               <span><i>推</i><i>￥' + data[i].defaultAgentCommission + '</i></span>' +
+                        '               <span><i>享</i><i>￥' + data[i].defaultSaleCommission + '</i></span>' +
+                        '        </p>\n';
+                } else {
+                    var ticketFlag = "";
+                }
+                innerHtml +=
+                    '<div class="ticket-item" data-packageId="' + data[i].productPackageId + '">\n' +
+                    '   <div class="ticket-item-left">\n' +
+                    '        <p class="ticket-item-title">' + data[i].packageName + '</p>\n' +
+                    ticketFlag +
+                    '   </div>\n' +
+                    '   <div class="ticket-item-right">\n' +
+                    '        <p class="present-price"><span>￥</span>' + data[i].salePrice + '</p>\n' +
+                    '        <p class="reservation" data-old="' + data[i].retailPrice + '" data-present="' + data[i].salePrice + '" data-endsale="' + data[i].endSale + '" data-startTime="' + data[i].startDate + '" data-endTime="' + data[i].endDate + '" data-packageId="' + data[i].productPackageId + '">预定</p>\n' +
+                    '    </div>\n' +
+                    '</div>';
+            }
+            $(".ticket-con").html(innerHtml);
+            setPackage();
+        } else if (e.errorCode == 530) {
+            //信息框
+            layer.open({
+                content: '产品已下架'
+                , btn: '看看别的',
+                yes: function () {
+                    location.href = "index.html";
+                }
+            });
+        }
+    }
+
+    /*票务的下转箭头*/
+    var arrowFlag = true;
+    $(".arrow").click(function () {
+        if (arrowFlag) {
+            $(this).css("transform", "Rotate(180deg)");
+            $(".ticket-con").slideUp(500);
+            arrowFlag = !arrowFlag;
+        } else {
+            $(this).css("transform", "Rotate(0)");
+            $(".ticket-con").slideDown(500);
+            arrowFlag = !arrowFlag;
+        }
+    });
+
+    //产品页banner上的收藏
+    function currentCollect(e) {
+        layer.open({
+            content: '请先关注“杭州同游”微信公众号'
+            ,btn: '我知道了'
+        });
+    }
+
+    //点击预定的页面跳转
+    function setPackage() {
+
+        $(".ticket-item").each(function (i, v) {
+            $(v).click(function () {
+                layer.open({
+                    content: '请先关注“杭州同游”微信公众号'
+                    ,btn: '我知道了'
+                });
+                // var productPackageId = $(v).attr("data-packageId");
+                // console.log("这是clientid" + clientId);
+                // if (clientId) {
+
+                //     /*为迎合ios所以productPackageId必须放在最后*/
+                //     if (endId) {
+                //         location.href = "packageDetail.html?clientId=" + clientId + "&endId=" + endId + "&productId=" + productId + "&productPackageId=" + productPackageId;
+                //     } else {
+                //         location.href = "packageDetail.html?clientId=" + clientId + "&productId=" + productId + "&productPackageId=" + productPackageId;
+                //     }
+
+                // } else {
+                //     // location.href = "packageDetail.html?productPackageId=" + productPackageId + "&productId=" + productId;
+                //     location.href = "packageDetail.html?productId=" + productId + "&productPackageId=" + productPackageId;
+                // }
+
+            })
+        })
+
+    }
+
+
+    //封装产品同类推荐的回调
+    function similarProductCall(e) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            // var collectionImg = '';
+            for (var i = 0; i < data.length; i++) {
+                var tagInnerHtml = ''; //标签
+                var starsHtml = '';    //星星的img标签
+                if (data[i].tags[0] != null) {
+                    for (var j = 0; j < data[i].tags.length; j++) {
+                        tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+                    }
+                } else {
+                    tagInnerHtml += '暂无标签';
+                }
+
+                //星星评分
+                var solidStars = data[i].score;
+                var emptyStars = starsLevel - solidStars;
+                for (var j = 0; j < solidStars; j++) {
+                    starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+                }
+                for (var n = 0; n < emptyStars; n++) {
+                    starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+                }
+
+                //主体
+                innerHtml +=
+                    '<div class="hot-item">\n' +
+                    '     <div class="hot-left">\n' +
+                    '         <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                    '      </div>\n' +
+                    '   <div class="hot-right">\n' +
+                    '           <div class="hot-p">\n' +
+                    '               <p class="hot-title">' + data[i].productName + '</p>\n' +
+                    '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                    '               <p class="hot-stars">\n' +
+                    '                   <span class="stars">' + starsHtml + '</span>\n' +
+                    '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                    '               </p>\n' +
+                    '               <p class="hot-detail">' + data[i].productAddress + ' | ' + data[i].distance + 'km</p>\n' +
+                    '           </div>\n' +
+                    '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                    '       </div>\n' +
+                    '   </div>\n' +
+                    '</div>';
+            }
+            $("#similarProduct").html(innerHtml);
+        }
+    }
+
+    //封装产品附近推荐的回调
+    function nearProductCall(e) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            // var collectionImg = '';
+            for (var i = 0; i < data.length; i++) {
+                var tagInnerHtml = '';  //标签
+                var starsHtml = '';     //星星的img标签
+                if (data[i].tags[0] != null) {
+                    for (var j = 0; j < data[i].tags.length; j++) {
+                        tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+                    }
+                } else {
+                    tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+                }
+
+                //星星评分
+                var solidStars = data[i].score;
+                var emptyStars = starsLevel - solidStars;
+                for (var j = 0; j < solidStars; j++) {
+                    starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+                }
+                for (var n = 0; n < emptyStars; n++) {
+                    starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+                }
+
+                innerHtml +=
+                    '<div class="hot-item">\n' +
+                    '       <div class="hot-left">\n' +
+                    '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                    '        </div>\n' +
+                    '   <div class="hot-right">\n' +
+                    '           <div class="hot-p">\n' +
+                    '               <p class="hot-title">' + data[i].productName + '</p>\n' +
+                    '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                    '               <p class="hot-stars">\n' +
+                    '                   <span class="stars">' + starsHtml + '</span>\n' +
+                    '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                    '               </p>\n' +
+                    '               <p class="hot-detail">' + data[i].productAddress + ' | ' + data[i].distance + 'km</p>\n' +
+                    '           </div>\n' +
+                    '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                    '       </div>\n' +
+                    '   </div>\n' +
+                    '</div>';
+            }
+            $("#nearProduct").html(innerHtml);
+        }
+    }
+
+    /*推荐的产品点击收藏时的函数*/
+
+    /*点击图片列表*/
+    function pictureSwiper() {
+
+        $("#goodsImg").click(function () {
+            var pritureList = JSON.parse($(this).children("input").val());
+            console.log(pritureList);
+            var swiperCon = '';
+            if (pritureList.length == 0) {
+                return false;
+            }
+            for (var i = 0; i < pritureList.length; i++) {
+                swiperCon +=
+                    '   <div class="swiper-slide">\n' +
+                    '       <img src="' + baseImgUrl + pritureList[i] + '_small.jpg" alt="">\n' +
+                    '   </div>\n';
+            }
+            layer.open({
+                type: 1
+                ,
+                className: "goods-img",
+                content:
+                '   <div class="swiper-container">\n' +
+                '       <div class="swiper-wrapper">' +
+                swiperCon +
+                '       </div>\n' +
+                '       <div class="swiper-pagination"></div>\n' +
+                '   </div>' +
+                '<img src="static/img/public/close@2x.png" alt="" class="close">'
+                ,
+                anim: 'scale'
+                ,
+                style: 'position:fixed; bottom:0; left:0;top:0;right:0; width: 100%;padding:10px 0; border:none;background: rgba(0, 0, 0, 0.1);',
+                success: function () {
+                    var swiper = new Swiper('.swiper-container', {
+                        loop: false,
+                        autoplay: false,
+                        pagination: {
+                            el: '.swiper-pagination',
+                            type: 'fraction',
+                        },
+                    });
+                    $(".close").click(function () {
+                        layer.closeAll()
+                    })
+                }
+            });
+        })
+
+    }
+</script>

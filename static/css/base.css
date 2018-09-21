@@ -1,0 +1,48 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-transform: none
+}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, blockquote, th, td, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+    -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
+    -webkit-user-select: none;
+    -moz-user-focus: none;
+    -moz-user-select: none;
+}
+
+ul, li, ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+input,
+textarea {
+    outline: none;
+    border: 0; /* 方法1 */
+    -webkit-appearance: none; /* 方法2 */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    -webkit-user-select: none;
+}
+
+img {
+    border: none;
+    display: block;
+}
+#cnzz_stat_icon_1274589946{
+    display: none;
+}

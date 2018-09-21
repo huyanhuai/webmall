@@ -1,0 +1,978 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>酒店</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../plug-in/priceRange/range.css">
+    <link rel="stylesheet" href="../plug-in/meScroll/mescroll.min.css">
+    <link rel="stylesheet" href="../static/css/hotelDate.css">
+    <style>
+        /*头部*/
+        .hotelHead {
+            border-bottom: 0.01rem solid #f6f6f6;
+            width: 100%;
+            height: 0.9rem;
+            background: #fff;
+            padding: 0 0.32rem;
+            font-size: 0.36rem;
+            color: #3b3b3b;
+            text-align: center;
+            position: relative;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .search-box {
+            width: 80%;
+            /*height: 98%;*/
+            height: 0.54rem;
+            float: right;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            position: relative;
+            border-radius: 0.2rem;
+            background: #f6f6f6;
+        }
+
+        .dateBox {
+            width: 22%;
+            height: 0.54rem;
+            font-size: 0.18rem;
+            padding-left: 2%;
+            position: relative;
+        }
+
+        .dateBox p span {
+            color: #f79628;
+        }
+
+        #searchText::after {
+            content: '';
+            display: block;
+            width: 0.01rem;
+            height: 60%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            background: #e0e0e0;
+        }
+
+        #searchText {
+            width: 78%;
+            height: 0.54rem;
+            /*border-radius: 0.2rem;*/
+            /*background: #f6f6f6;*/
+            padding: 0 0.2rem;
+            font-size: 0.24rem;
+            color: rgba(140, 140, 140, 0.8);
+            text-align: left;
+            line-height: 0.54rem;
+            position: relative;
+            float: right;
+        }
+
+        .search-box > img {
+            width: 0.3rem;
+            height: 0.29rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0.2rem;
+            margin: auto;
+        }
+
+        .navMap {
+            width: 0.5rem;
+        }
+
+        .hotelBack {
+            height: 0.33rem;
+        }
+
+        /*下拉筛选框*/
+        #filter {
+            width: 100%;
+            height: 0.9rem;
+            background: #fff;
+        }
+
+        .filter-box {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            border-bottom: 0.01rem solid #47bfc5;
+        }
+
+        .filter-item {
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .filter-item img {
+            width: 0.2rem;
+            margin-left: 0.1rem;
+            margin-top: 0.1rem;
+        }
+
+        .filter-more {
+            transform: rotate(180deg);
+            -ms-transform: rotate(180deg); /* IE 9 */
+            -moz-transform: rotate(180deg); /* Firefox */
+            -webkit-transform: rotate(180deg); /* Safari 和 Chrome */
+            -o-transform: rotate(180deg); /* Opera */
+        }
+
+        .filter-item.active {
+            color: #47bfc5;
+        }
+
+        /*酒店产品*/
+        #mescroll {
+            width: 100%;
+            position: fixed;
+            top: 1.8rem;
+            bottom: 0;
+            height: auto;
+        }
+
+        .hotelProduct .hotel-product-item:last-child {
+            border: 0;
+        }
+
+        .hotel-product-item {
+            width: 100%;
+            height: 2.1rem;
+            border-bottom: 0.01rem solid #eee;
+            padding: 0.2rem 0.25rem;
+            background: #fff;
+        }
+
+        .hotel-product-left {
+            width: 30%;
+            float: left;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .hotel-product-left img {
+            height: 100%;
+            width: 100%;
+        }
+
+        .hotel-product-right {
+            width: 65%;
+            float: right;
+            height: 100%;
+        }
+
+        .hotel-product-right p {
+            width: 100%;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            margin-bottom: 0.1rem;
+        }
+
+        .hotel-product-right p:last-child {
+            margin: 0;
+        }
+
+        .hp-name {
+            color: #333;
+            font-size: 0.3rem;
+            font-weight: 600;
+        }
+
+        .hp-score, .hp-address {
+            font-size: 0.26rem;
+            color: #b0b0b0;
+        }
+
+        .hp-score .hp-grade {
+            color: #f7ae5c;
+        }
+
+        .hp-price {
+            font-size: 0.24rem;
+            color: #f7ae5c;
+            text-align: right;
+        }
+
+        .hp-price span {
+            font-size: 0.3rem;
+        }
+
+        /*下拉框*/
+        #selectBox {
+            width: 100%;
+            position: fixed;
+            top: 1.8rem;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 320;
+            display: none;
+        }
+
+        #selectSort {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #ffffff;
+            /*display: none;*/
+        }
+
+        .sort-item {
+            width: 100%;
+            height: 0.7rem;
+            color: #979797;
+        }
+
+        .sort-item.active {
+            color: #47bfc5;
+        }
+
+        .sort-item.active .sort-choose {
+            background: url("../static/img/hotel/chose.png") center center no-repeat;
+            background-size: 25%;
+        }
+
+        .sort-item .sort-choose {
+            width: 18%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            float: left;
+        }
+
+        .sort-item .sort-text {
+            width: 82%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            float: left;
+            border-bottom: 0.01rem solid #e5e5e5;
+            padding-left: 0.2rem;
+        }
+
+        #starPrice {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #ffffff;
+            padding: 0.2rem 0.4rem;
+            display: none;
+        }
+
+        #starBox {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding-bottom: 0.2rem;
+            /*border-bottom: 0.01rem solid #eee;*/
+        }
+
+        .star-title {
+            width: 100%;
+            color: #b5b5b5;
+            margin-bottom: 0.2rem;
+        }
+
+        .star-tab {
+            width: 100%;
+            height: 1.5rem;
+        }
+
+        .star-item {
+            width: 32%;
+            margin-right: 2%;
+            float: left;
+            height: 0.6rem;
+            border: 0.01rem solid #eee;
+            display: flex;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #8f8f8f;
+            border-radius: 0.1rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .star-tab .star-item:nth-child(3n) {
+            margin-right: 0;
+        }
+        .star-item.active {
+            color: #47bfc5;
+            border-color: #47bfc5;
+        }
+
+        /*价格的*/
+        #priceBox {
+            width: 100%;
+            height: auto;
+            padding-top: 0.2rem;
+        }
+
+        .price-range {
+            width: 100%;
+            height: 1rem;
+            padding-top: 0.2rem;
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        #selectFilter {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #ffffff;
+            padding: 0.2rem 0.4rem 0 0.4rem;
+            display: none;
+        }
+
+        .sfilter-title {
+            width: 100%;
+            color: #b5b5b5;
+            margin-bottom: 0.2rem;
+        }
+
+        .sfilter-box {
+            width: 100%;
+            margin-bottom: 0.2rem;
+        }
+
+        .sf-ul {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            /*display: flex;*/
+            /*display: -webkit-flex;*/
+            /*flex-wrap: wrap;*/
+            /*-webkit-flex-wrap: wrap;*/
+            /*justify-content: space-between;*/
+            /*-webkit-justify-content: space-between;*/
+        }
+
+        .sfilter-item {
+            width: 32%;
+            height: 0.6rem;
+            float: left;
+            margin-right: 2%;
+            border: 0.01rem solid #eee;
+            display: flex;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #8f8f8f;
+            border-radius: 0.1rem;
+            margin-bottom: 0.15rem;
+        }
+
+        .sf-ul .sfilter-item:nth-child(3n) {
+            margin-right: 0;
+        }
+
+        .sfilter-item.active {
+            color: #47bfc5;
+            border-color: #47bfc5;
+        }
+
+        .sf-btn {
+            width: 100%;
+            height: 1rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .sf-reset {
+            width: 1.4rem;
+            height: 0.6rem;
+            border: 0.01rem solid #eee;
+            display: flex;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #8f8f8f;
+            border-radius: 0.1rem;
+        }
+
+        .sf-sure {
+            width: 1.4rem;
+            height: 0.6rem;
+            display: flex;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #fff;
+            background: #47bfc5;
+            border-radius: 0.1rem;
+        }
+
+        .hotel-product-right .hp-address {
+            margin-bottom: 0;
+        }
+
+        #navMap {
+            width: 100%;
+            position: fixed;
+            top: 1.8rem;
+            bottom: 0;
+            height: auto;
+            z-index: 300;
+            background: #fff;
+            display: none;
+        }
+
+        #container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #locationPoint {
+            width: 0.8rem;
+            height: 0.8rem;
+            position: fixed;
+            bottom: 0.3rem;
+            left: 0.3rem;
+            z-index: 100;
+            /*display: none;*/
+        }
+
+        #locationPoint img {
+            width: 100%;
+            height: 100%;
+        }
+
+        /*高德地图*/
+        .amap-marker-label {
+            position: absolute;
+            z-index: 2;
+            border: none !important;
+            background-color: white;
+            white-space: nowrap;
+            cursor: default;
+            padding: 3px;
+            font-size: 12px;
+            line-height: 14px;
+            top: 42px !important;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="hotelHead forbidScrollIos">
+        <img src="../static/img/public/return2@2x.png" alt="" onclick="returnBack()" class="hotelBack">
+        <div class="search-box">
+            <!--<input type="text" id="searchText" placeholder="酒店名/地名" disabled>-->
+            <div class="dateBox" id="chooseData">
+                <p>入 <span id="stayDate">07-23</span></p>
+                <p>离 <span id="leaveDate">07-24</span></p>
+            </div>
+            <div id="searchText">酒店名/地名</div>
+            <img src="../static/img/hotel/seach.png" alt="" id="searchBtn">
+        </div>
+        <img src="../static/img/hotel/map.png" alt="" class="navMap">
+    </div>
+</header>
+<main>
+    <!--下拉筛选-->
+    <section id="filter" class="forbidScrollIos">
+        <ul class="filter-box">
+            <li class="filter-item active">
+                <span>推荐排序</span>
+                <img src="../static/img/hotel/more2.png" alt="" class="filter-more2">
+            </li>
+            <li class="filter-item">
+                <span>星级价格</span>
+                <img src="../static/img/hotel/more2.png" alt="" class="filter-more2">
+            </li>
+            <li class="filter-item">
+                <span>筛选</span>
+                <img src="../static/img/hotel/more2.png" alt="" class="filter-more2">
+            </li>
+        </ul>
+    </section>
+    <!--下拉框-->
+    <section id="selectBox">
+        <!--排序-->
+        <ul id="selectSort" class="selectBoxItem">
+            <li class="sort-item active" data-sortBy="">
+                <span class="sort-choose"></span>
+                <span class="sort-text">推荐排序</span>
+            </li>
+            <li class="sort-item" data-sortBy="distance">
+                <span class="sort-choose"></span>
+                <span class="sort-text">距离优先</span>
+            </li>
+            <li class="sort-item" data-sortBy="minPrice">
+                <span class="sort-choose"></span>
+                <span class="sort-text">低价优先</span>
+            </li>
+            <li class="sort-item" data-sortBy="maxPrice">
+                <span class="sort-choose"></span>
+                <span class="sort-text">高价优先</span>
+            </li>
+            <li class="sort-item" data-sortBy="score">
+                <span class="sort-choose"></span>
+                <span class="sort-text">好评优先</span>
+            </li>
+        </ul>
+        <!--星级价格-->
+        <div id="starPrice" class="selectBoxItem">
+            <div id="starBox">
+                <p class="star-title">星级筛选</p>
+                <ul class="star-tab">
+                    <li class="star-item active" data-starLevel="">
+                        不限
+                    </li>
+                    <li class="star-item" data-starLevel="2">
+                        二星/经济型
+                    </li>
+                    <li class="star-item" data-starLevel="3">
+                        三星/舒适
+                    </li>
+                    <li class="star-item" data-starLevel="4">
+                        四星/高档
+                    </li>
+                    <li class="star-item" data-starLevel="5">
+                        五星/豪华
+                    </li>
+                </ul>
+            </div>
+            <!--<div id="priceBox">-->
+            <!--<p class="star-title">价格筛选</p>-->
+            <!--<div class="price-range">-->
+            <!--<input type="hidden" class="single-slider" value="0"/>-->
+            <!--</div>-->
+            <!--</div>-->
+        </div>
+        <!--筛选-->
+        <div id="selectFilter" class="selectBoxItem">
+            <div class="sfilter-box">
+                <p class="sfilter-title">房型</p>
+                <ul class="homeType sf-ul">
+                    <li class="sfilter-item active" data-roomType="">不限</li>
+                    <li class="sfilter-item" data-roomType="KING_SIZE">大床房</li>
+                    <li class="sfilter-item" data-roomType="DOUBLE_ROOM">双床房</li>
+                    <li class="sfilter-item" data-roomType="FAMILY">家庭房</li>
+                    <li class="sfilter-item" data-roomType="LUXURY">豪华套房</li>
+                </ul>
+            </div>
+            <!--<div class="sfilter-box">-->
+            <!--<p class="sfilter-title">支付方式</p>-->
+            <!--<ul class="payType sf-ul">-->
+            <!--<li class="sfilter-item active">不限</li>-->
+            <!--<li class="sfilter-item">在线付</li>-->
+            <!--<li class="sfilter-item">到店付</li>-->
+            <!--</ul>-->
+            <!--</div>-->
+            <div class="sfilter-box">
+                <p class="sfilter-title">早餐信息</p>
+                <ul class="breakfast sf-ul">
+                    <li class="sfilter-item active" data-breakfast="">不限</li>
+                    <li class="sfilter-item" data-breakfast="0">不含早</li>
+                    <li class="sfilter-item" data-breakfast="1">单早</li>
+                    <li class="sfilter-item" data-breakfast="2">双早</li>
+                </ul>
+            </div>
+            <div class="sf-btn">
+                <div class="sf-reset">重置</div>
+                <div class="sf-sure">确定</div>
+            </div>
+        </div>
+    </section>
+    <!--酒店产品-->
+    <section id="mescroll" class="mescroll">
+        <div class="hotelProduct content">
+
+        </div>
+    </section>
+    <!--高德地图-->
+    <section id="navMap">
+        <div id="container"></div>
+        <div id="locationPoint" onClick="javascript:toolBar.doLocation()">
+            <img src="../static/img/hotel/location2.png" alt="">
+        </div>
+    </section>
+</main>
+<!--日历插件-->
+<div id="calendarBox">
+    <input type="text" id="startDate"/>
+    <input type="text" id="endDate"/>
+</div>
+<div class="calendar"></div>
+</body>
+</html>
+<script type="text/javascript" src="http://webapi.amap.com/maps?v=1.4.7&key=4e0cec807af339647c998fa5b7249ac7"></script>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../plug-in/meScroll/mescroll.min.js"></script>
+<script src="../static/js/upLoading.js"></script>
+<script type="text/javascript" src="../static/js/history.js"></script>
+<script src="../plug-in/priceRange/range.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="../static/js/data.js" charset="utf-8"></script>
+<script>
+    var markerPoint = [];
+    var firstMark = [];
+    var latitude, longitude, startDate, endDate;
+    var sortBy = '', starLevel = '', roomType = '', breakfast = '', search = '';
+    var hotelSearchInfo;
+    $(function () {
+        latitude = getSess("latitude");
+        longitude = getSess("longitude");
+        hotelSearchInfo = JSON.parse(getSess("hotelSearchInfo"));
+        startDate = hotelSearchInfo.startDate;
+        endDate = hotelSearchInfo.endDate;
+        starLevel = hotelSearchInfo.starLevel;
+        search = hotelSearchInfo.search;
+
+
+        if(starLevel!=''){
+            $(".star-item").eq(starLevel-1).addClass("active").siblings().removeClass("active");
+        }
+        $("#stayDate").html(timeTransformation(startDate, "date"))
+        $("#leaveDate").html(timeTransformation(endDate, "date"))
+        $("#startDate").val(startDate);
+        $("#endDate").val(endDate);
+        /*查询酒店*/
+        queryHotelFn();
+
+    });
+
+    /*酒店日期插件*/
+    $('#chooseData').calendarSwitch({
+        selectors: {
+            sections: ".calendar"
+        },
+        index: 4,      //展示的月份个数
+        animateFunction: "toggle",        //动画效果
+        controlDay: false,//知否控制在daysnumber天之内，这个数值的设置前提是总显示天数大于90天
+        daysnumber: "90",     //控制天数
+        comeColor: "#47bfc5",       //入住颜色
+        outColor: "#47bfc5",      //离店颜色
+        comeoutColor: "#78e0e6",        //入住和离店之间的颜色
+        callback: function () {
+            console.log("callback")
+        },   //回调函数
+        comfireBtn: '.comfire',//确定按钮的class或者id
+        cancelBtn: '.cancelChoose'//确定按钮的class或者id
+    });
+    $(".comfire").click(function () {
+        startDate = $("#startDate").val();
+        endDate = $("#endDate").val();
+        liveNum="共"+$(".hover").html()+"晚";
+        $("#stayDate").text(replaceSeparator(startDate));
+        $("#leaveDate").text(replaceSeparator(endDate));
+
+        hotelSearchInfo.startDate=startDate;
+        hotelSearchInfo.endDate=endDate;
+        hotelSearchInfo.liveNum=liveNum;
+        setSess("hotelSearchInfo", JSON.stringify(hotelSearchInfo));
+
+        clearDown();
+        queryHotelFn();
+    })
+
+    $("#searchText").click(function () {
+        location.href = oneselfUrl + "search.html";
+    });
+    /*顶部下拉框点击切换*/
+    var filterFlag = true;
+    $(".filter-item").each(function (i, v) {
+        $(v).click(function () {
+            if (filterFlag) {
+                $("#selectBox").show();
+                $(v).addClass("active").siblings().removeClass("active");
+                $(v).children("img").attr("src", "../static/img/hotel/more.png").addClass("filter-more");
+                $(v).siblings().children("img").attr("src", "../static/img/hotel/more2.png").removeClass("filter-more");
+                $(".selectBoxItem").eq(i).show().siblings().hide();
+                filterFlag = !filterFlag;
+            } else {
+                $("#selectBox").hide();
+                $(v).children("img").attr("src", "../static/img/hotel/more.png").removeClass("filter-more");
+                filterFlag = !filterFlag
+            }
+        })
+    });
+    /*推荐排序点击切换*/
+    $(".sort-item").each(function (i, v) {
+        $(v).click(function () {
+            sortBy = $(v).attr("data-sortBy");
+            clearDown();
+            queryHotelFn();
+            $(v).addClass("active").siblings().removeClass("active");
+            $(".filter-item").eq(0).children("img").attr("src", "../static/img/hotel/more2.png").removeClass("filter-more");
+            $("#selectBox").hide();
+            filterFlag = !filterFlag;
+        })
+    });
+    /*酒店星级价格的点击切换*/
+    $(".star-item").each(function (i, v) {
+        $(v).click(function () {
+            starLevel = $(v).attr("data-starLevel");
+            clearDown();
+            queryHotelFn();
+            $(v).addClass("active").siblings().removeClass("active");
+            $(".filter-item").eq(0).children("img").attr("src", "../static/img/hotel/more2.png").removeClass("filter-more");
+            $("#selectBox").hide();
+            filterFlag = !filterFlag;
+        })
+    });
+    /*房型的点击切换*/
+    $(".homeType .sfilter-item").each(function (i, v) {
+        $(v).click(function () {
+            $(v).addClass("active").siblings().removeClass("active");
+        })
+    });
+    /*支付方式的点击切换*/
+    $(".payType .sfilter-item").each(function (i, v) {
+        $(v).click(function () {
+            $(v).addClass("active").siblings().removeClass("active");
+        })
+    });
+    /*早餐信息的点击切换*/
+    $(".breakfast .sfilter-item").each(function (i, v) {
+        $(v).click(function () {
+            $(v).addClass("active").siblings().removeClass("active");
+        })
+    });
+    /*重置按钮*/
+    $(".sf-reset").click(function () {
+        $(".homeType .sfilter-item").removeClass("active");
+        $(".homeType .sfilter-item").eq(0).addClass("active");
+        $(".payType .sfilter-item").removeClass("active");
+        $(".payType .sfilter-item").eq(0).addClass("active");
+        $(".breakfast .sfilter-item").removeClass("active");
+        $(".breakfast .sfilter-item").eq(0).addClass("active");
+    });
+    /*确认按钮*/
+    $(".sf-sure").click(function () {
+        roomType = $(".homeType .sfilter-item.active").attr("data-roomType");
+        breakfast = $(".breakfast .sfilter-item.active").attr("data-breakfast");
+        clearDown();
+        queryHotelFn();
+        $(".filter-item").eq(2).children("img").attr("src", "../static/img/hotel/more2.png").removeClass("filter-more");
+        $("#selectBox").hide();
+        filterFlag = !filterFlag;
+    });
+
+
+    function queryHotelFn() {
+        var url = baseAjaxUrl + "/ty_api/hotel/queryHotelList";
+        var data = {
+            "sortBy": sortBy,
+            "starLevel": starLevel,
+            "roomType": roomType,
+            "includeBreakfast": breakfast,
+            "longitude": longitude,
+            "latitude": latitude,
+            "search": search,
+            "startDate": startDate,
+            "endDate": endDate
+        };
+        markerPoint = [];
+        firstMark = [];
+        upLoading(url, data, getHotelProductCall, false);
+    }
+
+    //获取酒店的回调
+    function getHotelProductCall(data) {
+        console.log(data);
+        var listDom = $(".hotelProduct");
+        var innerHtml = '';
+        if (data.length != 0) {
+            firstMark.push(data[0].longitude);
+            firstMark.push(data[0].latitude);
+        }
+        for (var i = 0; i < data.length; i++) {
+            markerPoint.push({
+                "id": data[i].hotelId,
+                "point": [data[i].longitude, data[i].latitude],
+                "content": data[i].hotelName
+            });
+            if (data[i].distance == null) {
+                var distance = "";
+            } else {
+                var distance = "| " + data[i].distance + "km";
+            }
+
+
+            switch (data[i].starLevel){
+                case "2":
+                    var starLevelHtml='经济型';
+                    break;
+                case "3":
+                    var starLevelHtml='舒适型';
+                    break;
+                case "4":
+                    var starLevelHtml='高档型';
+                    break;
+                case "5":
+                    var starLevelHtml='豪华型';
+                    break;
+            }
+
+            innerHtml +=
+                '       <div class="hotel-product-item">\n' +
+                '       <a href="hotelDetail.html?hotelId=' + data[i].hotelId + '">' +
+                '            <div class="hotel-product-left">\n' +
+                '                <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg"\n' +
+                '                     alt="">\n' +
+                '            </div>\n' +
+                '            <div class="hotel-product-right">\n' +
+                '                <p class="hp-name">' + data[i].hotelName + '</p>\n' +
+                '                <p class="hp-score">\n' +
+                '                    <span class="hp-grade">' + data[i].score + '分</span>&nbsp/&nbsp<span class="hp-discuss">' + (data[i].commentNum == null ? 0 : data[i].commentNum) + '条评论</span>&nbsp&nbsp <span\n' +
+                '                        class="hp-type">'+starLevelHtml+'</span>\n' +
+                '                </p>\n' +
+                '                <p class="hp-address">' + data[i].address + distance + '</p>\n' +
+                '                <p class="hp-price">￥<span>' + data[i].minPrice + '元</span></p>\n' +
+                '            </div>\n' +
+                '        </a>' +
+                '        </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        showMap();
+    }
+
+
+    /*价格筛选*/
+    // $(function () {
+    //     var rangeWidth = $(".price-range").width()-20;
+    //
+    //     $('.single-slider').jRange({
+    //         from: 0,
+    //         to: 500,
+    //         step: 1,
+    //         scale: [0, 100, 200, 300, 400, 500 + '+'],
+    //         format: '%s',
+    //         width: rangeWidth,
+    //         showLabels: true,
+    //         showScale: true
+    //     });
+    //
+    //     $("#g2").click(function () {
+    //         var aa = $(".range-slider").val();
+    //         alert(aa);
+    //     });
+    // });
+
+</script>
+<script>
+    var mapFlag = true;
+    var toolBar;
+    $(".navMap").click(function () {
+        mapFlag = !mapFlag;
+        if (!mapFlag) {
+            $(this).attr("src", "../static/img/hotel/menu.png");
+            $("#navMap").show();
+        } else {
+            $(this).attr("src", "../static/img/hotel/map.png");
+            $("#navMap").hide();
+        }
+        showMap();
+    });
+
+    function showMap() {
+        var markerList = [];
+        if (firstMark.length != 0) {
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                center: firstMark,
+                zoom: 12
+            });
+            var offset = (0, 0);
+            for (var i = 0; i < markerPoint.length; i++) {
+                var content = markerPoint[i].content;
+                marker = new AMap.Marker({
+                    icon: "../static/img/hotel/Group 2@1x.png",
+                    position: markerPoint[i].point,
+                    label: {content, offset},
+                    title: markerPoint[i].id,
+                    clickable: true
+                });
+                //点标注的点击事件
+                marker.on('click', function (e) {
+                    var hotelId = e.target.F.title;
+                    location.href = "hotelDetail.html?hotelId=" + hotelId;
+                });
+                markerList.push(marker);
+            }
+
+            console.log(firstMark);
+            map.add(markerList);
+        } else {
+            //如果数据为空时，则提供空地图
+            var map = new AMap.Map('container', {
+                resizeEnable: true,
+                zoom: 12
+            });
+        }
+
+
+        /*定位自己的位置*/
+        var customMarker = new AMap.Marker({
+            offset: new AMap.Pixel(-14, -34),//相对于基点的位置
+            icon: new AMap.Icon({  //复杂图标
+                size: new AMap.Size(27, 36),//图标大小
+                image: "https://webapi.amap.com/images/custom_a_j.png", //大图地址
+                imageOffset: new AMap.Pixel(-28, 0)//相对于大图的取图位置
+            }),
+            zoom: 10
+        });
+        //地图中添加地图操作ToolBar插件
+        map.plugin(["AMap.ToolBar"], function () {
+            toolBar = new AMap.ToolBar({locationMarker: customMarker}); //设置地位标记为自定义标记
+            map.addControl(toolBar);
+        });
+    }
+
+
+</script>

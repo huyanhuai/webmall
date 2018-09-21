@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>意见反馈</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <style>
+        .feedback-box{
+            width: 100%;
+            height: 6rem;
+            padding: 0 0.4rem;
+        }
+        .message{
+            width: 100%;
+            font-size: 0.3rem;
+            color: #494949;
+        }
+        #info{
+            width: 100%;
+            height: 4rem;
+            background-color: #ffffff;
+            border-radius: 0.05rem;
+            border: solid 0.01rem #bfbfbf;
+            padding: 0.22rem;
+            margin: 0.2rem 0 0.6rem 0;
+            resize: none;
+            font-size: 0.26rem;
+        }
+        #contact{
+            width: 100%;
+            height: 0.76rem;
+            background-color: #ffffff;
+            border-radius: 0.05rem;
+            border: solid 0.01rem #d2d2d2;
+            padding: 0 0.2rem;
+        }
+        footer {
+            width: 100%;
+            height: 0.82rem;
+            position: fixed;
+            bottom: 0;
+            background: #fff;
+        }
+        #lodbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            margin: auto;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        意见反馈
+    </div>
+</header>
+<main style="margin-top: 0.24rem">
+<div class="feedback-box">
+    <p class="message">您的意见 </p>
+    <textarea name="" id="info" cols="30" rows="10" placeholder="输入文字"></textarea>
+    <input type="number" id="contact" placeholder="联系方式">
+</div>
+</main>
+<footer>
+    <div class="submit-btn" id="submitAdvise">
+        确认保存
+    </div>
+</footer>
+<div id="lodbox">
+    <div id="loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/public.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $("#submitAdvise").click(function () {
+        var advise=$("#info").val();
+        var userContactWay=$("#contact").val();
+        if(advise==''){
+            layMessage("请填写您的反馈信息");
+            return false;
+        }
+        if(userContactWay==''){
+            layMessage("请填写您的联系方式");
+            return false;
+        }
+        $("#lodbox").show();
+        publicAjaxToken(baseAjaxUrl+"/ty_api/user/advise/insert","POST",{"advise":advise,"userContactWay":userContactWay},getAdviseBackCall)
+    });
+    function getAdviseBackCall(res) {
+        if(res.errorCode==200){
+            $("#lodbox").hide();
+            layMessage("您的反馈已提交！谢谢您的宝贵建议！");
+            setTimeout("location.href='personalCenter.html';",2000);
+        }
+    }
+</script>

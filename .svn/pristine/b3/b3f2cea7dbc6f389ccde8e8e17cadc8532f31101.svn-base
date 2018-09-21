@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>绑定手机号</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <style>
+        section{
+            width: 100%;
+            height: auto;
+            overflow:hidden;
+            padding: 0 0.2rem;
+            margin-top: 0.24rem;
+            background: #fff;
+        }
+        .item{
+            width: 100%;
+            height: 0.8rem;
+            border-bottom: 0.01rem solid #cfcfcf;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            position: relative;
+        }
+        .item label{
+            width: 20%;
+            height: 100%;
+            line-height: 0.8rem;
+        }
+        #phone{
+            width: 80%;
+            height: 70%;
+            line-height: 0.56rem;
+            font-size: 0.28rem;
+        }
+        #code{
+            width: 55%;
+            height: 70%;
+            line-height: 0.56rem;
+            font-size: 0.28rem;
+        }
+        #checkCode{
+            width: 24%;
+            height: 80%;
+            border-left: 0.01rem solid #cfcfcf;
+            color: #47bfc5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            position: relative;
+        }
+        .mask{
+            width: 24%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            display: none;
+        }
+        #submit{
+            margin: 0 0.2rem;
+            height: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin-top: 0.5rem;
+            background: #47bfc5;
+            color: #fff;
+            font-size: 0.3rem;
+        }
+        input[type="number" i]:disabled{
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        绑定手机号
+    </div>
+</header>
+<main>
+    <section>
+        <div class="item">
+            <label for="phone">手机号</label>
+            <input type="number" id="phone" placeholder="请输入绑定手机号">
+        </div>
+        <div class="item hidetag" style="border: none;">
+            <label for="phone">验证码</label>
+            <input type="number" id="code" placeholder="请输入验证码">
+            <div id="checkCode">
+                获取验证码
+            </div>
+            <div class="mask"></div>
+        </div>
+    </section>
+    <div id="submit" class="hidetag">确  认</div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/md5.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="static/js/phone.js"></script>
+<script>
+    $("#submit").click(function () {
+        var phone=$("#phone").val();
+        var code=$("#code").val();
+        if(code==""){
+            layMessage("请输入验证码");
+            return false;
+        }
+        publicAjaxToken(baseAjaxUrl+"/ty_api/user/bindingMobile","POST",{"mobile":phone,"verificationCode":code},bindingMobileCall);
+    });
+    $(function () {
+        var user=JSON.parse(getSess("userInfo"));
+        if(user.mobile!=null){
+            $("#phone").val(user.mobile);
+            $("#phone").attr("disabled",true);
+            $(".mask").hide();
+            // $(".hidetag").hide();
+        }
+    })
+</script>

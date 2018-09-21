@@ -1,0 +1,1704 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>酒店详情</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/package.css">
+    <link rel="stylesheet" href="../plug-in/swiper/swiper-4.2.0.min.css">
+    <link rel="stylesheet" href="../static/css/hotelDate.css">
+    <style>
+        .banner-box {
+            width: 100%;
+            height: 3.75rem;
+            position: relative;
+        }
+
+        .banner-box .nav {
+            position: absolute;
+            top: 0.3rem;
+            left: 0.33rem;
+            right: 0.33rem;
+            margin: auto;
+            height: 0.6rem;
+            z-index: 10;
+        }
+
+        .banner-box .nav > img {
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+        }
+
+        .banner-box .return {
+            float: left;
+        }
+
+        .banner-box .share {
+            float: right;
+            margin-left: 0.25rem;
+            /*display: none!important;*/
+        }
+
+        .banner-box .collection {
+            float: right;
+        }
+
+        .banner {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .banner img {
+            width: 100%;
+        }
+
+        .banner-mask {
+            position: absolute;
+            padding: 0.1rem 0.24rem;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            color: #fff;
+            font-size: 0.28rem;
+            line-height: 0.4rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        #hoteMap {
+            width: 100%;
+            height: 1.2rem;
+            background: url("../static/img/goods/map.png") center center no-repeat;
+            background-size: 100%;
+            padding: 0.1rem 0.3rem;
+        }
+
+        #hoteMap div {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            font-size: 0.26rem;
+        }
+
+        .hm-address img {
+            width: 0.2rem;
+            margin-right: 0.2rem;
+        }
+
+        .hm-address span {
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #4b4b4b;
+        }
+
+        .hm-distance span {
+            width: 50%;
+            height: 100%;
+            color: #959595;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        #hoteScore {
+            width: 100%;
+            height: 1rem;
+            border-top: 0.01rem solid #eee;
+            border-bottom: 0.01rem solid #eee;
+            padding: 0.1rem 0.3rem;
+            background: #fff;
+        }
+
+        .hs-left {
+            width: 13%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .hs-left p {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #f79628;
+        }
+
+        .hsl-grade span {
+            font-size: 0.34rem;
+        }
+
+        .hs-middle {
+            width: 66%;
+            height: 100%;
+            float: left;
+            /*padding-top: 0.1rem;*/
+        }
+
+        .hs-middle p {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #f79628;
+        }
+
+        .hs-right {
+            width: 21%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+            color: #959595;
+        }
+
+        .hs-right img {
+            height: 0.3rem;
+        }
+
+        /*.hsr-tag span {*/
+        /*width: 1.28rem;*/
+        /*height: 100%;*/
+        /*border-radius: 0.05rem;*/
+        /*display: flex;*/
+        /*display: -webkit-flex;*/
+        /*align-items: center;*/
+        /*-webkit-align-items: center;*/
+        /*justify-content: center;*/
+        /*-webkit-justify-content: center;*/
+        /*color: #47bfc5;*/
+        /*border: 0.01rem solid #47bfc5;*/
+        /*margin-right: 0.2rem;*/
+        /*}*/
+
+        .hs-middle .hsr-comment-num {
+            color: #959595;
+        }
+
+        /*酒店设施*/
+
+        #hotelFacility {
+            width: 100%;
+            height: 1.8rem;
+            background: #fff;
+            border: 0.01rem solid #eee;
+            margin: 0.2rem 0;
+        }
+
+        .hf-date {
+            width: 100%;
+            height: 0.8rem;
+            border-bottom: 0.01rem solid #eeeeee;
+            padding: 0 0.3rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .hfd-left {
+            width: 84%;
+        }
+
+        .hfd-right {
+            width: 16%;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .hfd-right img {
+            height: 0.3rem;
+        }
+
+        .hfd-left, .hfd-right {
+            height: 100%;
+            float: left;
+            color: #959595;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .hfd-left span {
+            margin: 0 0.05rem;
+        }
+
+        #stayDate, #leaveDate {
+            color: #313131;
+        }
+
+        .hf-bottom {
+            width: 100%;
+            height: 1rem;
+            padding: 0 0.3rem;
+        }
+
+        .hfb-right {
+            width: 20%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+            color: #959595;
+        }
+
+        .hfb-right img {
+            height: 0.3rem;
+        }
+
+        .hf-facility {
+            width: 80%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            padding-right: 0.2rem;
+        }
+
+        .hf-facility li {
+            /*width: 0.9rem;*/
+            height: 100%;
+            padding: 0.1rem 0;
+        }
+
+        .hf-facility li p {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        /*.hf-facility li p:first-child img {*/
+        /*width: 0.4rem;*/
+        /*}*/
+
+        /*.hf-facility li p:last-child {*/
+        /*width: 100%;*/
+        /*height: 44%;*/
+        /*display: flex;*/
+        /*display: -webkit-flex;*/
+        /*align-items: center;*/
+        /*-webkit-align-items: center;*/
+        /*justify-content: center;*/
+        /*-webkit-justify-content: center;*/
+        /*color: #959595;*/
+        /*}*/
+
+        /*酒店房型*/
+        #hotelHouseTypeBox {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .hotelHouseType {
+            width: 100%;
+            height: 1.4rem;
+            background: #fff;
+            padding: 0.1rem 0.3rem;
+            border-top: 0.01rem solid #eee;
+        }
+
+        .hht-img {
+            width: 23%;
+            height: 100%;
+            float: left;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hht-img img {
+            height: 100%;
+            width: 100%;
+        }
+
+        .hht-img span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            font-size: 0.22rem;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            -webkit-justify-content: center;
+            align-items: center;
+            -webkit-align-items: center;
+            width: 0.6rem;
+            height: 0.4rem;
+        }
+
+        .hht-detail {
+            width: 54%;
+            height: 100%;
+            float: left;
+            padding-left: 0.2rem;
+            display: flex;
+            display: -webkit-flex;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+        }
+
+        .hht-detail p:first-child {
+            color: #313131;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: 0.26rem;
+        }
+
+        .hht-detail p:last-child {
+            color: #959595;
+        }
+
+        .hht-detail p:last-child span {
+            margin-right: 0.05rem;
+        }
+
+        .hht-price {
+            width: 23%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            color: #f79628;
+        }
+
+        .hht-price p {
+            font-size: 0.24rem;
+        }
+
+        .hht-price p span {
+            font-size: 0.32rem;
+        }
+
+        .hht-price img {
+            transform: rotate(0);
+            transition: 0.5s;
+        }
+
+        /*酒店预订*/
+        .hotelReservationBox {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: none;
+        }
+
+        .hotelReservation {
+            margin: 0.2rem;
+            background: #fff;
+            height: 1.6rem;
+            padding: 0.1rem 0.2rem;
+        }
+
+        .hr-left {
+            width: 70%;
+            height: 100%;
+            float: left;
+            color: #959595;
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+        }
+
+        .hr-left div {
+            width: 100%;
+        }
+
+        .hrl-icon {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .hrl-icon span {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            margin-right: 0.2rem;
+            color: #959595;
+        }
+
+        .hrl-icon span img {
+            display: inline-block;
+            width: 0.24rem;
+            margin-right: 0.1rem;
+        }
+
+        .hr-right {
+            width: 30%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .hrr-price p:first-child {
+            color: #f79628;
+            margin-bottom: 0.1rem;
+        }
+
+        .hrr-price p:first-child span {
+            font-size: 0.32rem;
+        }
+
+        .hrr-price p:last-child {
+            color: #9b9b9b;
+            font-size: 0.24rem;
+        }
+
+        .hrr-order-btn {
+            padding: 0.06rem 0.1rem;
+            background: #47bfc5;
+            color: #fff;
+            border-radius: 0.05rem;
+        }
+
+        /*统一提醒*/
+        #hotelUnityMsg {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #fff;
+            border-top: 0.01rem solid #eee;
+            border-bottom: 0.01rem solid #eee;
+            padding: 0.2rem 0.3rem;
+            background: #fff;
+        }
+
+        .hum-item p:first-child {
+            color: #959595;
+        }
+
+        .hum-item p:last-child {
+            color: #313131;
+        }
+
+        .hum-item p {
+            margin-bottom: 0.1rem;
+        }
+
+        #hotelFoot {
+            width: 100%;
+            height: 1.2rem;
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            padding: 0.2rem 0.3rem;
+            color: #959595;
+        }
+    </style>
+    <!--酒店详情的弹窗-->
+    <style>
+        .hdlay-box {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #fff;
+        }
+
+        .hdlay-head {
+            width: 100%;
+            height: auto;
+            background: #47bfc5;
+            overflow: hidden;
+            padding: 0.15rem 0.3rem;
+            box-sizing: border-box;
+        }
+
+        #houseName {
+            width: 100%;
+            font-size: 0.28rem;
+            color: #fff;
+            margin-bottom: 0.05rem;
+        }
+
+        #houseBreakfast {
+            width: 100%;
+            font-size: 0.24rem;
+            color: #fff;
+            margin-bottom: 0.05rem;
+        }
+
+        .houseUl {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            /*display: flex;*/
+            /*display: -webkit-flex;*/
+            /*align-items: center;*/
+            /*-webkit-align-items: center;*/
+            /*justify-content: space-around;*/
+            /*-webkit-justify-content: space-around;*/
+            /*flex-wrap: wrap;*/
+            /*-webkit-flex-wrap: wrap;*/
+            padding: 0.1rem;
+        }
+
+        .houseUl .house-item:nth-child(3n) {
+            margin-right: 0;
+        }
+
+        .house-item {
+            width: 32%;
+            margin-right: 2%;
+            margin-bottom: 0.1rem;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            color: #ffffff;
+        }
+
+        .house-item img {
+            width: 0.4rem;
+            margin-right: 0.2rem;
+        }
+
+        .hdlay-note {
+            width: 100%;
+            min-height: 0.8rem;
+            border-bottom: 0.01rem solid #eeeeee;
+            padding: 0 0.3rem;
+            line-height: 0.8rem;
+            box-sizing: border-box;
+        }
+
+        .hdlay-service {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0.15rem 0.3rem;
+            box-sizing: border-box;
+        }
+
+        .hdlays-msg {
+            width: 100%;
+            font-size: 0.28rem;
+            margin-bottom: 0.05rem;
+        }
+
+        .hdlays-item {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.2rem;
+        }
+
+        .hdalys-item-left {
+            width: 20%;
+            float: left;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .hdalys-item-left span {
+            padding: 0.05rem 0.1rem;
+            background: #47bfc5;
+            border-radius: 0.05rem;
+            color: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .hdalys-item-right {
+            width: 75%;
+            float: right;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .hdlay-btn {
+            width: 100%;
+            height: 0.9rem;
+        }
+
+        .hdlayb-left {
+            width: 50%;
+            height: 100%;
+            float: left;
+            background: #fff;
+            border-top: 0.01rem solid #eeeeee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #f79628;
+        }
+
+        #salePrice {
+            font-size: 0.4rem;
+        }
+
+        .hdlayb-right {
+            width: 50%;
+            height: 100%;
+            float: left;
+            background: #47bfc5;
+            border-top: 0.01rem solid #eeeeee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #fff;
+            font-size: 0.36rem;
+        }
+
+        .layui-m-layerchild {
+            font-size: 0.24rem !important;
+        }
+
+        .layui-m-layer * {
+            -webkit-box-sizing: border-box !important;
+            -moz-box-sizing: border-box !important;
+            box-sizing: border-box !important;
+        }
+
+        .layui-m-layercont {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+        }
+
+        .close {
+            margin-top: 1rem;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 40%;
+        }
+
+        .swiper-pagination {
+            font-size: 0.3rem;
+            color: #fff;
+        }
+
+        .swiper-slide img {
+            width: 100%;
+            height: 100%;
+        }
+
+
+    </style>
+</head>
+<body>
+<header>
+    <div id="hotelBanner">
+        <div class="banner-box">
+            <div class="nav">
+                <img src="../static/img/goods/return@2x.png" alt="" class="return" onclick="returnBack()">
+                <img src="../static/img/goods/endorsement.png" alt="" class="share">
+                <img src="../static/img/goods/collection@2x.png" alt="" class="collection"
+                     onclick="currentCollect(this)" id="currentCollectFlag">
+            </div>
+            <div class="banner">
+                <img src="" alt="">
+            </div>
+            <div class="banner-mask" id="hotelName"><span></span><span></span></div>
+        </div>
+    </div>
+</header>
+<main>
+    <section id="hoteMap">
+        <div class="hm-address">
+            <img src="../static/img/hotel/location@2x.png" alt="">
+            <span id="hotelAddress">杭州天目山路学院路口</span>
+        </div>
+    </section>
+    <section id="hoteScore">
+        <div class="hs-left">
+            <p class="hsl-grade"><span id="houtelSort">4.6</span>分</p>
+            <!--<p class="hsl-tag">非常棒</p>-->
+        </div>
+        <div class="hs-middle">
+            <!--<p class="hsr-tag">-->
+            <!--<span>环境卫生</span><span>还不错</span><span>性价比高</span>-->
+            <!--</p>-->
+            <p class="hsr-comment-num" id="discussNum"></p>
+        </div>
+        <div class="hs-right">
+            全部点评
+            <img src="../static/img/public/more@2x.png" alt="">
+        </div>
+    </section>
+    <!--酒店设施-->
+    <section id="hotelFacility">
+        <div class="hf-date" id="chooseData">
+            <div class="hfd-left">
+                <span class="hfd-title">入住</span>
+                <span id="stayDate"></span>
+                <!--<span id="stayWeek">周三</span>-->
+                <span class="fenge">|</span>
+                <span class="hfd-title">离店</span>
+                <span id="leaveDate"></span>
+                <!--<span id="leaveWeek">周四</span>-->
+            </div>
+            <div class="hfd-right">
+                <span id="liveNum">共1晚</span>
+                <img src="../static/img/public/more@2x.png" alt="">
+            </div>
+        </div>
+        <div class="hf-bottom" id="facility">
+            <ul class="hf-facility">
+
+            </ul>
+            <div class="hfb-right">
+                全部设施
+                <img src="../static/img/public/more@2x.png" alt="">
+            </div>
+        </div>
+
+    </section>
+    <!--酒店房型-->
+    <section id="hotelHouseTypeBox">
+
+    </section>
+
+    <!--统一提醒-->
+    <section id="hotelUnityMsg" style="margin-top: 0.2rem;">
+        <div class="hum-item">
+            <p>入离时间：</p>
+            <p id="inoutTime">
+                入住时间<span>14：00</span>以后&nbsp&nbsp&nbsp&nbsp离店时间<span>12：00</span>以前
+            </p>
+        </div>
+        <div class="hum-item">
+            <p>酒店提示：</p>
+            <p id="hotelRemind">
+                根据杭州市禁止吸烟根据杭州市禁止吸烟根据杭州市禁止吸烟根据杭州市禁止吸烟根据杭州市禁止吸烟根据杭州市禁止吸烟
+            </p>
+        </div>
+    </section>
+    <section id="hotelFoot">
+        <p>服务热线：</p>
+        <p>杭州同游科技有限公司：<a href="tel:0571-86981889">0571-86981889</a></p>
+    </section>
+    <!--日历插件-->
+    <div id="calendarBox">
+        <input type="text" id="startDate"/>
+        <input type="text" id="endDate"/>
+    </div>
+    <div class="calendar"></div>
+    <!--海报分享-->
+    <div id="shareImgBox">
+        <div id="shareImg">
+            <img src="" alt="" crossOrigin="anonymous">
+            <!--<div id="qrcode"></div>-->
+        </div>
+        <div id="shareQCode">
+            <div class="shareQ-left">
+                <img src="" alt="" id="shareHeadImg" crossOrigin="anonymous">
+                <span id="shareName"></span>
+            </div>
+            <div class="shareQ-right">
+                <div id="qrcode"></div>
+                <p>扫描二维码，立即购买</p>
+            </div>
+            <!--<span>微信扫一扫即可购买</span>-->
+        </div>
+    </div>
+    <!--海报加载-->
+    <div id="loading" style="background-color: rgba(0,0,0,.7);">
+        <p style="color: #fff">海报生成中......</p>
+    </div>
+</main>
+<!--前往首页的悬浮窗-->
+<a id="indexMall" href="../index.html" style="display: none">
+    <img src="../static/img/public/indexMall.png" alt="">
+</a>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../plug-in/swiper/swiper-4.2.0.min.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../static/js/history.js"></script>
+<script src="../static/js/data.js" charset="utf-8"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript" src="../static/js/md5.js"></script>
+<script type="text/javascript" src="../static/js/phone.js"></script>
+<script type="text/javascript" src="../static/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="../static/js/qrcode.min.js?ver=20110905"></script>
+<script>
+    var latitude, longitude, address, provinceName, hotelName;
+    //定义用来分享所用的变量
+    var sharProductName, sharProductTitle, sharPicture, shareUrl;
+    var coverImg;   //海报的图片
+    var clientId, clientType, endId;       //接受app传送过来的
+    var str = "您还未绑定手机号，分享将无法获取佣金，绑定后分享成交订单才有奖励可拿哦！请前往个人中心进行手机号绑定";
+    var token, isMobile = true;
+    var hotelId, hotelSearchInfo;
+
+    var oldStartDate, oldEndDate;
+
+    var isReally;//判断是否虚拟数据
+    $(function () {
+        hotelId = GetQueryString("hotelId");
+        clientId = GetQueryString("clientId");
+        endId = GetQueryString("endId");
+        clientType = GetQueryString("clientType");
+        hotelSearchInfo = JSON.parse(getSess("hotelSearchInfo"));
+
+        if (clientId != null) {
+            $("#indexMall").show();
+        }
+
+        //获取酒店的信息
+        publicAjax(baseAjaxUrl + "/ty_api/hotel/getSimpleDetail", "POST", {"hotelId": hotelId}, goodsHotelDetail);
+
+        /*酒店日期插件*/
+        $('#chooseData').calendarSwitch({
+            selectors: {
+                sections: ".calendar"
+            },
+            index: 4,      //展示的月份个数
+            animateFunction: "toggle",        //动画效果
+            controlDay: false,//知否控制在daysnumber天之内，这个数值的设置前提是总显示天数大于90天
+            daysnumber: "90",     //控制天数
+            comeColor: "#47bfc5",       //入住颜色
+            outColor: "#47bfc5",      //离店颜色
+            comeoutColor: "#78e0e6",        //入住和离店之间的颜色
+            callback: function () {
+                console.log("callback")
+            },   //回调函数
+            comfireBtn: '.comfire',//确定按钮的class或者id
+            cancelBtn: '.cancelChoose'//确定按钮的class或者id
+        });
+        /*初始化入住日期*/
+
+        if (hotelSearchInfo) {
+            startDate = hotelSearchInfo.startDate;
+            endDate = hotelSearchInfo.endDate;
+            liveNum = hotelSearchInfo.liveNum;
+            $("#stayDate").html(timeTransformation(startDate, "date"));
+            $("#leaveDate").html(timeTransformation(endDate, "date"));
+            $("#liveNum").html(liveNum);
+            $("#startDate").val(startDate);
+            $("#endDate").val(endDate);
+
+        } else {
+            initStayLeaveDate()
+        }
+
+        function initStayLeaveDate() {
+            var b = new Date();
+            //b.setDate(a.getDate()+1)
+            var ye = b.getFullYear();
+            var mo = b.getMonth() + 1;
+            var da = b.getDate();
+            if (mo < 10) {
+                mo = "0" + mo;
+            }
+            if (da < 10) {
+                da = "0" + da;
+            }
+            $('#startDate').val(ye + '-' + mo + '-' + da);
+            b = new Date(b.getTime() + 24 * 3600 * 1000);
+            var ye = b.getFullYear();
+            var mo = b.getMonth() + 1;
+            var da = b.getDate();
+            if (mo < 10) {
+                mo = "0" + mo;
+            }
+            if (da < 10) {
+                da = "0" + da;
+            }
+            $('#endDate').val(ye + '-' + mo + '-' + da);
+
+
+            oldStartDate = $("#startDate").val();
+            oldEndDate = $("#endDate").val();
+            $("#stayDate").text(replaceSeparator(oldStartDate));
+            $("#leaveDate").text(replaceSeparator(oldEndDate));
+
+        }
+
+        $(".comfire").click(function () {
+            console.log("oldStartDate" + oldStartDate);
+            console.log("oldEndDate" + oldEndDate);
+            var newStartDate = $('#startDate').val();
+            var newEndDate = $('#endDate').val();
+            if (newStartDate != oldStartDate || newEndDate != oldEndDate) {
+                oldStartDate = newStartDate;
+                oldEndDate = newEndDate;
+                $("#stayDate").text(replaceSeparator(oldStartDate));
+                $("#leaveDate").text(replaceSeparator(oldEndDate));
+                $("#liveNum").html("共" + $(".hover").html() + "晚");
+
+                hotelSearchInfo.startDate = oldStartDate;
+                hotelSearchInfo.endDate = oldEndDate;
+                hotelSearchInfo.liveNum = "共" + $(".hover").html() + "晚";
+                setSess("hotelSearchInfo", JSON.stringify(hotelSearchInfo));
+            }
+        })
+
+
+        /*配置微信，为定位做前提*/
+        // wxInitConfigFn();
+        if (clientType) {//这个是ios要嵌套的页面
+            // $("#clientHead").hide();
+            // $("#clientFoot").hide();
+        } else {//这是正常的
+            getToken();     //只能在这里获取（否则ios嵌套会有问题）
+            var token = getLocal("token");
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + '/ty_api/user/getDetail',
+                type: "POST",
+                sync: false,
+                success: function (res) {
+                    if (res.errorCode == 200) {
+                        //分享海报相关
+                        var headImg = baseImgUrl + res.data.headImg + ".jpg";
+                        $("#shareName").html("[" + res.data.nickName + "]邀您同游");
+                        $("#shareHeadImg").attr("src", headImg);
+
+                        if (clientId == null) {
+                            shareUrl = oneselfUrl + "/hotel/hotelDetail.html?clientId=" + res.data.userId + "&type=PRODUCT_CODE_URL" + "&hotelId=" + hotelId;
+                        } else {
+                            shareUrl = oneselfUrl + "/hotel/hotelDetail.html?clientId=" + clientId + "&endId=" + res.data.userId + "&type=PRODUCT_CODE_URL" + "&hotelId=" + hotelId;
+                        }
+
+                        //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+                        if (res.data.mobile == null) {
+                            isMobile = false;
+                        }
+
+                        //海报的二维码
+                        var qrcode = new QRCode('qrcode', {
+                            text: shareUrl,
+                            width: 80,
+                            height: 80,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.L
+                        });
+                    }
+                }
+            });
+        }
+
+
+        //微信相关设置分享
+        $.ajax({
+            url: baseAjaxUrl + "/wechatController/getSignature",
+            type: "POST",
+            data: {requestUrl: window.location.href},
+            success: function (e) {
+                if (e.errorCode == 200) {
+
+                    var data = e.data;
+                    wx.config({
+                        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                        appId: data.appId, // 必填，公众号的唯一标识
+                        timestamp: data.timestamp, // 必填，生成签名的时间戳
+                        nonceStr: data.noncestr, // 必填，生成签名的随机串
+                        signature: data.signature,// 必填，签名
+                        jsApiList: [
+                            // 所有要调用的 API 都要加到这个列表中
+                            'checkJsApi',
+                            'onMenuShareTimeline',       // 分享到朋友圈接口
+                            'onMenuShareAppMessage',  //  分享到朋友接口
+                            'onMenuShareQQ',         // 分享到QQ接口
+                            'onMenuShareWeibo',      // 分享到微博接口
+                            'onMenuShareQZone',     //分享到QQ空间] // 必填，需要使用的JS接口列表
+                            'getLocation',
+                            'openLocation'
+                        ]
+                    });
+                }
+            }
+        });
+        wx.ready(function () {
+
+            wx.checkJsApi({
+                jsApiList: [
+                    'checkJsApi',
+                    'onMenuShareTimeline',       // 分享到朋友圈接口
+                    'onMenuShareAppMessage',  //  分享到朋友接口
+                    'onMenuShareQQ',         // 分享到QQ接口
+                    'onMenuShareWeibo',      // 分享到微博接口
+                    'onMenuShareQZone',     //分享到QQ空间] // 必填，需要使用的JS接口列表
+                    'getLocation',
+                    'openLocation'
+                ], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                success: function (res) {
+                    // 以键值对的形式返回，可用的api值true，不可用为false
+                    // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                }
+            });
+
+            //微信分享
+            var shareData = {
+                title: sharProductName, // 分享标题
+                desc: "欢迎您的入住", // 分享描述
+                link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: sharPicture, // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                trigger: function (res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+
+                    if (!isMobile) {
+                        alert(str);
+                    }
+
+                },
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                    console.log(sharPicture)
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            };
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareTimeline(shareData);
+            wx.onMenuShareQQ(shareData);
+            wx.onMenuShareWeibo(shareData);
+            wx.onMenuShareQZone(shareData);
+
+        });
+        wx.error(function (res) {
+            alert("config,配置失败")
+        });
+
+        //查看是否收藏
+        var token = getLocal("token");
+        $.ajax({
+            beforeSend: function (xhr) {
+                //发送ajax请求之前向http的head里面加入验证信息
+                xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+            },
+            url: baseAjaxUrl + "/ty_api/hotel/collection/isCollectionHotel",
+            type: "POST",
+            data: {"hotelId": hotelId},
+            async: false,
+            success: function (e) {
+                if (e.errorCode == 200) {
+                    if (e.data.isCollection == 0) {
+                        $("#currentCollectFlag").attr("src", "../static/img/goods/collection@2x.png");
+                        $("#currentCollectFlag").attr("data-collection", "0");
+                    } else if (e.data.isCollection == 1) {
+                        $("#currentCollectFlag").attr("src", "../static/img/goods/collection2@2x.png");
+                        $("#currentCollectFlag").attr("data-collection", "1");
+                    }
+                }
+            },
+            error: function (res) {
+                // alert("您访问的服务器被外星人抓走了")
+            }
+        });
+
+        //获取酒店房型及套餐
+        publicAjax(baseAjaxUrl + "/ty_api/hotel/room/queryHotelRoomList", "POST", {
+            "hotelId": hotelId,
+            "startDate": $('#startDate').val(),
+            "endDate": $('#endDate').val()
+        }, getHotelRoomListCall);
+
+        $(".banner").click(function () {
+            location.href = "hotelImgList.html?hotelId=" + hotelId;
+        });
+
+        $("#hoteScore").click(function () {
+            // alert(2)
+            location.href = "hotelEvaluation.html?hotelId=" + hotelId;
+        });
+
+        $("#facility").click(function () {
+            // alert(1)
+            location.href = "hotelFacility.html?hotelId=" + hotelId;
+        });
+    });
+
+    /*酒店的信息回调*/
+    function goodsHotelDetail(res) {
+        console.log(res.data);
+        if (res.errorCode == 200) {
+            $(".banner img").attr("src", baseImgUrl + res.data.pictureUrl + "_small.jpg");
+            $("#hotelName span").eq(0).html(res.data.hotelName);
+            $("#hotelName span").eq(1).html(res.data.count + "张");
+            $("#hotelAddress").html(res.data.address);
+            var score = res.data.score == null ? "0" : res.data.score;
+            $("#houtelSort").html(score);
+            var commentNum = res.data.commentNum == null ? "0" : res.data.commentNum;
+            $("#discussNum").html(commentNum + "条评论");
+            $("#inoutTime span").eq(0).html(res.data.inTime);
+            $("#inoutTime span").eq(1).html(res.data.outTime);
+
+            isReally = res.data.isReally;
+
+            //分享海报相关——商家上传的海报图片
+            coverImg = res.data.coverImg;
+            var imgurl = baseImgUrl + res.data.coverImg + ".jpg";
+            $("#shareImg img").attr("src", imgurl);
+
+            sharProductName = res.data.hotelName;
+            sharPicture = baseImgUrl + res.data.pictureUrl + "_small.jpg";
+
+            var innerHtml = '';
+            for (var i = 0; i < 4; i++) {
+                innerHtml +=
+                    '   <li>\n' +
+                    '        <p>' + res.data.hotelItemList[i].itemName + '</p>\n' +
+                    '   </li>';
+            }
+            $(".hf-facility").html(innerHtml);
+            $("#hotelRemind").html(res.data.remind);
+
+            latitude = res.data.latitude;
+            longitude = res.data.longitude;
+            address = res.data.address;
+            provinceName = res.data.provinceName;
+            hotelName = res.data.hotelName;
+        } else {
+            layMessage(res.message)
+        }
+    }
+
+    /*获取酒店房型的回调*/
+    function getHotelRoomListCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            var data = res.data.list;
+            var innerHtml = '';
+            for (var i = 0; i < data.length; i++) {
+                var RoomInnerHtml = '';
+                var roomList = data[i].hotelRoomCombos;
+                for (var j = 0; j < roomList.length; j++) {
+                    var breakfastInnerHtml = '';
+                    var refundHtml = '';
+                    switch (roomList[j].includeBreakfast) {
+                        case 0:
+                            breakfastInnerHtml = "不含早餐";
+                            break;
+                        case 1:
+                            breakfastInnerHtml = "含单人早餐";
+                            break;
+                        case 2:
+                            breakfastInnerHtml = "含双人早餐";
+                            break;
+                        case 3:
+                            breakfastInnerHtml = "含三人早餐";
+                            break;
+
+                    }
+                    if (roomList[j].refundType == "NO_REFUND") {
+                        refundHtml += '不可取消';
+                    } else if (roomList[j].refundType == "REFUND") {
+                        refundHtml += '免费取消';
+                    }
+                    RoomInnerHtml +=
+                        '   <div class="hotelReservation" data-salePrice="' + roomList[j].salePrice + '" data-comboName="' + roomList[j].comboName + '" data-breakfast="' + breakfastInnerHtml + '" data-hotelRoomId="' + roomList[j].hotelRoomId + '"  data-hotelRoomComboId="' + roomList[j].hotelRoomComboId + '"  data-isWifi="' + data[i].isWifi + '"  data-floorArea="' + data[i].floorArea + '"  data-peopleNum="' + data[i].peopleNum + '"  data-bedSize="' + data[i].bedSize + '"  data-isWindow="' + data[i].isWindow + '" data-remark="' + roomList[j].remark + '" data-refundType="' + roomList[j].refundType + '">\n' +
+                        '       <div class="hr-left">\n' +
+                        '           <div class="hrl-icon">' + roomList[j].comboName + '</div>\n' +
+                        '           <div>' + refundHtml + '</div>\n' +
+                        '           <div>' + breakfastInnerHtml + '</div>\n' +
+                        '       </div>\n' +
+                        '       <div class="hr-right">\n' +
+                        '           <div class="hrr-price">\n' +
+                        '               <p>￥<span>' + roomList[j].salePrice + '</span></p>\n' +
+                        '               <p>原价￥' + roomList[j].retailPrice + '</p>\n' +
+                        '           </div>\n' +
+                        '           <div class="hrr-order-btn">预定</div>\n' +
+                        '       </div>\n' +
+                        '   </div>\n';
+                }
+                var pictureList = [];
+                for (var m = 0; m < data[i].hotelRoomPictures.length; m++) {
+                    pictureList.push(data[i].hotelRoomPictures[m].pictureUrl);
+                }
+                pictureList = JSON.stringify(pictureList);
+                if (data[i].hotelRoomPictures.length == 0) {
+                    var hotelRoomPicture = "../static/img/hotel/hotelRoom.png";
+                } else {
+                    var hotelRoomPicture = baseImgUrl + data[i].hotelRoomPictures[0].pictureUrl + "_small.jpg"
+                }
+                innerHtml +=
+                    '       <div class="hotel-house-item">\n' +
+                    '            <div class="hotelHouseType">\n' +
+                    '                <div class="hht-img">\n' +
+                    '                    <input type="text" value=\'' + pictureList + '\' style="display: none;" class="hht-picture"> ' +
+                    '                    <img src="' + hotelRoomPicture + '" alt="">\n' +
+                    '                    <span>' + data[i].hotelRoomPictures.length + '张</span>' +
+                    '                </div>\n' +
+                    '           <a href="javascript:;" class="hotelHouseTypeItem">' +
+                    '                <div class="hht-detail">\n' +
+                    '                    <p>' + data[i].roomName + '</p>\n' +
+                    '                    <p>\n' +
+                    '                        <span>' + data[i].floorArea + 'm²</span>\n' +
+                    '                    </p>\n' +
+                    '                </div>\n' +
+                    '                <div class="hht-price">\n' +
+                    '                    <p>￥<span>' + data[i].salePrice + '</span></p>\n' +
+                    '                    <img src="../static/img/hotel/more2.png" alt="" class="arrow">\n' +
+                    '                </div>\n' +
+                    '           </a>' +
+                    '            </div>\n' +
+                    '            <!--酒店套餐-->\n' +
+                    '            <section class="hotelReservationBox">' + RoomInnerHtml + '</section>\n' +
+                    '        </div>';
+
+            }
+            $("#hotelHouseTypeBox").append(innerHtml);
+            changeArrow();
+            homeDetail();
+            pictureSwiper();
+        } else {
+            layMessage(res.message)
+        }
+
+    }
+
+    //地图点击导航
+    $("#hoteMap").click(function () {
+        console.log(latitude);
+        console.log(longitude);
+        wx.openLocation({
+            latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
+            longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
+            name: provinceName, // 位置名
+            address: address, // 地址详情说明
+            scale: 15, // 地图缩放级别,整形值,范围从1~28。默认为最大
+            infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+        });
+    });
+
+    /*房型套餐的下转箭头*/
+    function changeArrow() {
+        $(".hotelHouseTypeItem").each(function (i, v) {
+            var arrowFlag = true;
+            $(v).click(function () {
+                if (arrowFlag) {
+                    $(".arrow").eq(i).css("transform", "Rotate(180deg)");
+                    $(".hotelReservationBox").eq(i).slideToggle(500);
+                    arrowFlag = !arrowFlag;
+                } else {
+                    $(".arrow").eq(i).css("transform", "Rotate(0)");
+                    $(".hotelReservationBox").eq(i).slideToggle(500);
+                    arrowFlag = !arrowFlag;
+                }
+            });
+        });
+    }
+
+    /*点击房型的详情*/
+    function homeDetail() {
+        $(".hotelReservation").each(function (i, v) {
+            $(v).click(function () {
+                var salePrice = $(this).attr("data-salePrice");
+                var comboName = $(this).attr("data-comboName");
+                var breakfast = $(this).attr("data-breakfast");
+                var hotelRoomId = $(this).attr("data-hotelRoomId");
+                var hotelRoomComboId = $(this).attr("data-hotelRoomComboId");
+                var isWifi = $(this).attr("data-isWifi") == "1" ? "免费Wifi" : "没有Wifi";
+                var floorArea = $(this).attr("data-floorArea") != null ? $(this).attr("data-floorArea") + "m²" : "";
+                var peopleNum = $(this).attr("data-peopleNum") != null ? '最多入住' + $(this).attr("data-peopleNum") + '人' : '';
+                var bedSize = $(this).attr("data-bedSize");
+                var isWindow = $(this).attr("data-isWindow") == "1" ? "有窗" : "无窗";
+                var remark = $(this).attr("data-remark") != "" ? $(this).attr("data-remark") : "暂无备注";
+                var refundType = $(this).attr("data-refundType");
+                var refundHtml = '';
+                if (refundType == "NO_REFUND") {
+                    refundHtml += '订单提交成功后不可取消';
+                } else if (refundType == "REFUND") {
+                    refundHtml += '订单提交成功后可随时免费取消/变更';
+                }
+                var houseFacility =
+                    '                <li class="house-item">\n' +
+                    '                    <img src="../static/img/hotel/wifi1.png" alt="">\n' +
+                    isWifi +
+                    '                </li>\n' +
+                    '                <li class="house-item">\n' +
+                    '                    <img src="../static/img/hotel/area.png" alt="">\n' +
+                    floorArea +
+                    '                </li>\n' +
+                    '                <li class="house-item">\n' +
+                    '                    <img src="../static/img/hotel/people.png" alt="">\n' +
+                    peopleNum +
+                    '                </li>\n' +
+                    '                <li class="house-item">\n' +
+                    '                    <img src="../static/img/hotel/bed.png" alt="">\n' +
+                    bedSize +
+                    '                </li>\n' +
+                    '                <li class="house-item">\n' +
+                    '                    <img src="../static/img/hotel/window.png" alt="">\n' +
+                    isWindow +
+                    '                </li>\n';
+
+
+                layer.open({
+                    type: 1
+                    ,
+                    content:
+                    '   <div class="hdlay-box">\n' +
+                    '        <div class="hdlay-head">\n' +
+                    '            <p id="houseName">' + comboName + '</p>\n' +
+                    '            <p id="houseBreakfast">' + breakfast + '</p>\n' +
+                    '            <ul class="houseUl">\n' +
+                    houseFacility +
+                    '            </ul>\n' +
+                    '        </div>\n' +
+                    '        <div class="hdlay-note">\n' +
+                    '            备注信息 <span style="margin-left: 0.2rem;color: #959595;">' + remark + '</span>' +
+                    '        </div>\n' +
+                    '        <div class="hdlay-service">\n' +
+                    '            <p class="hdlays-msg">服务与支持</p>\n' +
+                    '            <div class="hdlays-item">\n' +
+                    '                <p class="hdalys-item-left">\n' +
+                    '                    <span>取消规则</span>\n' +
+                    '                </p>\n' +
+                    '                <p class="hdalys-item-right">\n' +
+                    refundHtml +
+                    '                </p>\n' +
+                    '            </div>\n' +
+                    '            <div class="hdlays-item" style="margin-top: 0.3rem">\n' +
+                    '                <p class="hdalys-item-left">\n' +
+                    '                    <span>订购提示</span>\n' +
+                    '                </p>\n' +
+                    '                <p class="hdalys-item-right">\n' +
+                    '                    此为酒店在平台发布的价格，价格可能变动，提交订单后先操作扣款，特殊需求不能满足\n' +
+                    '                </p>\n' +
+                    '            </div>\n' +
+                    '        </div>\n' +
+                    '        <div class="hdlay-btn">\n' +
+                    '            <div class="hdlayb-left">￥<span id="salePrice">' + salePrice + '</span></div>\n' +
+                    '            <div class="hdlayb-right" id="homeReserve" onclick="jumpHouseOrder(' + hotelRoomId + ',\'' + comboName + '\',\'' + breakfast + '\',' + salePrice + ',' + hotelRoomComboId + ',\'' + peopleNum + '\',\'' + isWifi + '\')">立即预定</div>\n' +
+                    '        </div>\n' +
+                    '    </div>'
+                    ,
+                    anim: 'up'
+                    ,
+                    style: 'position:fixed; bottom:0; left:0; width: 100%; height: auto; border:none;overflow: hidden;box-sizing: border-box;'
+                });
+            })
+        })
+    }
+
+    /*点击图片列表*/
+    function pictureSwiper() {
+        $(".hht-img").each(function (i, v) {
+            $(v).click(function () {
+                var pritureList = JSON.parse($(this).children("input").val());
+                console.log(pritureList);
+                var swiperCon = '';
+                if (pritureList.length == 0) {
+                    return false;
+                }
+                for (var i = 0; i < pritureList.length; i++) {
+                    swiperCon +=
+                        '   <div class="swiper-slide">\n' +
+                        '       <img src="' + baseImgUrl + pritureList[i] + '_small.jpg" alt="">\n' +
+                        '   </div>\n';
+                }
+                layer.open({
+                    type: 1
+                    ,
+                    content:
+                    '   <div class="swiper-container">\n' +
+                    '       <div class="swiper-wrapper">' +
+                    swiperCon +
+                    '       </div>\n' +
+                    '       <div class="swiper-pagination"></div>\n' +
+                    '   </div>' +
+                    '<img src="../static/img/public/close@2x.png" alt="" class="close">'
+                    ,
+                    anim: 'scale'
+                    ,
+                    style: 'position:fixed; bottom:0; left:0;top:0;right:0; width: 100%;padding:10px 0; border:none;background: rgba(0, 0, 0, 0.1);',
+                    success: function () {
+                        var swiper = new Swiper('.swiper-container', {
+                            loop: false,
+                            autoplay: false,
+                            pagination: {
+                                el: '.swiper-pagination',
+                                type: 'fraction',
+                            },
+                        });
+                        $(".close").click(function () {
+                            layer.closeAll()
+                        })
+                    }
+                });
+            })
+        })
+    }
+
+    /*跳转预定页*/
+    function jumpHouseOrder(hotelRoomId, comboName, breakfast, salePrice, hotelRoomComboId, peopleNum, isWifi) {
+        if (isReally == "0") {
+            layMessage("还未运营该酒店");
+            return false;
+        }
+
+        var hotelInfo = {};
+        hotelInfo.hotelRoomId = hotelRoomId;
+        hotelInfo.hotelRoomComboId = hotelRoomComboId;
+        hotelInfo.hotelName = hotelName;
+        hotelInfo.startDate = $('#startDate').val();
+        hotelInfo.endDate = $('#endDate').val();
+        hotelInfo.date = $("#stayDate").text() + "-" + $("#leaveDate").text() + "&nbsp&nbsp&nbsp&nbsp" + $("#liveNum").text();
+        hotelInfo.comboName = comboName;
+        hotelInfo.breakfast = breakfast;
+        hotelInfo.salePrice = salePrice;
+        hotelInfo.peopleNum = peopleNum;
+        hotelInfo.isWifi = isWifi;
+        hotelInfo.dayNum = $(".hover").html() == undefined ? "1" : $(".hover").html();
+        setSess("hotelInfo", JSON.stringify(hotelInfo));
+
+
+        var token = getLocal("token");
+        //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+        $.ajax({
+            beforeSend: function (xhr) {
+                //发送ajax请求之前向http的head里面加入验证信息
+                xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+            },
+            url: baseAjaxUrl + "/ty_api/user/getDetail",
+            type: "POST",
+            async: false,
+            data: {},
+            success: function (res) {
+                if (res.data.mobile == null) {
+                    layer.open({
+                        content:
+                        '   <section style="padding: 0;margin: 0;" class="bind-mobile">\n' +
+                        '        <div class="item">\n' +
+                        '            <label for="phone">手机号</label>\n' +
+                        '            <input type="number" id="phone" placeholder="请输入绑定手机号">\n' +
+                        '        </div>\n' +
+                        '        <div class="item" style="border: none;">\n' +
+                        '            <label for="phone">验证码</label>\n' +
+                        '            <input type="number" id="code" placeholder="请输入验证码">\n' +
+                        '            <div id="checkCode">\n' +
+                        '                获取验证码\n' +
+                        '            </div>\n' +
+                        '            <div class="mask"></div>\n' +
+                        '        </div>\n' +
+                        '    </section>'
+                        , btn: '确  定',
+                        style: 'box-sizing: border-box;',
+                        success: function () {
+                            $("#checkCode").click(function () {
+                                var phone = $("#phone").val();
+                                if (phone == '') {
+                                    layMessage("请输入手机号！", 1);
+                                    return false;
+                                }
+                                if (!mobileReg(phone)) {
+                                    layMessage("手机格式不正确", 1);
+                                    return false;
+                                }
+
+                                clearTimeout(aa);//清除延迟
+                                settime();
+                                $(".mask").show();
+
+                                var code = $.md5(phone + "APP_20!$_TY_HZ");
+                                console.log(code);
+                                //向手机发送验证码
+                                publicAjax(baseAjaxUrl + "/ty_api/user/sendMessage", "POST", {
+                                    "code": code,
+                                    "mobile": phone
+                                }, sendInfoCall);
+
+                            });
+                        },
+                        yes: function (index) {
+                            var phone = $("#phone").val();
+                            var code = $("#code").val();
+                            // publicAjaxToken(baseAjaxUrl+"/ty_api/user/bindingMobile","POST",{"mobile":phone,"verificationCode":code},bindingMobileCall);
+                            $.ajax({
+                                beforeSend: function (xhr) {
+                                    //发送ajax请求之前向http的head里面加入验证信息
+                                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                                },
+                                url: baseAjaxUrl + "/ty_api/user/bindingMobile",
+                                type: "post",
+                                data: {"mobile": phone, "verificationCode": code},
+                                success: function (res) {
+                                    if (res.errorCode == 200) {
+                                        layMessage(res.message);
+                                        return false;
+                                    } else {
+                                        layMessage(res.message);
+                                        return false;
+                                    }
+                                }
+                            })
+
+                        }
+                    });
+                } else {
+                    if (clientId) {
+                        if(endId){
+                            location.href = "hotelReservation.html?clientId=" + clientId+"&endId="+endId;
+                        }else{
+                            location.href = "hotelReservation.html?clientId=" + clientId;
+                        }
+
+                    } else {
+                        location.href = "hotelReservation.html";
+                    }
+                }
+            }
+        });
+
+    }
+
+    //产品页banner上的收藏  1——收藏  0——未收藏
+    function currentCollect(e) {
+        var collectionIsFlag = $(e).attr("data-collection");
+        //进行收藏
+        if (collectionIsFlag == "0") {
+            publicAjaxToken(baseAjaxUrl + "/ty_api/hotel/collection/doCollectionHotel", "POST", {
+                "hotelId": hotelId
+            }, doCollectionCall);
+        } else if (collectionIsFlag == "1") {     //取消收藏
+            publicAjaxToken(baseAjaxUrl + "/ty_api/hotel/collection/cancelCollectionHotel", "POST", {
+                "hotelId": hotelId
+            }, cancelCollectionCall);
+        }
+    }
+
+    //产品页banner上进行收藏的回调
+    function doCollectionCall(e) {
+        if (e.errorCode == 200) {
+            layMessage(e.message);
+            $("#currentCollectFlag").attr("src", "../static/img/goods/collection2@2x.png");
+            $("#currentCollectFlag").attr("data-collection", "1");
+        } else {
+            layMessage(e.message);
+        }
+    }
+
+    //产品页banner上取消收藏的回调
+    function cancelCollectionCall(e) {
+        if (e.errorCode == 200) {
+            layMessage(e.message);
+            $("#currentCollectFlag").attr("src", "../static/img/goods/collection@2x.png");
+            $("#currentCollectFlag").attr("data-collection", "0");
+        } else {
+            layMessage(e.message);
+        }
+
+    }
+
+    $(".share").click(function () {
+        if (coverImg == '') {
+            layMessage("商家未上传产品海报图片，无法生成分享海报");
+            return false;
+        }
+
+        //没有绑定手机号时给的提示
+        if (!isMobile) {
+            layer.open({
+                content: str
+                , btn: ['继续分享', '前往绑定'],
+                yes: function () {
+                    /*分享*/
+                    htmlCanvas();
+                },
+                no: function () {
+                    location.href = "bindingPhone.html";
+                }
+            });
+        } else {
+            htmlCanvas();
+        }
+    })
+
+
+</script>

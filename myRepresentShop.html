@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的代言</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/represent.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        #qrcode1 {
+            margin: 0 auto;
+            width: 5rem;
+            height: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .qrcode-box .layui-m-layercont {
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+        #mescroll{
+            position: fixed;
+            top: 2.8rem;
+            bottom: 0;
+            height: auto;
+        }
+
+        #titleMsg{
+            width: 100%;
+            height: 0.7rem;
+            background: rgba(0, 0, 0, 0.7);
+            position: fixed;
+            top: 0;
+            z-index: 700;
+            /*display: flex;*/
+            /*display: -webkit-flex;*/
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            color: #fff;
+            padding: 0 0.2rem;
+            display: none;
+        }
+        #titleMsg span:last-child{
+            padding: 0.05rem 0.1rem;
+            border-radius: 0.02rem;
+            border: 0.01rem solid #fff;
+            color: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .public-code{
+            width: 100%;
+        }
+        .layui-m-layercont{
+            padding: 20px!important;
+        }
+    </style>
+</head>
+<body>
+<div id="titleMsg">
+    <span>您还未关注“杭州同游”公众号</span>
+    <span id="publicCode">加关注</span>
+</div>
+<header class="forbidScrollIos">
+    <div class="sd-banner">
+        <div class="nav">
+            <img src="static/img/goods/return@2x.png" alt="" class="return" onclick="returnBack()">
+            <img src="static/img/myAgent/erweima.png" alt="" onclick="" id="erweima">
+        </div>
+        <div class="business">
+            <div class="bus-img">
+                <img src="" alt="" class="user-headimg">
+                <img src="static/img/public/daiPoint.png" alt="" class="user-daipoint">
+            </div>
+            <p id="userName" class="bus-title"></p>
+        </div>
+        <div class="shop-tab">
+            <div class="tab-btn active" data-tabIndex="0">
+                <img src="static/img/represent/already_yes.png" alt="" class="tab1">
+                <img src="static/img/represent/already_no.png" alt="" class="tab2">
+                景区
+            </div>
+            <div class="tab-btn" data-tabIndex="1">
+                <img src="static/img/represent/never_no.png" alt="" class="tab1">
+                <img src="static/img/represent/never_yes.png" alt="" class="tab2">
+                酒店
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+    <div id="mescroll" class="mescroll">
+        <div class="shop-content content" style="margin: 0;">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var userId, userType;
+    $(function () {
+        getToken();
+        userId = GetQueryString("userId");
+        userType = GetQueryString("userType");
+
+        if (userId != null) {//从其他带参数的页面过来
+            //扫业务员店铺码进来
+            if (userType == "personal") {
+                publicAjax(baseAjaxUrl + "/ty_api/user/getSimpleDetail", "POST", {"userId": userId}, getUserInfoCall);
+                // publicAjax(baseAjaxUrl + "/ty_api/user/product/queryRepresentProduct", "POST", {"userId": userId}, getRepresentScenicCall);
+                //获取我代言的景区产品
+                getRepresentScenicU();
+            } else {//扫子码
+
+                token = getLocal("token");
+                // alert(token);
+                //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+                $.ajax({
+                    beforeSend: function (xhr) {
+                        //发送ajax请求之前向http的head里面加入验证信息
+                        xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                    },
+                    url: baseAjaxUrl+"/ty_api/user/getDetail",
+                    type: "POST",
+                    async:false,
+                    data: {},
+                    success: function(res){
+                        if(res.data.mobile==null){
+                            layer.open({
+                                content: '你还未绑定手机号！'
+                                ,btn: '前往绑定',
+                                shadeClose:false,
+                                yes:function () {
+                                    location.href="bindingPhone.html";
+                                }
+                            });
+                        }else{
+                            //扫子码以后变为业务员
+                            publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/insertSale", "GET", {"userId": userId}, becomeSalesmanCall);
+                        }
+
+                    }
+                });
+
+            }
+
+        } else {//页面直接进来
+            //获取用户信息
+            publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+            //获取我代言的景区产品
+            getRepresentScenicT();
+
+        }
+    });
+
+    $("#publicCode").click(function () {
+        //自定义标题风格
+        layer.open({
+            title: [
+                '杭州同游  (长按识别关注)',
+                'background-color: #47bfc5; color:#fff;'
+            ]
+            ,content: '<img src="static/img/public/publicCode.jpg" alt="" class="public-code">'
+        });
+    });
+
+
+    //变业务员的回调
+    function becomeSalesmanCall(res) {
+        if (res.errorCode == 200 || res.errorCode == 515) {
+            if(res.data.subscribe==0){
+                $("#titleMsg").css({"display":"flex","display":"-webkit-flex"});
+            }
+
+            //获取用户信息
+            // publicAjax(baseAjaxUrl + "/ty_api/user/getSimpleDetail", "POST", {"userId": userId}, getUserInfoCall);
+            publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+            //获取我代言的景区产品
+            getRepresentScenicT();
+        } else if (res.errorCode == 516) {//别人的业务员
+            layer.open({
+                content: '您已成为其他代理商的业务员，无权成为该代理商的业务员!'
+                , btn: '我知道了',
+                shadeClose:false,
+                yes: function () {
+                    location.href="representCenter.html";
+                }
+            });
+        }else{
+            layMessage(res.message);
+        }
+    }
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //收藏数据
+            userId = res.data.userId;
+            $("#userName").html(res.data.nickName);
+            // $("#shopTitle").html(res.data.nickName + "的店铺");
+            $(".user-headimg").attr("src", baseImgUrl + res.data.headImg + '_small.jpg');
+            //判断角色类型
+            if (res.data.isAgent == "1") {
+                if (res.data.isSale == "1") {
+                    $(".roleType").html("代理商 & 业务员");
+                } else {
+                    $(".roleType").html("代理商");
+                }
+            } else {
+                if (res.data.isSale == "1") {
+                    $(".roleType").html("业务员");
+                    $(".user-daipoint").show()
+                } else {
+                    $(".roleType").html("游客");
+                }
+            }
+        }
+    }
+
+    /*景区*/
+    //获取代言的景区
+    function getRepresentScenicT() {
+        var url = baseAjaxUrl + "/ty_api/user/product/queryAlreadyRepresentProduct";
+        var data = {"directProxy": 0};
+        upLoading(url, data, getRepresentScenicCall, false);
+    }
+    function getRepresentScenicU() {
+        var url = baseAjaxUrl + "/ty_api/user/product/queryRepresentProduct";
+        var data = {"userId": userId};
+        upLoading(url, data, getRepresentScenicCall, false);
+    }
+    //获取代言的景区回调
+    function getRepresentScenicCall(data) {
+        var listDom = $(".shop-content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <a href="goods.html?productId=' + data[i].productId + '&clientId=' + userId + '">\n' +
+                '       <div class="shop-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '       </div>\n' +
+                '       <div class="shop-middle">\n' +
+                '           <p class="shop-special">' + data[i].productName + '</p>\n' +
+                '           <p class="shop-commission">最高可得：￥<span>' + data[i].commission + '</span></p>\n' +
+                '           <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '       </div>\n' +
+                '       <div class="shop-right">\n' +
+                '               已代言\n' +
+                '       </div>\n'+
+                '   </a>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        if(userType == "personal"){
+            $(".shop-right").hide();
+            $(".shop-commission").hide();
+            $(".shop-special").css("-webkit-line-clamp","2");
+            $(".shop-middle").css("width","80%");
+        }
+    }
+    /*酒店*/
+    //获取代言的酒店
+    function getRepresentHotelT() {
+        var url = baseAjaxUrl + "/ty_api/user/hotel/queryAlreadyRepresentHotel";
+        var data = {};
+        upLoading(url, data, getRepresentHotelCall, false);
+    }
+    function getRepresentHotelU() {
+        var url = baseAjaxUrl + "/ty_api/user/hotel/queryAlreadyRepresentHotel";
+        var data = {"userId": userId};
+        upLoading(url, data, getRepresentHotelCall, false);
+    }
+    //获取代言的酒店回调
+    function getRepresentHotelCall(data) {
+        var listDom = $(".shop-content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+
+            innerHtml +=
+                '<div class="shop-item">\n' +
+                '   <a href="/hotel/hotelDetail.html?hotelId=' + data[i].hotelId + '&clientId=' + userId + '">\n' +
+                '       <div class="shop-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '       </div>\n' +
+                '       <div class="shop-middle">\n' +
+                '           <p class="shop-special">' + data[i].hotelName + '</p>\n' +
+                '           <p class="shop-commission">最高可得：￥<span>' + data[i].maxCommission + '</span></p>\n' +
+                '           <p class="scenicPrice">最低价格：￥<span>' + data[i].minPrice + '</span></p>\n' +
+                '       </div>\n' +
+                '       <div class="shop-right">\n' +
+                '               已代言\n' +
+                '       </div>\n'+
+                '   </a>\n' +
+                '</div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        if(userType == "personal"){
+            $(".shop-right").hide();
+            $(".shop-commission").hide();
+            $(".shop-special").css("-webkit-line-clamp","2");
+            $(".shop-middle").css("width","80%");
+        }
+    }
+
+    //代言店铺码
+    $("#erweima").click(function () {
+        location.href="personalQrCode.html?userId="+userId;
+    });
+    //景区酒店tab栏切换显示
+    $(".tab-btn").each(function (i, v) {
+        $(v).click(function () {
+            $(".tab-btn").removeClass("active");
+            $(v).addClass("active");
+            var tabIndex = $(v).attr("data-tabIndex");
+            if (tabIndex == "0") {
+                $(".tab1").show();
+                $(".tab2").hide();
+                clearDown();
+                if(userType){
+                    getRepresentScenicU();
+                }else{
+                    getRepresentScenicT();
+                }
+            } else if (tabIndex == "1") {
+                $(".tab2").show();
+                $(".tab1").hide();
+                clearDown();
+                if(userType){
+                    getRepresentHotelU();
+                }else{
+                    getRepresentHotelT();
+                }
+            }
+        })
+    });
+
+</script>

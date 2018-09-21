@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的组织</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/setting.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <!--<script src="static/js/rem.js"></script>-->
+    <style>
+        .organize-tab {
+            width: 7.5rem;
+            height: 0.7rem;
+            background-color: #ffffff;
+            border-top: 0.01rem solid #dfdfdf;
+        }
+
+        .organize-tab div {
+            width: 50%;
+            height: 100%;
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            font-size: 0.3rem;
+            color: #494949;
+        }
+
+        .organize-tab div.active {
+            color: #47bfc5;
+            border-bottom: 0.01rem solid #47bfc5;
+        }
+
+        .organize-con {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: none;
+        }
+
+        .organize-con.active {
+            display: block;
+        }
+
+        .organize-item {
+            width: 7.5rem;
+            height: 1.42rem;
+            background-color: #ffffff;
+            margin-top: 0.2rem;
+        }
+
+        .organize-left {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .organize-left img {
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+        }
+
+        .organize-right {
+            width: 80%;
+            height: 100%;
+            float: left;
+            padding: 0.1rem 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            display: -webkit-flex;
+            -webkit-justify-content: space-around;
+            -webkit-flex-direction: column;
+        }
+
+        .organize-right p:first-child {
+            font-size: 0.24rem;
+            color: #494949;
+        }
+
+        .organize-right p:last-child {
+            font-size: 0.22rem;
+            color: #a0a0a0;
+        }
+
+        #mescroll{
+            position: fixed;
+            bottom: 0;
+            top: 1.6rem;
+            height: auto!important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        我的组织
+    </div>
+</header>
+<main style="margin-top: 0;">
+    <div class="organize-tab forbidScrollIos">
+        <div class="active">一度组织 (<span class="one-organize">0</span>)</div>
+        <div>二度组织 (<span class="two-organize">0</span>)</div>
+    </div>
+    <div id="mescroll" class="mescroll">
+        <div class="organize-con active content" id="oneOrganize">
+
+        </div>
+        <div class="organize-con content" id="twoOrganize">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    //初始化数据
+    $(function () {
+        //获取人脉数量
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/getOrganizationCount", "POST", {}, getContactsNumCall);
+        //获取刚开始的一度组织信息
+        // publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/getMySaleUserInfo", "POST", {
+        //     "pageNum": 1,
+        //     "pageSize": 10
+        // }, getOneOrganizeCall);
+        var url = baseAjaxUrl + "/ty_api/user/product/getMySaleUserInfo";
+        var data = {};
+        upLoading(url, data, getOneOrganizeCall, false);
+    });
+
+    $(".organize-tab div").each(function (i, v) {
+        $(v).click(function () {
+            $(this).addClass("active").siblings("div").removeClass("active");
+            $(".organize-con").eq(i).addClass("active").siblings(".organize-con").removeClass("active");
+            if (i == 0) {//一度组织
+                clearDown();
+                var url = baseAjaxUrl + "/ty_api/user/product/getMySaleUserInfo";
+                var data = {};
+                upLoading(url, data, getOneOrganizeCall, false);
+            } else if (i == 1) {//二度组织
+                // publicAjaxToken(baseAjaxUrl + "/ty_api/user/product/getMyCustomerInfo", "POST", {
+                //     "pageNum": 1,
+                //     "pageSize": 10
+                // }, getTwoOrganizeCall);
+                clearDown();
+                var url = baseAjaxUrl + "/ty_api/user/product/getMyCustomerInfo";
+                var data = {};
+                upLoading(url, data, getTwoOrganizeCall, false);
+            }
+        })
+    });
+
+
+    //人脉数量的回调
+    function getContactsNumCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            $(".one-organize").html(res.data.onceOrganization);
+            $(".two-organize").html(res.data.twoOrganization);
+        }
+    }
+
+    //获取一度人脉的回调
+    function getOneOrganizeCall(data) {
+        var listDom = $("#oneOrganize");
+        var innerHtml = "";
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '       <div class="organize-item">\n' +
+                '            <div class="organize-left">\n' +
+                '                <img src="' + baseImgUrl + data[i].headImg + '_small.jpg" alt="">\n' +
+                '            </div>\n' +
+                '            <div class="organize-right">\n' +
+                '                <p>' + data[i].nickName + '</p>\n' +
+                '                <p>成为业务员的时间：' + timeTransformation(data[i].createTime) + '</p>\n' +
+                '            </div>\n' +
+                '        </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //获取二度组织的回调
+    function getTwoOrganizeCall(data) {
+        var listDom = $("#twoOrganize");
+        var innerHtml = "";
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+                '       <div class="organize-item">\n' +
+                '            <div class="organize-left">\n' +
+                '                <img src="' + baseImgUrl + data[i].headImg + '_small.jpg" alt="">\n' +
+                '            </div>\n' +
+                '            <div class="organize-right">\n' +
+                '                <p>' + data[i].nickName + '</p>\n' +
+                '                <p>成为业务员的时间：' + timeTransformation(data[i].createTime) + '</p>\n' +
+                '            </div>\n' +
+                '        </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+</script>

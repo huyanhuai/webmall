@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人设置</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/setting.css">
+    <!--<script src="static/js/rem.js"></script>-->
+    <style>
+        footer {
+            width: 100%;
+            height: 0.82rem;
+            position: fixed;
+            bottom: 0;
+            background: #fff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        修改个人信息
+    </div>
+</header>
+<main>
+    <div class="head-image">
+        头像
+        <div class="imgup">
+            <input type="file" id="imgup" name="file">
+            <img src="" alt="" onclick="getElementById('imgup').click()" class="user-image">
+        </div>
+    </div>
+    <div class="setting-item">
+        <label for="nicheng">昵称</label>
+        <input type="text" id="nicheng" placeholder="请输入昵称">
+    </div>
+    <div class="setting-item">
+        <label for="name">真实姓名</label>
+        <input type="text" id="name" placeholder="请输入真实姓名">
+    </div>
+    <div class="setting-item">
+        <label for="sex" style="border-bottom: none;">性别</label>
+        <select name="" id="sex">
+            <option value="0">未知</option>
+            <option value="1">男</option>
+            <option value="2">女</option>
+        </select>
+    </div>
+</main>
+<footer>
+    <div class="submit-btn" id="submitUserInfo">
+        确认修改
+    </div>
+</footer>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var imgUrl;
+    $(function () {
+        getToken();
+        //获取用户信息
+        // publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+        var user=JSON.parse(getSess("userInfo"));
+        $(".user-image").attr("src", baseImgUrl+user.headImg+ '_small.jpg');
+        $("#nicheng").val(user.nickName);
+        $("#name").val(user.userName);
+        if (user.sex == '0') {
+            $("#sex option").eq(0).attr("selected", true);
+        } else if (user.sex == '1') {
+            $("#sex option").eq(1).attr("selected", true);
+        } else if (user.sex == '2') {
+            $("#sex option").eq(2).attr("selected", true);
+        }
+    });
+
+
+    $("#imgup").change(function () {
+        var file = $(this)[0].files[0];
+        if (file.size > 1024 * 1024 * 5) {
+            layMessage("图片大小超出限制");
+        }
+        var form = new FormData();
+        form.append("headImg", file);
+        publicAjaxFormdata(baseAjaxUrl + "/ty_api/user/updateHeadImg", "POST", form, uploadImgCall);
+    });
+
+    function uploadImgCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            $(".user-image").attr("src", baseImgUrl+res.data + '_small.jpg');
+            imgUrl = res.data;
+        }
+    }
+
+    $("#submitUserInfo").click(function () {
+        var nickName = $("#nicheng").val();
+        var userName = $("#name").val();
+        var sex = $("#sex option:selected").val();
+        console.log(sex);
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/updateUserInfo", "POST", {
+            "nickName": nickName,
+            "userName": userName,
+            "headImg": imgUrl,
+            "sex":sex
+        },submitInfoCall);
+    })
+    function submitInfoCall(res) {
+        if (res.errorCode == 200) {
+            getUser();
+            layMessage("信息更改成功");
+            setTimeout("returnBack()",2000)
+        }
+    }
+
+</script>

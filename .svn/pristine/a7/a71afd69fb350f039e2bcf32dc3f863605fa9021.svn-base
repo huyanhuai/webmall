@@ -1,0 +1,101 @@
+/*封装通用ajax*/
+function publicAjax(url, type, data, callback) {
+    $.ajax({
+        url: url,
+        type: type,
+        data: data,
+        success: callback,
+    })
+}
+
+//带token的ajax
+function publicAjaxToken(url, type, data, callback, async) {
+    async = async || true;
+    var token = getLocal("token");
+    $.ajax({
+        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+        beforeSend: function (xhr) {
+            //发送ajax请求之前向http的head里面加入验证信息
+            xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+        },
+        url: url,
+        type: type,
+        data: data,
+        async: async,
+        success: callback,
+    })
+}
+
+//formdata传递的ajax
+function publicAjaxFormdata(url, type, data, callback) {
+    var token = getLocal("token");
+    $.ajax({
+        beforeSend: function (xhr) {
+            //发送ajax请求之前向http的head里面加入验证信息
+            xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+        },
+        url: url,
+        type: type,
+        data: data,
+        processData: false,  // 不处理数据
+        contentType: false,  // 不设置内容类型
+        success: callback,
+    })
+}
+
+/*定义ajax的基本路径*/
+//海报的前缀
+// var posterUrl="http://2y0640281b.imwork.net:48474/";
+// var oneselfUrl="http://nwx.tongyoutrip.com/";
+var oneselfUrl="http://2y0640281b.imwork.net:48474/";
+/*正式服务器*/
+// var baseAjaxUrl = "http://api.tongyoutrip.com";          //接口
+// var baseImgUrl="http://image.tongyoutrip.com";           //图片服务器
+/*线上先下测试服务器*/
+// var baseAjaxUrl="http://192.168.0.16:8060";                 //小许
+var baseAjaxUrl="http://192.168.0.148:8060";                 //小许
+// var baseAjaxUrl="http://2y0640281b.imwork.net:35024";    //公司
+// var baseImgUrl="http://192.168.0.148:80";
+var baseImgUrl="http://192.168.0.17:8010";                  //小马
+
+
+//获取token
+function getToken() {
+    // delLocal("token");
+    // alert(getLocal("token"));
+    var token = getLocal("token");
+    console.log("dsdffd" + token);
+    // alert(token)
+    //用于判断获取微信的code
+    if (token == undefined || token == null) {
+        var access_code = GetQueryString('code');
+        if (access_code == null) {
+            var fromurl = location.href;
+            // 线下测试
+            var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx495767263d501f89&redirect_uri=' + encodeURIComponent(fromurl) + '&response_type=code&scope=snsapi_userinfo&state=STATE%23wechat_redirect&connect_redirect=1#wechat_redirect';
+            //线上可买（杭州同游）
+            //var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd58ce374d5350466&redirect_uri=' + encodeURIComponent(fromurl) + '&response_type=code&scope=snsapi_userinfo&state=STATE%23wechat_redirect&connect_redirect=1#wechat_redirect';
+            //线上可买（同游科技demo）
+            //var url = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx3ffb0a2a372c2bda&redirect_uri=' + encodeURIComponent(fromurl) + '&response_type=code&scope=snsapi_userinfo&state=STATE%23wechat_redirect&connect_redirect=1#wechat_redirect';
+            location.href = url;
+        } else {
+            $.ajax({
+                type: 'get',
+                url: baseAjaxUrl + '/wechatController/oauth',
+                async: false,
+                cache: false,
+                data: {code: access_code},
+                dataType: 'json',
+                success: function (result) {
+                    if (result.errorCode == 200) {
+                        console.log(result);
+                        var token = result.data.token;
+
+                        setLocal("token", token);
+                    }
+                }
+            });
+        }
+    }
+}
+

@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>电子票详情</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        body {
+            color: #fff;
+        }
+
+        .E-ticket {
+            width: 100%;
+            height: 1rem;
+            background: url("static/img/ticket/111111.png") center center no-repeat;
+            background-size: 100%;
+            border-top: 0.02rem solid #efefef;
+        }
+
+        .E-detail {
+            width: 100%;
+            height: 2.2rem;
+            background: url("static/img/ticket/222222.png") center center no-repeat;
+            background-size: 100%;
+            display: flex;
+            justify-content: space-around;
+            flex-direction: column;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: space-around;
+            padding: 0.45rem 0;
+        }
+
+        .E-detail p {
+            display: block;
+            width: 100%;
+            color: #fff;
+            text-align: center;
+        }
+
+        .E-detail p:nth-child(1) {
+            font-size: 0.3rem;
+        }
+
+        .E-detail p:nth-child(2) {
+            font-size: 0.26rem;
+        }
+
+        .E-detail p:nth-child(3) {
+            font-size: 0.26rem;
+        }
+
+        .E-code-msg{
+            width: 100%;
+            height: 1rem;
+            padding: 0 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: space-between;
+        }
+
+        .E-code-msg span:nth-child(1){
+            font-size: 0.28rem;
+            color: #a5a5a5;
+        }
+
+        .E-code-msg span:nth-child(2){
+            font-size: 0.3rem;
+            color: #f79628;
+        }
+
+        .E-code-box{
+            width: 3.5rem;
+            height: 3.5rem;
+            background-color: rgba(125, 125, 125, 0.1);
+            border-radius: 0.1rem;
+            margin: 0.4rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin-top: 0.2rem;
+            position: relative;
+        }
+        .E-code-box .alreadyCode,.E-code-box .canaelCode{
+            width: 1.5rem;
+            height: 1.5rem;
+            position: absolute;
+            top: -0.6rem;
+            right: -0.6rem;
+            display: none;
+        }
+
+        .E-code-box .alreadyCode img,.E-code-box .canaelCode img{
+            width: 1.5rem;
+        }
+
+        .E-code-box #qrcode {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+        .E-code-p1{
+            width: 100%;
+            margin: 0.1rem 0;
+            text-align: center;
+            font-size: 0.26rem;
+            color: #a5a5a5;
+        }
+        .E-code-p2{
+            width: 100%;
+            margin: 0.1rem 0;
+            text-align: center;
+            font-size: 0.24rem;
+            color: #f79628;
+        }
+
+        .instructions{
+            width: 100%;
+            padding: 0 0.4rem;
+            font-size: 0.26rem;
+            color: #cccccc;
+        }
+
+        .instructions p{
+            padding: 0.1rem 0;
+        }
+
+
+
+    </style>
+</head>
+<body>
+<main>
+    <div class="E-ticket"></div>
+    <div class="E-detail">
+        <p></p>
+        <p></p>
+        <p></p>
+    </div>
+    <div class="E-code-msg">
+        <span class="E-ma"></span>
+        <span class="E-price"></span>
+    </div>
+    <div class="E-code-box">
+        <div id="qrcode"></div>
+        <div class="alreadyCode">
+            <img src="static/img/ticket/yiyanpiao2.png" alt="">
+        </div>
+        <div class="canaelCode">
+            <img src="static/img/ticket/yiquxiao.png" alt="">
+        </div>
+
+    </div>
+    <p id="checkTime" class="E-code-p1"></p>
+    <p class="E-code-p1">请出示上方二维码，轻松验票</p>
+    <p class="E-code-p2">二维码一经泄露，平台概不负责</p>
+    <div class="instructions">
+        <p>使用说明：</p>
+        <p>1.本活动凭票入场，仅限一人一票，一次性使用</p>
+        <p>2.请截屏保存此二维码，以便作为入场凭证</p>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script>
+    $(function () {
+        var checkCode=GetQueryString("no");
+        // var checkCode="27822009";
+        //获取二维码信息
+        publicAjax(baseAjaxUrl+"/ty_api/order/ticket/queryCheckMessage","POST",{"checkCode":checkCode},getEcodeDetailCall);
+    });
+    //获取二维码的回调
+    function getEcodeDetailCall(res) {
+        console.log(res);
+        if(res.errorCode==200){
+            $(".E-detail p").eq(0).html(res.data.checkMessage.packageName+"&nbsp&nbsp&nbsp&nbsp x"+res.data.checkMessage.buySum);
+            $(".E-detail p").eq(1).html(res.data.checkMessage.address);
+
+            if(res.data.checkMessage.saleDateType=="NONE"){
+                $(".E-detail p").eq(2).html("永久有效");
+            }else if(res.data.checkMessage.saleDateType=="RANGE"){
+                $(".E-detail p").eq(2).html("时间："+timeTransformation(res.data.checkMessage.startDate,"dateCount")+" 至 "+timeTransformation(res.data.checkMessage.endDate,"dateCount"));
+            }else if(res.data.checkMessage.saleDateType=="TODAY"){
+                $(".E-detail p").eq(2).html("时间："+timeTransformation(res.data.checkMessage.arriveTime,"dateCount"));
+            }
+
+
+            if(res.data.apiType=="ZYB"){
+                var img=new Image();
+                img.src="data:image/gif;base64,"+res.data.checkMessage.img;
+                $("#qrcode").append(img)
+            }else if(res.data.apiType=="TONGYOU"){
+                var codeMsgJson={"createTime":res.data.checkMessage.ticketTime,"userId":res.data.checkMessage.userId,"orderNo":res.data.checkMessage.orderNo,"type":"Scan_Ticket"};
+                var qrcode = new QRCode('qrcode', {
+                    text: JSON.stringify(codeMsgJson),
+                    width: 150,
+                    height: 150,
+                    colorDark: '#000000',
+                    colorLight: '#ffffff',
+                    correctLevel: QRCode.CorrectLevel.Q
+                });
+            }
+            $(".E-ma").html("验票码  "+res.data.checkMessage.checkCode);
+            $(".E-price").html("￥"+res.data.checkMessage.payAmount);
+
+            if(res.data.checkMessage.status=="1"){
+                $(".alreadyCode").show();
+                $("#checkTime").html("验票时间： "+timeTransformation(res.data.checkMessage.checkTime));
+            }else if(res.data.checkMessage.status=="2"){
+                $(".canaelCode").show();
+            }
+        }
+    }
+</script>

@@ -1,0 +1,220 @@
+.order-box {
+    width: 7.5rem;
+    height: auto;
+    overflow: hidden;
+    background-color: #ffffff;
+    margin-top: 0.24rem;
+}
+
+.order-top {
+    width: 100%;
+    height: 1.9rem;
+    padding: 0.2rem 0.4rem;
+}
+
+.order-top-left {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: space-around;
+    float: left;
+}
+
+.order-top-left p:nth-child(1) {
+    font-size: 0.3rem;
+    color: #5b5b5b;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.order-top-left p:nth-child(2) {
+    font-size: 0.3rem;
+    color: #a5a5a5;
+}
+
+.order-top-left .other span:nth-child(1) {
+    font-size: 0.36rem;
+    color: #f79628;
+    margin-right: 0.2rem;
+}
+
+.order-top-left .other span:nth-child(2) {
+    font-size: 0.3rem;
+    color: #a5a5a5;
+}
+
+.order-top-left .common span {
+    font-size: 0.3rem;
+    color: #f79628;
+}
+
+.order-top-right {
+    width: 10%;
+    height: 100%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: flex-end;
+}
+
+.order-top-right > img {
+    width: 0.2rem;
+}
+
+.order-menu {
+    width: 100%;
+    height: 0.7rem;
+    border-top: 0.01rem solid #d2d2d2;
+    position: relative;
+}
+
+.order-menu div {
+    width: 50%;
+    height: 100%;
+    float: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    color: #a5a5a5;
+    font-size: 0.3rem;
+}
+
+.order-menu::after {
+    content: '';
+    width: 0.03rem;
+    height: 0.45rem;
+    background-color: #d2d2d2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+/*中间块*/
+.order-info-box {
+    width: 100%;
+    height: 3.52rem;
+    background: #fff;
+    margin-top: 0.24rem;
+}
+
+.order-msg {
+    width: 100%;
+    height: 0.68rem;
+    border-bottom: 0.01rem solid #d2d2d2;
+    padding: 0 0.45rem;
+    font-size: 0.3rem;
+    color: #494949;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+}
+
+.apiType,.typeMsg{
+    margin-left: 1.2rem;
+}
+
+.order-info {
+    width: 100%;
+    height: 2.84rem;
+    padding: 0.1rem 0.45rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: space-around;
+}
+
+.order-info p {
+    width: 100%;
+    font-size: 0.26rem;
+    color: #5b5b5b;
+}
+
+.order-info p span:nth-child(1) {
+    width: 35%;
+    float: left;
+}
+
+.order-info p span:nth-child(2) {
+    width: 65%;
+    float: left;
+}
+
+/*二维码*/
+.qrcode-box {
+    width: 100%;
+    height: 4rem;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: center;
+    margin-top: 0.24rem;
+    position: relative;
+}
+
+#ticketSuccess::after {
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #fff;
+    opacity: 0.5;
+    z-index: 20;
+}
+
+#ticketSuccess .alreadyLogo {
+    width: 1.38rem;
+    height: 1.23rem;
+    position: absolute;
+    top: 0;
+    right: 0.38rem;
+    z-index: 30;
+}
+
+.qrcode-box p {
+    font-size: 0.3rem;
+    color: #494949;
+    margin-top: 0.1rem;
+}
+
+.qrcode {
+    width: 2.6rem;
+    height: 2.6rem;
+    background-color: rgba(125, 125, 125, 0.1);
+    border-radius: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    margin-top: 0.2rem;
+}
+
+/*调节type*/
+.order-type.active {
+    display: none;
+}

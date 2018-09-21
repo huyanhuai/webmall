@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>产品列表</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        body {
+            background: #fff;
+        }
+
+        #mescroll {
+            width: 100%;
+            height: auto;
+            overflow: auto;
+            position: fixed;
+            top: 1.6rem;
+            bottom: 0;
+        }
+
+        .navigation {
+            justify-content: flex-end;
+            -webkit-justify-content: flex-end;
+            border-bottom: 0.01rem solid #f6f6f6;
+        }
+
+        .search-box {
+            width: 90%;
+            height: 98%;
+            float: right;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            position: relative;
+        }
+
+        #searchText {
+            width: 100%;
+            height: 0.54rem;
+            border-radius: 0.2rem;
+            background: #f6f6f6;
+            padding: 0 0.2rem;
+            font-size: 0.24rem;
+            color: rgba(140, 140, 140, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: flex-start;
+
+        }
+
+        .search-box > img {
+            width: 0.3rem;
+            height: 0.29rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0.2rem;
+            margin: auto;
+        }
+
+        #searchResult {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #fff;
+            /*margin-top: 0.24rem;*/
+        }
+
+        .tab-menu-box{
+            margin: 0 0.24rem;
+            height: 0.7rem;
+            font-size: 0.26rem;
+        }
+        .tab-item{
+            width: 50%;
+            float: left;
+            height: 100%;
+            border: solid 0.01rem #47bfc5;
+            color: #000;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .tab-item.active{
+            background-color: #47bfc5;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        <div class="search-box">
+            <!--<div id="searchText"></div>-->
+            <input type="text" id="searchText" placeholder="搜索目的地/酒店/旅游/景点">
+            <img src="static/img/public/seachblue.png" alt="" id="searchBtn">
+        </div>
+    </div>
+    <div class="tab-menu-box">
+        <div class="tab-item active" data-tabIndex="0">景区</div>
+        <div class="tab-item" data-tabIndex="1">酒店</div>
+    </div>
+</header>
+<main>
+    <div class="mescroll" id="mescroll">
+        <section id="searchResult" class="content">
+
+        </section>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        var searchText = decodeURI(escape(GetQueryString("searchText")));
+        $("#searchText").val(searchText);
+        var content=$("#searchText").val();
+        getScenicFn(content)
+    });
+
+    /*景点搜索*/
+    //景点
+    function getScenicFn(content) {
+        var url = baseAjaxUrl + "/ty_api/product/searchProduct";
+        var data = {"content": content};
+        upLoading(url, data, getSearchScenicCall, false);
+    }
+    //景点搜索信息的回调
+    function getSearchScenicCall(data) {
+        var listDom = $("#searchResult");
+        var innerHtml = '';
+        var starsLevel = 5;   //星星最高等级
+        for (var i = 0; i < data.length; i++) {
+            //循环标签
+            var tagInnerHtml = '';  //标签
+            var starsHtml = '';   //星星的img标签
+            if (data[i].tags[0] != null) {
+                for (var j = 0; j < data[i].tags.length; j++) {
+                    tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+                }
+            } else {
+                tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+            }
+
+            //循环评分星星
+            var solidStars = Math.round(Number(data[i].score));
+            var emptyStars = starsLevel - solidStars;
+            for (var m = 0; m < solidStars; m++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml +=
+                '<div class="hot-item">\n' +
+                '   <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                '       <div class="hot-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '        </div>\n' +
+                '   </a>\n' +
+                '   <div class="hot-right">\n' +
+                '       <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                '           <div class="hot-p">\n' +
+                '               <p class="hot-title">' + data[i].productName + '</p>\n' +
+                '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                '               <p class="hot-stars">\n' +
+                '                   <span class="stars">' + starsHtml + '</span>\n' +
+                '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '               </p>\n' +
+                '               <p class="hot-detail">' + data[i].productAddress + '</p>\n' +
+                '           </div>\n' +
+                '       </a>\n' +
+                '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '       </div>\n' +
+                '   </div>\n' +
+                '</div>';
+        }
+
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    /*酒店搜索*/
+    //酒店
+    function getHotelFn(content) {
+        var url = baseAjaxUrl + "/ty_api/hotel/queryHotelList";
+        var data = {"search": content};
+        upLoading(url, data, getSearchHotelCall, false);
+    }
+    //酒店搜索信息的回调
+    function getSearchHotelCall(data) {
+        var listDom = $("#searchResult");
+        var innerHtml = '';
+        var starsLevel = 5;   //星星最高等级
+        for (var i = 0; i < data.length; i++) {
+            //循环标签
+            var tagInnerHtml = '';  //标签
+            var starsHtml = '';   //星星的img标签
+            // if (data[i].tags[0] != null) {
+            //     for (var j = 0; j < data[i].tags.length; j++) {
+            //         tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+            //     }
+            // } else {
+            //     tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+            // }
+
+            //循环评分星星
+            var solidStars = Math.round(Number(data[i].score));
+            var emptyStars = starsLevel - solidStars;
+            for (var m = 0; m < solidStars; m++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml +=
+                '<div class="hot-item">\n' +
+                '   <a href="/hotel/hotelDetail.html?hotelId=' + data[i].hotelId + '">\n' +
+                '       <div class="hot-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '        </div>\n' +
+                '   </a>\n' +
+                '   <div class="hot-right">\n' +
+                '       <a href="/hotel/hotelDetail.html?hotelId=' + data[i].hotelId + '">\n' +
+                '           <div class="hot-p">\n' +
+                '               <p class="hot-title">' + data[i].hotelName + '</p>\n' +
+                '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                '               <p class="hot-stars">\n' +
+                '                   <span class="stars">' + starsHtml + '</span>\n' +
+                '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '               </p>\n' +
+                '               <p class="hot-detail hotel">' + data[i].address + '</p>\n' +
+                '           </div>\n' +
+                '       </a>\n' +
+                '       <div class="hot-icon"><p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '       </div>\n' +
+                '   </div>\n' +
+                '</div>';
+        }
+
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //景区酒店tab栏切换显示
+    $(".tab-item").each(function (i, v) {
+        $(v).click(function () {
+            var content=$("#searchText").val();
+            $(".tab-item").removeClass("active");
+            $(v).addClass("active");
+            var tabIndex = $(v).attr("data-tabIndex");
+            if (tabIndex == "0") {
+                clearDown();
+                getScenicFn(content);
+            } else if (tabIndex == "1") {
+                clearDown();
+                getHotelFn(content);
+            }
+        })
+    });
+
+    $("#searchBtn").click(function () {
+        var content=$("#searchText").val();
+        var tabIndex=$(".tab-item.active").attr("data-tabIndex");
+        if(tabIndex=="0"){
+            clearDown();
+            getScenicFn(content);
+        }else if(tabIndex=="1"){
+            clearDown();
+            getHotelFn(content);
+        }
+    });
+
+    $("#searchText").change(function () {
+        var content=$("#searchText").val();
+        var hotSearch=getLocal("hotSearch").split(",");
+        if($.inArray(content,hotSearch)==-1){
+            hotSearch.push(content);
+        }
+        setLocal("hotSearch",hotSearch);
+    })
+</script>

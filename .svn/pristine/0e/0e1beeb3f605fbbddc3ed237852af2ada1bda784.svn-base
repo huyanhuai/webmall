@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>更多主题分类</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: fixed;
+            top: 1.62rem;
+            bottom: 0;
+            height: auto!important;
+        }
+
+        /*可滑动的头*/
+        .theme-box{
+            width: 100%;
+            height: 0.72rem;
+            background-color: #ffffff;
+            overflow-x: scroll;
+            border-top: 0.01rem solid #d4d4d4;
+        }
+        .theme-ul{
+            height: 100%;
+            overflow-x: scroll;
+            /*display: flex;*/
+            /*display: -webkit-flex;*/
+            /*flex-wrap: nowrap;*/
+            /*-webkit-flex-wrap: nowrap;*/
+            /*align-items: center;*/
+            /*-webkit-align-items: center;*/
+        }
+        .theme-item{
+            height: 100%;
+            margin: 0 0.3rem;
+            padding: 0 0.2rem;
+            font-size: 0.26rem;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+        .theme-item.active{
+            color: #47bfc5;
+            border-bottom: 0.06rem solid #47bfc5;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        <span id="headTitle">更多主题</span>
+    </div>
+</header>
+<main>
+    <div class="theme-box forbidScrollIos">
+        <ul class="theme-ul">
+
+        </ul>
+    </div>
+    <div class="mescroll" id="mescroll">
+        <div class="hot-con content">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="plug-in/meScroll/mescroll.min.js"></script>
+<script type="text/javascript" src="static/js/upLoading.js"></script>
+<script>
+    var starsLevel = 5;   //星星最高等级_评分
+    var productPackageTypeId;
+    $(function () {
+        productPackageTypeId=GetQueryString("productPackageTypeId");
+       /*获取主题分类*/
+        publicAjax(baseAjaxUrl+"/ty_api/product/package/type/getList","POST",{},getThemeTitleCall);
+    });
+    /*获取主题分类的回调*/
+    function getThemeTitleCall(res) {
+        if(res.errorCode==200){
+            var innerHtml='';
+            var data=res.data.list;
+            for(var i=0;i<data.length;i++){
+                if(data[i].packageType!="HOTEL"){
+                    innerHtml+='<li class="theme-item" data-id="'+data[i].productPackageTypeId+'">'+data[i].typeName+'</li>';
+                }
+            }
+            $(".theme-ul").html(innerHtml);
+            widthSun(productPackageTypeId);
+        }
+    }
+
+    /*动态控制title宽度*/
+    function widthSun(productPackageTypeId){
+        var url=baseAjaxUrl+"/ty_api/product/package/type/queryProductByType";
+        var totalW=0;
+        $(".theme-item").each(function (i,v) {
+            totalW+=$(v).outerWidth(true);
+            if(productPackageTypeId==$(v).attr("data-id")){
+                $(v).addClass("active").siblings().removeClass("active");
+                var data={"productPackageTypeId":productPackageTypeId,"pageSize": 10};
+                upLoading(url, data, getMoreCall, false);
+            }
+            $(v).click(function () {
+                $(v).addClass("active").siblings().removeClass("active");
+                var id=$(v).attr("data-id");
+                var data={"productPackageTypeId":id,"pageSize": 10};
+                clearDown();
+                upLoading(url, data, getMoreCall, true);
+            })
+        });
+        $(".theme-ul").css("width",totalW);
+    }
+
+
+
+
+    //获取产品信息的回调
+    function getMoreCall(data) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        var listDom = $(".content");
+        var collectionImg = '';
+        for (var i = 0; i < data.length; i++) {
+            //循环标签
+            var tagInnerHtml = '';
+            var starsHtml = '';    //星星的img标签
+            if (data[i].tags[0] != null) {
+                for (var j = 0; j < data[i].tags.length; j++) {
+                    tagInnerHtml += '<span>' + data[i].tags[j] + '</span>';
+                }
+            } else {
+                tagInnerHtml += '<p style="color:#ddd;">暂无标签</p>';
+            }
+
+            //循环收藏
+            var token = getLocal("token");
+            $.ajax({
+                contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + "/ty_api/product/collection/isCollection",
+                type: "POST",
+                data: {"productId": data[i].productId},
+                async: false,
+                success: function (e) {
+                    if (e.errorCode == 200) {
+                        if (e.data.isCollection == 0) {
+                            collectionImg = '<img src="static/img/public/collection2@2x.png" alt="" class="collection" onclick="collectionFlag(this)" data-collection="0" data-productId="' + data[i].productId + '">';
+                        } else if (e.data.isCollection == 1) {
+                            collectionImg = '<img src="static/img/public/collection3@2x.png" alt="" class="collection" onclick="collectionFlag(this)" data-collection="1" data-productId="' + data[i].productId + '">';
+                        }
+                    }
+                },
+                error: function (res) {
+                    // alert("您访问的服务器被外星人抓走了")
+                }
+            });
+
+            //星星评分
+            var solidStars = data[i].score;
+            var emptyStars = starsLevel - solidStars;
+            for (var j = 0; j < solidStars; j++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml +=
+                '<div class="hot-item">\n' +
+                '   <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                '       <div class="hot-left">\n' +
+                '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '        </div>\n' +
+                '   </a>\n' +
+                '   <div class="hot-right">\n' +
+                '       <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                '           <div class="hot-p">\n' +
+                '               <p class="hot-title">' + data[i].productName + '</p>\n' +
+                '               <p class="hot-tag">' + tagInnerHtml + '</p>\n' +
+                '               <p class="hot-stars">\n' +
+                '                   <span class="stars">'+starsHtml+'</span>\n' +
+                '                   <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '               </p>\n' +
+                '               <p class="hot-detail">' + data[i].productAddress + ' </p>\n' +
+                '           </div>\n' +
+                '       </a>\n' +
+                '       <div class="hot-icon">' + collectionImg + '<p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '       </div>\n' +
+                '   </div>\n' +
+                '</div>';
+        }
+
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        // }
+    }
+    /*点击收藏时的函数*/
+    function collectionFlag(e) {
+        var token = getLocal("token");
+        var collectionIsFlag = $(e).attr("data-collection");
+        var productId = $(e).attr("data-productId");
+        if (collectionIsFlag == "0") {//无——》有
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + "/ty_api/product/collection/doCollection",
+                type: "POST",
+                data: {"productId": productId},
+                success: function (res) {
+                    if (res.errorCode == 200) {
+                        layMessage(res.message);
+                        $(e).attr("src", "static/img/public/collection3@2x.png");
+                        $(e).attr("data-collection", "1");
+                    }
+                },
+                error: function (res) {
+                    // alert("您访问的服务器被外星人抓走了")
+                }
+            })
+        } else if (collectionIsFlag == "1") {//有——》无
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + "/ty_api/product/collection/cancelCollection",
+                type: "POST",
+                data: {"productId": productId},
+                success: function (res) {
+                    if (res.errorCode == 200) {
+                        layMessage(res.message);
+                        $(e).attr("src", "static/img/public/collection2@2x.png");
+                        $(e).attr("data-collection", "0");
+                    }
+                },
+                error: function (res) {
+                    // alert("您访问的服务器被外星人抓走了")
+                }
+            })
+        }
+    }
+</script>

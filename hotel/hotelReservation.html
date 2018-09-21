@@ -1,0 +1,1004 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>确认订单</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/hotelContact.css">
+    <link rel="stylesheet" href="../plug-in/meScroll/mescroll.min.css">
+    <style>
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 3.2rem;
+            background: #eeeeee;
+            padding-top: 0.9rem;
+            background: url("../static/img/hotel/hotel_bg2.png")no-repeat;
+            background-size: 100%;
+        }
+
+        .navigation {
+            position: absolute;
+            top: 0;
+            color: #fff;
+        }
+
+        #hotelCard {
+            margin: 0.2rem 0.5rem;
+            height: 1.7rem;
+            background: #fff;
+            padding: 0.1rem 0.2rem;
+            display: flex;
+            display: -webkit-flex;
+            flex-direction: column;
+            -webkit-flex-direction: column;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            border-radius: 0.05rem;
+        }
+
+        #hotelCard p:first-child {
+            font-size: 0.28rem;
+            color: #313131;
+        }
+
+        #hotelCard p:nth-child(2) {
+            font-size: 0.26rem;
+            color: #626262;
+        }
+
+        #hotelCard p:last-child {
+            color: #868686;
+        }
+
+        #clientInfo {
+            width: 100%;
+            margin-top: 0.3rem;
+            padding: 0 0.3rem;
+            background: #fff;
+        }
+
+        .house-num {
+            width: 100%;
+            height: 1rem;
+            position: relative;
+            background: #fff;
+            border-bottom: 0.01rem solid #e5e5e5;
+        }
+
+        .hn-label {
+            width: 20%;
+            height: 100%;
+            line-height: 1rem;
+            color: #868686;
+            float: left;
+        }
+
+        .hn-num {
+            width: 80%;
+            height: 100%;
+            font-size: 0.26rem;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .hn-num span {
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .arrow {
+            display: inline-block;
+            float: right;
+            transform: rotate(0);
+            transition: 0.5s;
+        }
+
+        .arrow.active {
+            transform: rotate(180deg);
+        }
+
+        #choseNum {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0.2rem 0.1rem 0 0.1rem;
+            background: #fff;
+            display: none;
+            border-bottom: 0.01rem solid #eeeeee;
+        }
+
+        #choseNum .chose-item:nth-child(4n) {
+            margin-right: 0;
+        }
+
+        .chose-item {
+            width: 22%;
+            height: 0.8rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            float: left;
+            margin-bottom: 0.2rem;
+            margin-right: 4%;
+            border: 0.01rem solid #e5e5e5;
+        }
+
+        .chose-item.active {
+            background: rgba(71, 191, 197, 0.25);
+            border: 0.01rem solid #47bfc5;
+            color: #47bfc5;
+        }
+
+        .client-books {
+            width: 100%;
+            height: 2rem;
+            border-bottom: 0.01rem solid #eee;
+        }
+
+        .cb-left {
+            width: 80%;
+            height: 100%;
+            float: left;
+            border-right: 0.01rem solid #eeeeee;
+        }
+
+        .cb-left .cbl-item:last-child {
+            border: none;
+        }
+
+        .cbl-item {
+            width: 100%;
+            height: 1rem;
+            border-bottom: 0.01rem solid #eeeeee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .cb-right {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .cb-right img {
+            height: 0.5rem;
+        }
+
+        .cbl-item label {
+            display: inline-block;
+            width: 25%;
+            height: 100%;
+            line-height: 1rem;
+            color: #868686;
+        }
+
+        .cbl-item input {
+            display: inline-block;
+            width: 75%;
+            height: 80%;
+        }
+
+        .invoice {
+            width: 100%;
+            height: 1rem;
+            position: relative;
+            background: #fff;
+        }
+
+        .invoice .invoice-right {
+            width: 80%;
+            height: 100%;
+            line-height: 1rem;
+            font-size: 0.26rem;
+            float: left;
+            text-align: right;
+        }
+
+        .pay-btnbox {
+            width: 100%;
+            height: 0.9rem;
+            position: fixed;
+            bottom: 0;
+        }
+
+        .pay-left {
+            width: 40%;
+            height: 100%;
+            float: left;
+            background: #fff;
+            border-top: 0.01rem solid #eeeeee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #f79628;
+        }
+
+        .pay-left span:nth-child(1) {
+            color: #494949;
+        }
+
+        .pay-left span:nth-child(2) {
+            color: #f79628;
+        }
+
+        .pay-left span:nth-child(3) {
+            font-size: 0.4rem;
+            color: #f79628;
+        }
+
+        .pay-middle {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #47bfc5;
+            border-top: 0.01rem solid #eeeeee;
+            background: #fff;
+        }
+
+        .pay-middle img {
+            margin-left: 0.1rem;
+        }
+
+        .pay-right {
+            width: 40%;
+            height: 100%;
+            float: left;
+            background: #47bfc5;
+            border-top: 0.01rem solid #eeeeee;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #fff;
+            font-size: 0.36rem;
+        }
+
+        #htmlMask {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(210, 210, 210, 0.51);
+            z-index: 10;
+        }
+
+        /*费用明细*/
+        .layui-m-layer * {
+            box-sizing: border-box !important;
+        }
+
+        .layui-m-layer-footer .layui-m-layercont {
+            padding: 0 0.1rem !important;
+        }
+
+        .billing-details {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0 0.2rem 0.2rem 0.2rem;
+            color: #494949;
+        }
+
+        .billing-title {
+            width: 100%;
+            height: 1rem;
+            font-size: 0.32rem;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1rem;
+        }
+
+        .billing-msg {
+            width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+            font-size: 0.32rem;
+        }
+
+        .billing-msg span:last-child span {
+            color: #f79628;
+            font-size: 0.36rem;
+        }
+
+        .billing-msg span:last-child {
+            color: #f79628;
+            font-size: 0.26rem;
+        }
+
+        .billing-box {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin: 0.1rem 0;
+            padding: 0.1rem 0;
+            border-top: 0.01rem solid #ccc;
+            border-bottom: 0.01rem solid #ccc;
+            color: #494949;
+        }
+
+        .billing-box p {
+            width: 100%;
+            margin: 0.1rem 0;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+        .billing-box p span{
+            width: 33.33%;
+            height: 100%;
+        }
+
+        .billing-foot {
+            width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+            font-size: 0.28rem;
+        }
+
+        .billing-foot span:last-child span {
+            color: #f79628;
+            font-size: 0.36rem;
+        }
+
+        .billing-foot span:last-child {
+            color: #f79628;
+            font-size: 0.26rem;
+        }
+    </style>
+</head>
+<body>
+<section id="hotelReservationBox">
+    <header>
+        <div class="banner">
+            <div class="navigation" style="background: none;">
+                <img src="../static/img/public/return@2x.png" alt="" onclick="returnBack()">
+                <span class="hotelName"></span>
+            </div>
+            <div id="hotelCard">
+                <p class="hotel-card-date">10月10日</p>
+                <p class="hotel-card-pname">大床房</p>
+                <p class="hotel-card-breakfast">大床|免早</p>
+            </div>
+        </div>
+    </header>
+    <main>
+        <section id="clientInfo">
+            <div class="house-num">
+                <div class="hn-label">
+                    房间数
+                </div>
+                <div class="hn-num">
+                    <input type="text" id="houseNum" style="display: none;" value="1">
+                    <span id="houseNumText">1间</span>
+                    <img src="../static/img/hotel/more2.png" alt="" class="arrow">
+                </div>
+            </div>
+            <ul id="choseNum">
+
+            </ul>
+            <div class="client-books">
+                <div class="cb-left">
+                    <div class="cbl-item">
+                        <label for="clientName">入住人</label>
+                        <input type="text" placeholder="填写入住人姓名" id="clientName">
+                    </div>
+                    <div class="cbl-item">
+                        <label for="clientPhone">联系手机</label>
+                        <input type="number" placeholder="用于接收确认短信" id="clientPhone">
+                    </div>
+                </div>
+                <div class="cb-right" id="jumpHotelContact">
+                    <img src="../static/img/public/maillist@2x.png" alt="">
+                </div>
+            </div>
+            <div class="invoice">
+                <div class="hn-label">
+                    发票
+                </div>
+                <div class="invoice-right">
+                    如需发票，请到酒店前台索取
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <div class="pay-btnbox">
+            <div class="pay-left">
+                <span>共支付</span>
+                <span>￥</span>
+                <span id="salePrice"></span>
+            </div>
+            <div class="pay-middle" id="billingDetails">
+                明细
+                <img src="../static/img/hotel/detail.png" alt="">
+            </div>
+            <div class="pay-right" id="submit">
+                立即支付
+            </div>
+        </div>
+    </footer>
+</section>
+<!--我的联系人-->
+<section id="contact" class="tab-pal active">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnReservation()">
+            选择常用旅客
+        </div>
+    </header>
+    <main class="mescroll" id="mescroll">
+        <div class="contact-box content" id="myContactAll">
+
+        </div>
+    </main>
+    <footer>
+        <div class="submit-btn" onclick="jumpAdd()">
+            + 添加常用旅客
+        </div>
+    </footer>
+</section>
+<!--修改联系人-->
+<section id="editContact" class="tab-pal active">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnChoose()">
+            编辑常用旅客
+        </div>
+    </header>
+    <main style="margin-top: 0.82rem;">
+        <div class="edit-required">
+            <div class="edit-message">
+                必填信息
+            </div>
+            <div class="edit-item">
+                <label for="editPeopleName">中文姓名</label>
+                <input type="text" id="editPeopleName" placeholder="与证件保持一致">
+            </div>
+            <div class="edit-item">
+                <label for="editPeoplePhone">手机号</label>
+                <input type="text" id="editPeoplePhone" placeholder="用于接收确认短信">
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="submit-btn" id="submitEdit">
+            确认保存
+        </div>
+    </footer>
+</section>
+<!--添加联系人-->
+<section id="addContact" class="tab-pal active">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnChoose()">
+            添加常用旅客
+        </div>
+    </header>
+    <main style="margin-top: 0.82rem;">
+        <div class="edit-required">
+            <div class="edit-message">
+                必填信息
+            </div>
+            <div class="edit-item">
+                <label for="addPeopleName">中文姓名</label>
+                <input type="text" id="addPeopleName" placeholder="与证件保持一致">
+            </div>
+            <div class="edit-item">
+                <label for="addPeoplePhone">手机号</label>
+                <input type="number" id="addPeoplePhone" maxlength="11" placeholder="用于接收确认短信">
+            </div>
+        </div>
+        <form id="form1" action="" method="">
+            <input type="hidden" id="input1">
+        </form>
+    </main>
+    <footer>
+        <div class="submit-btn" id="submitAdd">
+            确认保存
+        </div>
+    </footer>
+</section>
+<div id="htmlMask"></div>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../static/js/history.js"></script>
+<script src="../static/js/data.js" charset="utf-8"></script>
+<script src="../plug-in/meScroll/mescroll.min.js"></script>
+<script src="../static/js/upLoading.js"></script>
+<script src="../static/js/jsencrypt.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script>
+    var pubKey, hotelRoomId, hotelRoomComboId, startDate, endDate, salePrice, dayNum;
+    var clientId,endId;
+    var priceDetailData;
+    var houseNum=1;
+    var priceSum=0,newPriceNum=0;
+    $(function () {
+        var hotelInfo = JSON.parse(getSess("hotelInfo"));
+        clientId = GetQueryString("clientId");
+        endId = GetQueryString("endId");
+        startDate = hotelInfo.startDate;
+        endDate = hotelInfo.endDate;
+        salePrice = hotelInfo.salePrice;
+        hotelRoomId = hotelInfo.hotelRoomId;
+        hotelRoomComboId = hotelInfo.hotelRoomComboId;
+        dayNum = hotelInfo.dayNum;
+        $(".hotelName").html(hotelInfo.hotelName);
+        $(".hotel-card-date").html(hotelInfo.date);
+        $(".hotel-card-pname").html(hotelInfo.comboName);
+        $(".hotel-card-breakfast").html(hotelInfo.peopleNum + "|" + hotelInfo.isWifi + "|" + hotelInfo.breakfast);
+        // $("#salePrice").html(hotelInfo.salePrice * dayNum);
+        /*初始化房间个数*/
+        publicAjax(baseAjaxUrl + "/ty_api/hotel/room/repertory/queryMinRepertory", "POST", {
+            "startDate": startDate,
+            "endDate": endDate,
+            "hotelRoomId": hotelRoomId
+        }, initNumCall);
+
+        /*价格明细*/
+        publicAjaxToken(baseAjaxUrl + "/ty_api/order/hotel/priceDetail", "POST", {
+            "startDate": startDate,
+            "endDate": endDate,
+            "hotelRoomComboId": hotelRoomComboId
+        }, getPriceDetailCall);
+
+
+        $("#jumpHotelContact").click(function () {
+            returnChoose();
+        });
+
+        //获取钥匙
+        publicAjaxToken(baseAjaxUrl + "/ty_api/order/getPublickey", "POST", {}, pubKeyCall);
+
+    });
+
+    //获取秘钥的回调
+    function pubKeyCall(res) {
+        if (res.errorCode == 200) {
+            pubKey = res.data.publicKey;
+        }
+    }
+
+    //初始化剩余房间数的回调
+    function initNumCall(res) {
+        if (res.errorCode == 200) {
+            var innerHtml = '';
+            for (var i = 1; i <= res.data; i++) {
+                innerHtml += '<li class="chose-item" data-num="' + i + '">' + i + '间</li>';
+            }
+            $("#choseNum").html(innerHtml);
+            $(".chose-item").eq(0).addClass("active");
+            chooseHouseNum();
+        } else {
+            layMessage(res.message);
+        }
+    }
+
+    //选择房间个数
+    function chooseHouseNum() {
+        var choseNumFlag = true;
+        $(".hn-num").click(function () {
+            if (choseNumFlag) {
+                $("#choseNum").show();
+                $(".arrow").addClass("active");
+                choseNumFlag = !choseNumFlag;
+            } else {
+                $("#choseNum").hide();
+                $(".arrow").removeClass("active");
+                choseNumFlag = !choseNumFlag;
+            }
+        });
+        $(".chose-item").each(function (i, v) {
+            $(v).click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                $("#houseNumText").html($(this).text());
+                $("#houseNum").val($(this).attr("data-num"));
+                choseNumFlag = !choseNumFlag;
+                houseNum=$(this).attr("data-num");
+                newPriceNum=priceSum*houseNum;
+                $("#salePrice").html(newPriceNum);
+                $("#choseNum").hide();
+                $(".arrow").removeClass("active");
+            })
+        });
+    }
+
+    //创建订单
+    $("#submit").click(function () {
+        if ($("#clientName").val() == '') {
+            layMessage("请填写联系人！");
+            return false;
+        }
+
+        if ($("#clientPhone").val() == '') {
+            layMessage("请填写联系方式！");
+            return false;
+        }
+
+        if(endId){
+            var data = {
+                "hotelRoomComboId": hotelRoomComboId,
+                "buySum": $("#houseNum").val(),
+                "startDate": startDate,
+                "endDate": endDate,
+                "mobile": $("#clientPhone").val(),
+                "realName": $("#clientName").val(),
+                "clientId": clientId,
+                "endId":endId
+            }
+        }else{
+            var data = {
+                "hotelRoomComboId": hotelRoomComboId,
+                "buySum": $("#houseNum").val(),
+                "startDate": startDate,
+                "endDate": endDate,
+                "mobile": $("#clientPhone").val(),
+                "realName": $("#clientName").val(),
+                "clientId": clientId
+            }
+        }
+
+
+        data = JSON.stringify(data);
+        //实例化
+        var encrypt = new JSEncrypt();
+        //公钥
+        encrypt.setPublicKey(pubKey);
+        //加密串分段加密
+        var dataJson = encrypt.encryptLong(data);
+        $("#htmlMask").show();
+        console.log(data);
+        //创建订单
+        publicAjaxToken(baseAjaxUrl + "/ty_api/order/createHotelOrder", "POST", {"orderStr": dataJson}, creatOrderCall);
+
+        //创建订单的回调
+        function creatOrderCall(res) {
+            console.log(res);
+            if (res.errorCode == 200) {
+                // $("#htmlMask").hide();
+                // layMessage("订单创建成功");
+                var orderNo = res.data.orderNo;
+                var orderId = res.data.orderId;
+                // wxConfigFn(orderNo, orderId, "hotel")
+                var form1 = $("#form1");
+                var input = $("#input1") 
+                // 设置相应参数 
+                input.val(orderNo);
+                console.log(input.val());
+                input.attr("name","orderNo");
+                // 将该输入框插入到 form 中 
+                input.appendTo(form1); 
+                console.log(input);
+                // form 的提交方式 
+                form1.attr("method","post");
+                form1.attr("action", baseAjaxUrl + "/ty_api/pay/aliWebPay");
+                // form 提交路径 
+                // form1.action = baseAjaxUrl +  "/ty_api/pay/aliWebPay"; 
+                // 对该 form 执行提交 
+                form1.submit(); 
+            } else if (res.errorCode == 503) {
+                layMessage(res.message);
+                $("#htmlMask").hide();
+            } else {
+                layMessage(res.message);
+                $("#htmlMask").hide();
+            }
+        }
+    });
+
+    //查看明细
+    $("#billingDetails").click(function () {
+        var priceDetailHtml='';
+        for(var i=0;i<priceDetailData.length;i++){
+            var breakfast='';
+            switch (priceDetailData[i].includeBreakfast) {
+                case 0:
+                    breakfast="不含早";
+                    break;
+                case 1:
+                    breakfast="含单早";
+                    break;
+                case 2:
+                    breakfast="含双早";
+                    break;
+            }
+            priceDetailHtml+=
+                '   <p>\n' +
+                '       <span>'+timeTransformation(priceDetailData[i].date,"dateCount")+'</span><span>'+breakfast+'</span><span>￥'+priceDetailData[i].salePrice+'x'+houseNum+'</span>\n' +
+                '   </p>\n';
+        }
+
+
+        layer.open({
+            content:
+            '<div class="billing-details">\n' +
+            '    <div class="billing-title">\n' +
+            '        费用明细\n' +
+            '    </div>\n' +
+            '    <div class="billing-msg">\n' +
+            '        <span>房费</span>\n' +
+            '        <span>￥<span>'+newPriceNum+'</span></span>\n' +
+            '    </div>\n' +
+            '    <div class="billing-box">\n' +
+                priceDetailHtml+
+            '    </div>\n' +
+            '    <div class="billing-foot">\n' +
+            '        <span>在线支付</span>\n' +
+            '        <span>￥<span>'+newPriceNum+'</span></span>\n' +
+            '    </div>\n' +
+            '</div>'
+            , btn: ['取消']
+            , skin: 'footer'
+            , yes: function (index) {
+                layer.close(index);
+            }, style: 'padding:0;'
+        });
+    });
+
+    function getPriceDetailCall(res) {
+        if (res.errorCode == 200) {
+            console.log(res);
+            priceDetailData = res.data;
+            for(var i=0;i<priceDetailData.length;i++){
+                priceSum+=priceDetailData[i].salePrice*houseNum;
+            }
+            newPriceNum=priceSum;
+            $("#salePrice").html(priceSum);
+        }
+    }
+
+
+</script>
+<script>
+    $(function () {
+        init()
+    });
+
+    function init() {
+        var url = baseAjaxUrl + "/ty_api/customer/getListByUserId";
+        var data = {"type":"HOTEL"};
+        upLoading(url, data, getUserCall, false);
+    }
+
+
+    /*提交按钮集合*/
+    //添加联系人
+    $("#submitAdd").click(function () {
+        var realname = $("#addPeopleName").val();
+        var mobile = $("#addPeoplePhone").val();
+        //验证必填字段
+        if (realname == '' || mobile == '') {
+            layMessage("请填写必填字段");
+            return false;
+        }
+
+        //验证手机号
+        if (mobileReg(mobile) == false) {
+            layMessage("手机号码格式不正确");
+            return false;
+        }
+
+        //添加联系人
+        publicAjaxToken(baseAjaxUrl + "/ty_api/customer/insertCustomer", "POST", {
+            "realname": realname,
+            "mobile": mobile,
+            "type": "HOTEL"
+        }, addUserCall);
+    });
+
+    //编辑联系人
+    $("#submitEdit").click(function () {
+        var customerId = $(this).attr("data-customerId");
+        var realname = $("#editPeopleName").val();
+        var mobile = $("#editPeoplePhone").val();
+        //验证必填字段
+        if (realname == '' || mobile == '') {
+            layMessage("请填写必填字段");
+            return false;
+        }
+
+        //验证手机号
+        if (mobileReg(mobile) == false) {
+            layMessage("手机号码格式不正确");
+            return false;
+        }
+
+
+        //编辑联系人
+        publicAjaxToken(baseAjaxUrl + "/ty_api/customer/insertCustomer", "POST", {
+            "customerId": customerId,
+            "realname": realname,
+            "mobile": mobile,
+            "type": "HOTEL"
+        }, addUserCall);
+    });
+
+    //删除联系人
+    function deletePeople(e) {
+        var customerId = $(e).siblings(".customerId").val();
+        //询问框
+        layer.open({
+            content: '您确定要删除联系人吗？'
+            , btn: ['取消', '确定']
+            , yes: function (index) {
+                layer.close(index);
+            },
+            no: function (index) {
+                publicAjaxToken(baseAjaxUrl + "/ty_api/customer/deleteCustomer", "POST", {
+                    "customerId": customerId
+                }, deletePeopleCall)
+            }
+        });
+
+    }
+
+    /*所有ajax的回调集合*/
+    //获取联系人的回调
+    function getUserCall(data) {
+        var listDom = $("#myContactAll");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            $("#clientName").val(data[0].realname);
+            $("#clientPhone").val(data[0].mobile);
+            // $("#submit").attr("data-customerid",data[0].customerId);
+            innerHtml +=
+                '   <div class="contact-item">\n' +
+                ' <a href="javascript:;" onclick="choosePeople(this)">' +
+                '       <div class="choosebtn">\n' +
+                '           <img src="../static/img/goods/selected2@2x.png" alt="" class="choose-img">\n' +
+                '       </div>   \n' +
+                '       <div class="contact-left">\n' +
+                '           <p class="contact-name">' + data[i].realname + '</p>\n' +
+                '           <p class="contact-phone">' + data[i].mobile + '</p>\n' +
+                '       </div>\n' +
+                '</a>' +
+                '       <div class="contact-right">\n' +
+                '           <img src="../static/img/hotel/edit.png" alt="" onclick="jumpEdit(this)">\n' +
+                '           <img src="../static/img/hotel/delete.png" alt="" onclick="deletePeople(this)">\n' +
+                '           <input type="hidden" class="customerId" value="' + data[i].customerId + '">' +
+                '           <input type="hidden" class="peopleName" value="' + data[i].realname + '">' +
+                '           <input type="hidden" class="peopleMobile" value="' + data[i].mobile + '">' +
+                '       </div>\n' +
+                '   </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //添加联系人的回调
+    function addUserCall(res) {
+        if (res.errorCode == 200) {
+            layMessage("操作成功");
+            returnChoose();
+            clearDown();
+            init();
+        } else if (res.errorCode == 305) {
+            layMessage("该联系人已存在");
+            return false;
+        }
+    }
+
+    //删除联系人的回调
+    function deletePeopleCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            layMessage("删除成功");
+            clearDown();
+            init();
+        }
+    }
+
+    /*修改联系人*/
+    function jumpEdit(e) {
+        $(".tab-pal").hide();
+        $("#editContact").show();
+        var peopleSex = $(e).siblings(".peopleSex").val();
+        console.log($(e).siblings(".peopleName").val());
+        var customerId = $(e).siblings(".customerId").val();
+        $("#submitEdit").attr("data-customerId", customerId);
+
+        $("#editPeopleName").val($(e).siblings(".peopleName").val());
+        $("#editPeoplePhone").val($(e).siblings(".peopleMobile").val());
+        $("#editPeopleNumber").val($(e).siblings(".peopleIdNum").val());
+        $("#editPeopleEmail").val($(e).siblings(".peopleEmail").val());
+        $("#editPeopleAddress").val($(e).siblings(".peopleAdd").val());
+        $("#editPeopleSex option").attr("selected", false);
+        $("#editPeopleSex option").eq(peopleSex).attr("selected", true);
+    }
+
+    /*跳转添加联系人*/
+    function jumpAdd() {
+        $("#addPeopleName").val("");
+        $("#addPeoplePhone").val("");
+        $("#addPeopleNumber").val("");
+        $("#addPeopleEmail").val("");
+        $("#addPeopleAddress").val("");
+        $("#addPeopleSex option").attr("selected", false);
+        $("#addPeopleSex option").eq(0).attr("selected", true);
+        $(".tab-pal").hide();
+        $("#addContact").show();
+    }
+
+    /*跳转我的联系人*/
+    function returnChoose() {
+        $(".tab-pal").hide();
+        $("#contact").show();
+        $("#hotelReservationBox").hide();
+    }
+
+    function returnReservation() {
+        $(".tab-pal").hide();
+        $("#hotelReservationBox").show();
+        $(".choose-img").attr("src", "../static/img/goods/selected2@2x.png");
+    }
+
+    /*确认选择联系人*/
+    function choosePeople(e) {
+        var chooseImg = $(e).children(".choosebtn").children(".choose-img").attr("src");
+        $(e).children(".choosebtn").children(".choose-img").attr("src", "../static/img/goods/selected@2x.png");
+        setTimeout("returnReservation();", 200);
+        // returnReservation();
+        // var customerId = $(e).attr("data-customerId");
+        // $("#submit").attr("data-customerId", customerId);
+        var peopleName = $(e).children(".contact-left").children(".contact-name").html();
+        var peoplePhone = $(e).children(".contact-left").children(".contact-phone").html();
+        console.log(peopleName, peoplePhone);
+        $("#clientName").val(peopleName);
+        $("#clientPhone").val(peoplePhone);
+    }
+
+
+</script>

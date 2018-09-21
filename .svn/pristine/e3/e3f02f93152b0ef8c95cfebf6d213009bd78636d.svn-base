@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>常用旅客信息</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/reservation.css">
+    <link rel="stylesheet" href="../static/css/hotelContact.css">
+    <link rel="stylesheet" href="../plug-in/meScroll/mescroll.min.css">
+</head>
+<body>
+<!--我的联系人-->
+<section id="contact" class="tab-pal">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+            选择常用旅客
+        </div>
+    </header>
+    <main class="mescroll" id="mescroll">
+        <div class="contact-box content" id="myContactAll">
+
+        </div>
+    </main>
+    <footer>
+        <div class="submit-btn" onclick="jumpAdd()">
+            + 添加常用旅客
+        </div>
+    </footer>
+</section>
+<!--修改联系人-->
+<section id="editContact" class="tab-pal active">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnChoose()">
+            编辑常用旅客
+        </div>
+    </header>
+    <main style="margin-bottom: 0.82rem;">
+        <div class="edit-required">
+            <div class="edit-message">
+                必填信息
+            </div>
+            <div class="edit-item">
+                <label for="editPeopleName">中文姓名</label>
+                <input type="text" id="editPeopleName" placeholder="与证件保持一致">
+            </div>
+            <div class="edit-item">
+                <label for="editPeoplePhone">手机号</label>
+                <input type="text" id="editPeoplePhone" placeholder="用于接收确认短信">
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="submit-btn" id="submitEdit">
+            确认保存
+        </div>
+    </footer>
+</section>
+<!--添加联系人-->
+<section id="addContact" class="tab-pal active">
+    <header>
+        <div class="navigation">
+            <img src="../static/img/public/return2@2x.png" alt="" onclick="returnChoose()">
+            添加常用旅客
+        </div>
+    </header>
+    <main style="margin-bottom: 0.82rem;">
+        <div class="edit-required">
+            <div class="edit-message">
+                必填信息
+            </div>
+            <div class="edit-item">
+                <label for="addPeopleName">中文姓名</label>
+                <input type="text" id="addPeopleName" placeholder="与证件保持一致">
+            </div>
+            <div class="edit-item">
+                <label for="addPeoplePhone">手机号</label>
+                <input type="number" id="addPeoplePhone" maxlength="11" placeholder="用于接收确认短信">
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div class="submit-btn" id="submitAdd">
+            确认保存
+        </div>
+    </footer>
+</section>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../plug-in/meScroll/mescroll.min.js"></script>
+<script src="../static/js/upLoading.js"></script>
+<script type="text/javascript" src="../static/js/history.js"></script>
+<script>
+    $(function () {
+        init()
+    });
+    function init(){
+        var url = baseAjaxUrl + "/ty_api/customer/getListByUserId";
+        var data = {};
+        upLoading(url, data, getUserCall, false);
+    }
+
+
+    /*提交按钮集合*/
+    //添加联系人
+    $("#submitAdd").click(function () {
+        var realname = $("#addPeopleName").val();
+        var mobile = $("#addPeoplePhone").val();
+        //验证必填字段
+        if (realname == '' || mobile == '') {
+            layMessage("请填写必填字段");
+            return false;
+        }
+
+        //验证手机号
+        if (mobileReg(mobile) == false) {
+            layMessage("手机号码格式不正确");
+            return false;
+        }
+
+        //添加联系人
+        publicAjaxToken(baseAjaxUrl + "/ty_api/customer/insertCustomer", "POST", {
+            "realname": realname,
+            "mobile": mobile
+        }, addUserCall);
+    });
+
+    //编辑联系人
+    $("#submitEdit").click(function () {
+        var customerId = $(this).attr("data-customerId");
+        var realname = $("#editPeopleName").val();
+        var mobile = $("#editPeoplePhone").val();
+        //验证必填字段
+        if (realname == '' || mobile == '') {
+            layMessage("请填写必填字段");
+            return false;
+        }
+
+        //验证手机号
+        if (mobileReg(mobile) == false) {
+            layMessage("手机号码格式不正确");
+            return false;
+        }
+
+
+        //添加联系人
+        publicAjaxToken(baseAjaxUrl + "/ty_api/customer/insertCustomer", "POST", {
+            "customerId": customerId,
+            "realname": realname,
+            "mobile": mobile
+        }, addUserCall);
+    });
+
+    //删除联系人
+    function deletePeople(e) {
+        var customerId = $(e).siblings(".customerId").val();
+        //询问框
+        layer.open({
+            content: '您确定要删除联系人吗？'
+            ,btn: ['取消', '确定']
+            ,yes: function(index){
+                layer.close(index);
+            },
+            no:function (index) {
+                publicAjaxToken(baseAjaxUrl + "/ty_api/customer/deleteCustomer", "POST", {
+                    "customerId": customerId
+                }, deletePeopleCall)
+            }
+        });
+
+    }
+    /*所有ajax的回调集合*/
+    //获取联系人的回调
+    function getUserCall(data) {
+        var listDom = $("#myContactAll");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml+=
+                '   <div class="contact-item">\n' +
+                '       <div class="choosebtn">\n' +
+                '           <img src="../static/img/goods/selected2@2x.png" alt="">\n' +
+                '       </div>   \n' +
+                '       <div class="contact-left" onclick="choosePeople(this)">\n' +
+                '           <p class="contact-name">' + data[i].realname + '</p>\n' +
+                '           <p class="contact-phone">' + data[i].mobile + '</p>\n' +
+                '       </div>\n' +
+                '       <div class="contact-right">\n' +
+                '           <img src="../static/img/hotel/edit.png" alt="" onclick="jumpEdit(this)">\n' +
+                '           <img src="../static/img/hotel/delete.png" alt="" onclick="deletePeople(this)">\n' +
+                '           <input type="hidden" class="customerId" value="' + data[i].customerId + '">' +
+                '           <input type="hidden" class="peopleName" value="' + data[i].realname + '">' +
+                '           <input type="hidden" class="peopleMobile" value="' + data[i].mobile + '">' +
+                '       </div>\n' +
+                '   </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+    //添加联系人的回调
+    function addUserCall(res) {
+        if (res.errorCode == 200) {
+            layMessage("操作成功");
+            returnChoose();
+            // publicAjaxToken(baseAjaxUrl + "/ty_api/customer/getListByUserId", "POST", {
+            //     "pageNum": 1,
+            //     "pageSize": 10
+            // }, getUserCall);
+            clearDown();
+            init();
+        } else if (res.errorCode == 305) {
+            layMessage("该联系人已存在");
+            return false;
+        }
+    }
+    //删除联系人的回调
+    function deletePeopleCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            layMessage("删除成功");
+            clearDown();
+            init();
+        }
+    }
+    /*修改联系人*/
+    function jumpEdit(e) {
+        $(".tab-pal").hide();
+        $("#editContact").show();
+        var peopleSex = $(e).siblings(".peopleSex").val();
+        console.log($(e).siblings(".peopleName").val());
+        var customerId = $(e).siblings(".customerId").val();
+        $("#submitEdit").attr("data-customerId", customerId);
+
+        $("#editPeopleName").val($(e).siblings(".peopleName").val());
+        $("#editPeoplePhone").val($(e).siblings(".peopleMobile").val());
+        $("#editPeopleNumber").val($(e).siblings(".peopleIdNum").val());
+        $("#editPeopleEmail").val($(e).siblings(".peopleEmail").val());
+        $("#editPeopleAddress").val($(e).siblings(".peopleAdd").val());
+        $("#editPeopleSex option").attr("selected", false);
+        $("#editPeopleSex option").eq(peopleSex).attr("selected", true);
+    }
+    /*跳转添加联系人*/
+    function jumpAdd() {
+        $("#addPeopleName").val("");
+        $("#addPeoplePhone").val("");
+        $("#addPeopleNumber").val("");
+        $("#addPeopleEmail").val("");
+        $("#addPeopleAddress").val("");
+        $("#addPeopleSex option").attr("selected", false);
+        $("#addPeopleSex option").eq(0).attr("selected", true);
+        $(".tab-pal").hide();
+        $("#addContact").show();
+    }
+    /*跳转我的联系人*/
+    function returnChoose() {
+        $(".tab-pal").hide();
+        $("#contact").show();
+    }
+
+
+</script>

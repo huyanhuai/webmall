@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>订单详情</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <!--<link rel="stylesheet" href="static/css/loader.css">-->
+    <link rel="stylesheet" href="static/css/orderDetail.css">
+    <!--<script src="static/js/rem.js"></script>-->
+    <style>
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        订单详情
+    </div>
+</header>
+<main>
+    <!--待付款-->
+    <section class="order-type active" id="noPay">
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+            <div class="order-menu">
+                <div onclick="cancelOrder(this)">取消订单</div>
+                <div onclick="payMoney(this)">去付款</div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="apiType"></span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>未付款</span></p>
+            </div>
+        </div>
+    </section>
+    <!--待验票-->
+    <section class="order-type active" id="noCheck">
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <!--<p><span>￥25.00</span><span>x1</span></p>-->
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="apiType"></span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>未验票</span></p>
+            </div>
+        </div>
+        <div class="qrcode-box">
+            <p>验票码 <span class="yanpiaoma"></span></p>
+            <div class="qrcode">
+                <div id="qrcode1"></div>
+            </div>
+        </div>
+    </section>
+    <!--已验票-->
+    <section class="order-type active" id="yesCheck">
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+            <div class="order-menu">
+                <div onclick="jumpGoods(this)">再来一单</div>
+                <div onclick="evaluation(this)">我要评论</div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="apiType"></span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>已验票</span></p>
+            </div>
+        </div>
+        <div class="qrcode-box" id="ticketSuccess">
+            <p>验票码 <span class="yanpiaoma"></span></p>
+            <div class="qrcode">
+                <div id="qrcode2"></div>
+            </div>
+            <p id="checkTime"></p>
+            <img src="static/img/ticket/yiyanpiao.png" alt="" class="alreadyLogo">
+        </div>
+    </section>
+    <!--已验票并且已评价-->
+    <section class="order-type active" id="yesEval">
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+            <div class="order-menu">
+                <div onclick="jumpGoods(this)">再来一单</div>
+                <div onclick="location.href='myEvaluation.html';">查看评论</div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="apiType"></span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>已验票</span></p>
+            </div>
+        </div>
+        <div class="qrcode-box" id="ticketSuccess">
+            <p>验票码 <span class="yanpiaoma"></span></p>
+            <div class="qrcode">
+                <div id="qrcode3"></div>
+            </div>
+            <p id="checkTime"></p>
+            <img src="static/img/ticket/yiyanpiao.png" alt="" class="alreadyLogo">
+        </div>
+    </section>
+    <!--已退款-->
+    <section class="order-type active" id="refundSucc" >
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="typeMsg">此订单已退款</span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>已退款</span></p>
+            </div>
+        </div>
+    </section>
+    <!--已取消-->
+    <section class="order-type active" id="cancel" >
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="typeMsg">此订单已取消</span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>订单已取消</span></p>
+            </div>
+        </div>
+    </section>
+    <!--已过期-->
+    <section class="order-type active" id="invalid" >
+        <div class="order-box">
+            <div class="order-top">
+                <div class="order-top-left">
+                    <p class="orderName"></p>
+                    <p class="common">共<span class="buyNum"></span>件商品<span class="payMoney"></span></p>
+                </div>
+                <div class="order-top-right" onclick="jumpGoods(this)">
+                    <img src="static/img/public/more@2x.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="order-info-box">
+            <div class="order-msg">订单信息 <span class="typeMsg">此订单已失效</span></div>
+            <div class="order-info">
+                <p><span>订单号</span><span class="cOrderNo"></span></p>
+                <p><span>购票人</span><span class="cName"></span></p>
+                <p><span>手机号</span><span class="cPhone"></span></p>
+                <p><span>下单时间</span><span class="cTime"></span></p>
+                <p><span>状态</span><span>订单已失效</span></p>
+            </div>
+        </div>
+    </section>
+</main>
+<!--load-->
+<div id="lodbox">
+    <div id="loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        var orderId = GetQueryString("orderId");
+        publicAjaxToken(baseAjaxUrl + "/ty_api/order/getDetail", "POST", {"orderId": orderId}, orderDetailCall);
+    });
+
+    function orderDetailCall(res) {
+        if (res.errorCode == 200) {
+            var data = res.data;
+            $("#lodbox").hide();
+            console.log(res);
+            switch (res.data.status) {
+                case "NON_PAY"://待付款
+                    $("#noPay").removeClass("active");
+                    break;
+                case "PAY_SUCCESS"://待验票
+                    $.ajax({
+                        url:baseAjaxUrl+"/ty_api/order/ticket/queryCheckMessage",
+                        type:"POST",
+                        data:{"checkCode":data.checkCode},
+                        success:function (res) {
+                            if(res.errorCode==200){
+                                if(res.data.apiType=="ZYB"){
+                                    $(".apiType").html("智游宝票务");
+                                    var img=new Image();
+                                    img.src="data:image/gif;base64,"+res.data.checkMessage.img;
+                                    $("#qrcode1").append(img)
+                                }else if(res.data.apiType=="TONGYOU"){
+                                    $(".apiType").html("同游票务");
+                                    var codeMsgJson={"createTime":res.data.checkMessage.ticketTime,"userId":res.data.checkMessage.userId,"orderNo":res.data.checkMessage.orderNo,"type":"Scan_Ticket"};
+                                    var qrcode = new QRCode('qrcode1', {
+                                        text: JSON.stringify(codeMsgJson),
+                                        width: 130,
+                                        height: 130,
+                                        colorDark: '#000000',
+                                        colorLight: '#ffffff',
+                                        correctLevel: QRCode.CorrectLevel.Q
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    $("#noCheck").removeClass("active");
+                    break;
+                case "TICKET_SUCCESS"://验票成功
+                    $.ajax({
+                        url:baseAjaxUrl+"/ty_api/order/ticket/queryCheckMessage",
+                        type:"POST",
+                        data:{"checkCode":data.checkCode},
+                        success:function (res) {
+                            if(res.errorCode==200){
+                                if(res.data.apiType=="ZYB"){
+                                    $(".apiType").html("智游宝票务");
+                                    var img=new Image();
+                                    img.src="data:image/gif;base64,"+res.data.checkMessage.img;
+                                    $("#qrcode2").append(img)
+                                }else if(res.data.apiType=="TONGYOU"){
+                                    $(".apiType").html("同游票务");
+                                    var codeMsgJson={"createTime":res.data.checkMessage.ticketTime,"userId":res.data.checkMessage.userId,"orderNo":res.data.checkMessage.orderNo,"type":"Scan_Ticket"};
+                                    var qrcode = new QRCode('qrcode2', {
+                                        text: JSON.stringify(codeMsgJson),
+                                        width: 130,
+                                        height: 130,
+                                        colorDark: '#000000',
+                                        colorLight: '#ffffff',
+                                        correctLevel: QRCode.CorrectLevel.Q
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    $("#yesCheck").removeClass("active");
+                    $("#yesCheck #checkTime").html("验票时间："+timeTransformation(res.data.checkTime));
+                    break;
+                case "COMMENT_SUCCESS"://已评价
+                    $.ajax({
+                        url:baseAjaxUrl+"/ty_api/order/ticket/queryCheckMessage",
+                        type:"POST",
+                        data:{"checkCode":data.checkCode},
+                        success:function (res) {
+                            if(res.errorCode==200){
+                                if(res.data.apiType=="ZYB"){
+                                    $(".apiType").html("智游宝票务");
+                                    var img=new Image();
+                                    img.src="data:image/gif;base64,"+res.data.checkMessage.timg;
+                                    $("#qrcode3").append(img)
+                                }else if(res.data.apiType=="TONGYOU"){
+                                    $(".apiType").html("同游票务");
+                                    var codeMsgJson={"createTime":res.data.checkMessage.ticketTime,"userId":res.data.checkMessage.userId,"orderNo":res.data.checkMessage.orderNo,"type":"Scan_Ticket"};
+                                    var qrcode = new QRCode('qrcode3', {
+                                        text: JSON.stringify(codeMsgJson),
+                                        width: 130,
+                                        height: 130,
+                                        colorDark: '#000000',
+                                        colorLight: '#ffffff',
+                                        correctLevel: QRCode.CorrectLevel.Q
+                                    });
+                                }
+                            }
+                        }
+                    });
+                    $("#yesEval").removeClass("active");
+                    $("#yesEval #checkTime").html("验票时间："+timeTransformation(res.data.checkTime));
+                    break;
+                case "REFUND_SUCCESS"://退款成功
+                    $("#refundSucc").removeClass("active");
+                    break;
+                case "CANCEL":      //取消订单cancel
+                    $("#cancel").removeClass("active");
+                    break;
+                case "INVALID_TICKET":      //取消订单cancel
+                    $("#invalid").removeClass("active");
+                    break;
+            }
+            $(".order-box").attr("data-productId",data.productId);
+            $(".yanpiaoma").html(data.checkCode);
+            $(".order-box").attr("data-orderId",data.orderId);
+            $(".order-box").attr("data-orderNo",data.orderNo);
+            $(".orderName").html(data.packageName);
+            $(".buyNum").html(data.buySum);
+            $(".payMoney").html("￥"+data.orderPrice);
+            $(".cOrderNo").html(data.orderNo);
+            $(".cName").html(data.realname);
+            $(".cPhone").html(data.mobile);
+            $(".cTime").html(timeTransformation(data.createTime));
+        }
+    }
+
+    //取消订单
+    function cancelOrder(e) {
+        var orderId=$(e).parent(".order-menu").parent(".order-box").attr("data-orderId");
+        publicAjaxToken(baseAjaxUrl+'/ty_api/order/cancelOrder',"POST",{"orderId":orderId},cancelOrderCall);
+    }
+    function cancelOrderCall(res) {
+        if(res.errorCode==200){
+            layMessage("订单取消成功");
+            location.href="order.html";
+        }
+    }
+    //付款
+    function payMoney(e) {
+        var orderId=$(e).parent(".order-menu").parent(".order-box").attr("data-orderId");
+        var orderNo=$(e).parent(".order-menu").parent(".order-box").attr("data-orderNo");
+        wxConfigFn(orderNo,orderId);
+    }
+    //进行评价
+    function evaluation(e) {
+        var orderId=$(e).parent(".order-menu").parent(".order-box").attr("data-orderId");
+        location.href = "evaluation.html?orderId="+orderId;
+    }
+    //跳转商品页和再来一单
+    function jumpGoods(e) {
+        var productId=$(e).parent("div").parent(".order-box").attr("data-productId");
+        location.href="goods.html?productId="+productId;
+    }
+
+</script>

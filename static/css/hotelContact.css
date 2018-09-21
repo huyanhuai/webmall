@@ -1,0 +1,163 @@
+/*选择联系人的页面样式*/
+.contact-box {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 0.24rem;
+}
+
+.contact-item {
+    height: 1.6rem;
+    margin: 0 0.15rem;
+    padding: 0.1rem 0.3rem;
+    border-bottom: 0.01rem solid #e5e5e5;
+}
+
+.contact-box .contact-item:last-child {
+    border-bottom: none;
+}
+
+.choosebtn{
+    width: 10%;
+    float: left;
+    height: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: flex-end;
+    -webkit-align-items: flex-end;
+    padding-bottom: 0.2rem;
+}
+.contact-left {
+    width: 70%;
+    float: left;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: space-around;
+}
+
+.contact-left p:nth-child(1) {
+    font-size: 0.3rem;
+    color: #494949;
+}
+
+.contact-left p:nth-child(2) {
+    font-size: 0.24rem;
+    color: #494949;
+}
+
+.contact-right {
+    width: 20%;
+    float: left;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    /*align-items: center;*/
+    display: -webkit-flex;
+    /*-webkit-align-items: center;*/
+    -webkit-justify-content: space-between;
+    padding-top: 0.2rem;
+}
+
+.contact-right span {
+    width: 0.7rem;
+    height: 0.4rem;
+    background: #ffffff;
+    border-radius: 0.05rem;
+    border: solid 0.01rem #eb001d;
+    font-size: 0.24rem;
+    color: #eb001d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+
+.contact-right img{
+    height: 0.45rem;
+}
+
+.tab-pal.active {
+    display: none;
+}
+
+/*选择联系人的页面样式*/
+/*编辑联系人页面样式*/
+.edit-required, .edit-choose {
+    width: 100%;
+    height: 3.28rem;
+}
+
+.edit-message {
+    width: 100%;
+    height: 0.88rem;
+    padding: 0 0.45rem;
+    font-size: 0.3rem;
+    color: #494949;
+    line-height: 0.9rem;
+}
+
+.edit-item {
+    width: 100%;
+    height: 0.8rem;
+    background: #fff;
+    padding: 0 0.45rem;
+    border-bottom: 0.01rem solid #e5e5e5;
+    font-size: 0.26rem;
+}
+
+.edit-required .edit-item:last-child, .edit-choose .edit-item:last-child {
+    border-bottom: none;
+}
+
+.edit-item label {
+    width: 25%;
+    height: 100%;
+    float: left;
+    line-height: 0.85rem;
+    color: #6a6a6a;
+}
+
+.edit-item input, .edit-item select {
+    width: 75%;
+    height: 99%;
+    float: left;
+    line-height: 0.85rem;
+    font-size: 0.28rem;
+}
+
+.edit-item select {
+    outline: none;
+    border: none;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: #fff;
+    color: #6a6a6a;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+footer {
+    width: 100%;
+    height: 0.82rem;
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+}
+
+/*编辑联系人页面样式*/
+#mescroll{
+    height: auto!important;
+    position: fixed;
+    top: 0.9rem;
+    bottom: 0.82rem;
+}

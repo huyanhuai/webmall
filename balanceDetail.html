@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>余额明细</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        .balanceBox{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+        .balance-item{
+            width: 100%;
+            height: 1.8rem;
+            background: #fff;
+            margin-top: 0.24rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: space-around;
+            padding: 0 0.4rem;
+        }
+        .balance-title{
+            font-size: 0.3rem;
+            color: #323232;
+        }
+        .balance-status span:first-child{
+            font-size: 0.24rem;
+            display: inline-block;
+            width: 50%;
+            float: left;
+            color: #909090;
+        }
+        .balance-status span:last-child{
+            display: inline-block;
+            width: 50%;
+            float: left;
+            font-size: 0.24rem;
+            color: #f79628;
+            text-align: right;
+        }
+        .balance-time{
+            font-size: 0.24rem;
+            color: #909090;
+            text-align: right;
+        }
+
+        #mescroll {
+            /*margin-bottom: 1rem;*/
+            width: 100%;
+            height: auto;
+            overflow: auto;
+            position: fixed;
+            top: 0.9rem;
+            bottom: 0rem;
+        }
+
+        .mescroll-totop {
+            bottom: 60px !important;
+        }
+
+        /*.navigation{*/
+            /*position: fixed;*/
+            /*top: 0;*/
+        /*}*/
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        余额明细
+    </div>
+</header>
+<main id="mescroll" class="mescroll">
+    <section class="balanceBox content">
+
+    </section>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        //获取余额明细
+        var url=baseAjaxUrl+"/ty_api/user/account/bill/queryBillList";
+        var data={};
+        upLoading(url, data, getBalanceCall, false);
+
+        //余额明细的回调
+        function getBalanceCall(data) {
+            var listDom = $(".balanceBox");
+            var innerHtml = '';
+            for (var i = 0; i < data.length; i++) {
+                var statusHtml='';
+                var packageName='';
+                switch (data[i].billType){
+                    case "THAW_COMMISSION":
+                        statusHtml="已结算佣金";
+                        packageName=data[i].packageName;
+                        break;
+                    case "REFUND":
+                        statusHtml="退款";
+                        packageName=data[i].packageName;
+                        break;
+                    case "WITHDRAW":
+                        statusHtml="提现";
+                        packageName='提现操作';
+                        break;
+                    case "CONSUME":
+                        statusHtml="支付";
+                        packageName=data[i].packageName;
+                        break;
+                }
+                innerHtml +=
+                    '       <div class="balance-item">\n' +
+                    '            <p class="balance-title">'+packageName+'</p>\n' +
+                    '            <p class="balance-status">\n' +
+                    '                <span>'+statusHtml+'</span>\n' +
+                    '                <span>'+data[i].validAmount+'元</span>\n' +
+                    '            </p>\n' +
+                    '            <p class="balance-time">\n' +
+                    '                '+timeTransformation(data[i].createTime)+'\n' +
+                    '            </p>\n' +
+                    '        </div>';
+            }
+            listDom.append(innerHtml);//加在列表的后面,上拉加载
+        }
+    })
+</script>

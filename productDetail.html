@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>产品详情</title>
+    <!--<script src="static/js/rem.js"></script>-->
+    <link rel="stylesheet" href="static/css/base.css?ver=20110905">
+    <link rel="stylesheet" href="static/css/public.css?ver=20110905">
+    <link rel="stylesheet" href="static/css/hot.css?ver=20110905">
+    <!--<link rel="stylesheet" href="static/css/productDetail.css">-->
+    <link rel="stylesheet" href="plug-in/swiper/swiper-4.2.0.min.css?ver=20110905">
+    <style>
+        /*banner*/
+        .banner {
+            width: 100%;
+            height: 3.75rem;
+            position: relative;
+        }
+
+        .nav {
+            position: absolute;
+            top: 0.3rem;
+            left: 0.33rem;
+            right: 0.33rem;
+            margin: auto;
+            height: 0.6rem;
+            z-index: 10;
+        }
+
+        .nav > img {
+            display: inline-block;
+            width: 0.6rem;
+            height: 0.6rem;
+        }
+
+        .return {
+            float: left;
+        }
+
+        .share {
+            float: right;
+            margin-left: 0.25rem;
+        }
+
+        .collection {
+            float: right;
+        }
+
+        .swiper-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /*产品介绍开始*/
+        .product-box {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.24rem;
+        }
+
+        .product-open {
+            width: 100%;
+            height: 1.7rem;
+            padding: 0 0.35rem;
+            background: #fff;
+        }
+
+        .product-h2 {
+            width: 100%;
+            height: 0.7rem;
+            font-size: 0.28rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            color: #222222;
+        }
+
+        .product-h2 > i {
+            width: 0.08rem;
+            height: 0.3rem;
+            background-color: #47bfc5;
+            border-radius: 0.04rem;
+            margin-right: 0.15rem;
+        }
+
+        .workday, .dayoff {
+            width: 100%;
+            height: 0.45rem;
+            font-size: 0.24rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            color: #7e7e7e;
+        }
+
+        .product-detail, .product-comments, .product-message {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0 0.35rem;
+            background: #fff;
+            margin-top: 0.2rem;
+            padding-bottom: 0.1rem;
+        }
+
+        #productRichtext {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+        #productRichtext img{
+            width: 100%;
+        }
+
+        .product-message > p:not(.product-h2) {
+            margin: 0.12rem 0;
+            font-size: 0.24rem;
+            color: #7e7e7e;
+        }
+
+        /*#mask{*/
+        /*width: 100%;*/
+        /*height: 100%;*/
+        /*position: fixed;*/
+        /*top: 0;*/
+        /*bottom: 0;*/
+        /*z-index: 100;*/
+        /*background: #fff;*/
+        /*}*/
+
+        /*//评论相关*/
+        .discuss{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+        .discuss-item {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0.15rem 0;
+            border-bottom: 0.01rem dashed #777777;
+        }
+
+        .discuss .discuss-item:last-child{
+            border: none;
+        }
+        .discuss-item-head {
+            width: 100%;
+            height: 0.5rem;
+        }
+
+        .discuss-head-left, .discuss-head-right {
+            width: 50%;
+            height: 100%;
+            float: left;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+        }
+        .discuss-head-right{
+            justify-content: flex-end;
+            -webkit-justify-content: flex-end;
+            padding-right: 0.15rem;
+        }
+
+        .discuss-head-left img {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            margin-left: 0.1rem;
+        }
+
+        .discuss-head-left .userName, .createTime {
+            font-size: 0.24rem;
+            color: #7e7e7e;
+            margin-left: 0.2rem;
+        }
+
+        .discuss-head-right .starsImg img {
+            width: 0.18rem;
+            height: 0.18rem;
+            margin-right: 0.05rem;
+            float: left;
+        }
+
+        /*评论图片*/
+        .discuss-item-com, .commentContent, .merchants-discuss {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            font-size: 0.26rem;
+            color: #7e7e7e;
+        }
+
+        .img-prview {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.1rem;
+            padding: 0 0.1rem;
+        }
+
+        .img-item {
+            width: 1.4rem;
+            height: 1.4rem;
+            float: left;
+            margin-right: 0.3rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .img-prview .img-item:nth-child(4) {
+            margin: 0;
+        }
+
+        .img-item img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.05rem;
+        }
+
+        .merchants-discuss p:nth-child(1) {
+            color: #222222;
+            margin: 0.1rem 0;
+        }
+
+        .swiper-slide img {
+            height: auto!important;
+        }
+
+        #publicImg{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+        #publicImg img {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!--<div id="mask"></div>-->
+<header>
+    <div class="banner">
+        <div class="nav">
+            <img src="static/img/goods/return@2x.png" alt="" class="return" onclick="returnBack()">
+            <!--<img src="static/img/goods/endorsement.png" alt="" class="share">-->
+            <!--<img src="static/img/goods/collection@2x.png" alt="" class="collection">-->
+        </div>
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+    <div class="product-box">
+        <div class="product-detail">
+            <p class="product-h2">
+                <i></i>
+                游玩特色
+            </p>
+            <div id="productRichtext">
+                <div id="publicImg">
+                    <img src="static/img/public/gongzhonghao.png" alt="">
+                </div>
+            </div>
+        </div>
+        <div class="product-comments">
+            <p class="product-h2">
+                <i></i>
+                评论
+            </p>
+            <div class="discuss">
+
+            </div>
+        </div>
+        <div class="product-message">
+            <p class="product-h2">
+                <i></i>
+                温馨提示
+            </p>
+            <p class="message" style="margin-top: 0;">1、注意人身安全：请在自己能够控制风险的范围内活动，旅途中遇紧急情况的，应立即报警并寻求当地警察机关的帮助。</p>
+            <p class="message">2、保管好贵重物品：随身携带财物妥善安置，不要离开自己的视线范围；漂流时请寄存财物，以免落入水中。</p>
+            <p class="message">3、携带旅行票证：个人身份证件、旅行证件、交通票等请随身妥善保管，以免遗忘、丢失。</p>
+        </div>
+        <div class="product-message">
+            <p class="product-h2">
+                <i></i>
+                联系景区
+            </p>
+            <p class="message" style="margin-top: 0;">
+                景区地址：<span class="point-address" id="pointAdd"></span>
+            </p>
+            <p class="message">景区电话：<a class="point-phone" id="poinPhone"></a></p>
+        </div>
+        <div class="product-message">
+            <p class="product-h2">
+                <i></i>
+                服务热线
+            </p>
+            <p class="message" style="margin-top: 0;">
+                杭州同游科技有限公司：<span class="point-address">杭州西湖区天目山路网新大厦</span>
+            </p>
+            <p class="message">
+                服务热线：<a class="point-phone" href="tel:0571-86981889">0571-86981889</a>
+            </p>
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js?ver=20110905"></script>
+<script src="static/js/public.js?ver=20110905"></script>
+<script src="static/js/ajaxTool.js?ver=20110905"></script>
+<script src="plug-in/swiper/swiper-4.2.0.min.js?ver=20110905"></script>
+<script src="plug-in/layer_mobile/layer.js?ver=20110905"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var productId,clientType;
+    $(document).ready(function () {
+        productId = GetQueryString("productId");
+        clientType=GetQueryString("clientType");
+        if(clientType==1){
+            $(".nav").hide();
+        }
+        //获取轮播图
+        publicAjax(baseAjaxUrl + "/ty_api/product/picture/getListByProductId", "POST", {
+            "productId": productId,
+            "pageNum": 1,
+            "pageSize": 3
+        }, goodsSwiperCall);
+        //获取产品详情信息
+        publicAjax(baseAjaxUrl + "/ty_api/product/getProductDetail", "POST", {
+            "productId": productId,
+            "pageNum": 1,
+            "pageSize": 3
+        }, detailCall);
+        //获取评论相关
+        publicAjax(baseAjaxUrl + "/ty_api/product/comment/queryProductComment", "POST", {"productId": productId}, getProductCommentCall);
+
+    });
+
+
+    //轮播内容的回调
+    function goodsSwiperCall(e) {
+        /*用于存放轮播内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            for (var i = 0; i < data.length; i++) {
+                innerHtml +=
+                    '<div class="swiper-slide">\n' +
+                    '   <img src="' + baseImgUrl+data[i].pictureUrl + '.jpg" alt="">\n' +
+                    '</div>\n';
+            }
+            $(".swiper-wrapper").html(innerHtml);
+            lunbo();
+        }
+    }
+
+    /*产品的详情回调*/
+    function detailCall(e) {
+        if (e.errorCode == 200) {
+            var data = e.data.productDetail;
+            console.log(data);
+            $("#publicImg").before(data.detail);
+            $("#pointAdd").html(data.address);
+            $("#poinPhone").html(data.mobile).attr("href", "tel:" + data.mobile);
+
+            /*此方法用来解决，微信H5图片点击放大*/
+            /*用来判断机型，android和ios*/
+            var u = navigator.userAgent, app = navigator.appVersion;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isIOS) {
+                var imgObj = $("#productRichtext img"); //这里改成相应的对象
+                funcReadImgInfo(imgObj);
+            }
+
+        }
+    }
+
+
+
+    /*评论相关的回调*/
+    function getProductCommentCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            var data = res.data.list;
+            var innerHtml = '';
+            var starsLevel=5;   //星星最高等级
+            for (var i = 0; i < data.length; i++) {
+                var starsHtml='';   //星星的img标签
+                var merchants='';   //商家回复
+                var pictureHtml=''; //评价图片
+                //是否有商家回复
+                if (data[i].revertContent != null) {
+                    merchants =
+                        '<div class="merchants-discuss">\n' +
+                        '   <p>商家回复:</p>\n' +
+                        '   <p>'+data[i].revertContent+'</p>\n' +
+                        '</div>\n';
+                }
+                //星星评分
+                var solidStars = data[i].score;
+                var emptyStars = starsLevel - solidStars;
+                for (var j = 0; j < solidStars; j++) {
+                    starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+                }
+                for (var n = 0; n < emptyStars; n++) {
+                    starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+                }
+
+                //循环评价的图片
+                for (var m = 0; m < data[i].pictureList.length; m++) {
+                    pictureHtml +=
+                        '            <div class="img-item">\n' +
+                        '                <img src="' + baseImgUrl+data[i].pictureList[m].pictureUrl + '_small.jpg" alt="">\n' +
+                        '            </div>\n';
+                }
+                innerHtml +=
+                    '               <div class="discuss-item">\n' +
+                    '                    <div class="discuss-item-head">\n' +
+                    '                        <div class="discuss-head-left">\n' +
+                    '                            <img src="'+baseImgUrl+data[i].headImg+'_small.jpg" alt="">\n' +
+                    '                            <span class="userName">'+data[i].userName+'</span>\n' +
+                    '                        </div>\n' +
+                    '                        <div class="discuss-head-right">\n' +
+                    '                            <p class="starsImg">'+starsHtml+'</p>\n' +
+                    '                            <p class="createTime">'+timeTransformation(data[i].createTime,"dateCount")+'</p>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                    <div class="discuss-item-com">\n' +
+                    '                        <div class="img-prview">'+pictureHtml+'</div>\n' +
+                    '                        <div class="commentContent">'+data[i].commentContent+'</div>' +
+                    '                          '+merchants+
+                    '                    </div>\n' +
+                    '                </div>'
+            }
+            $(".discuss").html(innerHtml);
+        }
+    }
+
+</script>

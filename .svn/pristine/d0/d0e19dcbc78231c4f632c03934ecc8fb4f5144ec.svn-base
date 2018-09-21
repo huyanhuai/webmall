@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>商家产品列表</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <link rel="stylesheet" href="static/css/agentShop.css">
+    <style>
+        #mescroll {
+            position: fixed;
+            top: 1.14rem;
+            bottom: 0;
+            height: auto !important;
+        }
+
+        .applyBtn {
+            width: 80%;
+            height: 0.4rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .shop-middle {
+            width: 52%;
+        }
+
+        .shop-right {
+            width: 18%;
+        }
+
+        .applyBtn, .viewBtn {
+            width: 100%;
+            height: 0.45rem;
+            background: #47bfc5;
+            color: #fff;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            border-radius: 0.05rem;
+        }
+
+        .shop-middle2{
+            width: 70%;
+            height: 1rem;
+            float: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: space-between;
+            padding-left: 0.2rem;
+        }
+        .shop-middle3{
+            width: 70%;
+            height: 0.4rem;
+            float: left;
+            display: flex;
+            justify-content: space-between;
+            display: -webkit-flex;
+            -webkit-justify-content: space-between;
+            padding-left: 0.2rem;
+        }
+        .shop-middle2 p:first-child{
+            font-size: 0.28rem;
+            color: #5b5b5b;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp:2;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+        }
+        .scenicPrice {
+            display: inline-block;
+            width: 50%;
+            float: left;
+            font-size: 0.24rem;
+            color: #4c4c4c!important;
+        }
+        .scenicPrice span {
+            font-size: 0.28rem;
+            color: #f79628 !important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        商家产品列表
+    </div>
+</header>
+<main>
+    <div id="mescroll" class="mescroll">
+        <div class="shop-content content" style="margin: 0;">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        var businessUserId=GetQueryString("businessUserId");
+        /*获取商家列表*/
+        var url = baseAjaxUrl + "/ty_api/product/queryByBusinessId";
+        var data = {"businessUserId":businessUserId};
+        upLoading(url, data, getMerchantsProductCall, false);
+    });
+
+    //获取代言产品
+    function getMerchantsProductCall(data) {
+        console.log(data);
+        var listDom = $(".shop-content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            innerHtml +=
+            '           <div class="shop-item">\n' +
+            '                <div class="shop-left">\n' +
+            '                    <img src="'+baseImgUrl+data[i].pictureUrl+'_small.jpg" alt="">\n' +
+            '                </div>\n' +
+            '                <div class="shop-middle2">\n' +
+            '                    <p>'+data[i].productName+'</p>\n' +
+            '                </div>\n' +
+            '                <div class="shop-middle3">\n' +
+            '                   <p class="scenicPrice">最高可得：<span>￥'+data[i].commission+'</span></p>\n' +
+            '                   <p class="scenicPrice">最低价格：<span>￥'+data[i].minPrice+'</span></p>\n' +
+            '                </div>\n' +
+            '            </div>'
+
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+</script>

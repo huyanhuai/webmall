@@ -1,0 +1,936 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>套餐分享页</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="static/css/goods.css">
+    <link rel="stylesheet" href="static/css/package.css">
+    <link rel="stylesheet" href="plug-in/swiper/swiper-4.2.0.min.css">
+</head>
+<body>
+<main style="margin: 0;">
+    <div id="goodsCon">
+        <div class="banner">
+
+            <div class="swiper-container">
+                <div class="swiper-wrapper">
+
+                </div>
+            </div>
+        </div>
+        <div class="scenic-detail">
+            <div class="scenic-detail-left">
+                <p>
+                    <img src="static/img/goods/scenicspot@2x.png" alt="">
+                    <span id="productBaseName"></span>
+                </p>
+                <p id="productBaseInfo"></p>
+            </div>
+            <div class="scenic-detail-right">
+                <a href="javascript:;">
+                    <!--<img src="static/img/goods/details@2x.png" alt="">-->
+                </a>
+            </div>
+        </div>
+        <div class="scenic-address" id="navAddress">
+            <a href="javascript:;">
+                <img src="static/img/goods/address@2x.png" alt="" class="icon">
+                <span id="productBaseAdd"></span>
+                <img src="static/img/goods/details@2x.png" alt="" class="more">
+            </a>
+        </div>
+    </div>
+    <div id="packageCon" style="margin-top: 0.24rem">
+        <div class="package-head" style="background: #fff;">
+            <div class="package-title"></div>
+            <p class="package-data">使用日期:</p>
+            <div class="package-flag">
+                <img src="static/img/goods/allow@2x.png" alt="">
+                <span class="refundType"></span>
+                <img src="static/img/goods/allow@2x.png" alt="">
+                <span class="endsale">截止售票时间：</span>
+            </div>
+        </div>
+        <div class="promote">
+            <p>推广</p>
+            <p>
+                <img src="static/img/public/extension2.png" alt="">
+                <span class="promote-price">推：￥0 享：￥0</span>
+            </p>
+        </div>
+        <section class="package-box">
+            <div class="package-tab">
+                <a href="#packageDetailBox" class="package-tab-item active">购买须知</a>
+                <a href="#productDetailBox" class="package-tab-item">特色介绍</a>
+                <a href="#productDiscuss" class="package-tab-item">评论</a>
+            </div>
+            <div class="package-tab-con">
+                <div id="packageDetailBox">
+                    <p class="pinglun-msg">
+                        <i></i>
+                        购买须知
+                    </p>
+                    <div id="packageDetail"></div>
+                </div>
+                <div id="productDetailBox">
+                    <p class="pinglun-msg">
+                        <i></i>
+                        特色介绍
+                    </p>
+                    <div id="productDetail">
+                        <div id="publicImg">
+                            <img src="static/img/public/gongzhonghao.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="pinglun" id="productDiscuss">
+            <p class="pinglun-msg">
+                <i></i>
+                评论
+            </p>
+            <div class="discuss">
+
+            </div>
+        </section>
+    </div>
+</main>
+<footer id="clientFoot">
+    <div class="package-foot">
+        <div class="package-price">
+            <p>￥0</p>
+            <s>门市价：￥0</s>
+        </div>
+        <div class="package-promote" id="promote">
+            <img src="static/img/public/extension.png" alt="">
+            <span>推广</span>
+        </div>
+        <div id="packageSubmit">立即预定</div>
+    </div>
+</footer>
+<!--点击底部分享链接时候给的提示图片-->
+<div id="shareLink">
+    <img src="static/img/public/clicksharing.png" alt="">
+</div>
+<div id="shareImgBox">
+    <div id="shareImg">
+        <img src="" alt="" crossOrigin="anonymous">
+        <!--<div id="qrcode"></div>-->
+    </div>
+    <div id="shareQCode">
+        <div class="shareQ-left">
+            <img src="" alt="" id="shareHeadImg" crossOrigin="anonymous">
+            <span id="shareName"></span>
+            <span>邀您同游</span>
+        </div>
+        <div class="shareQ-right">
+            <div id="qrcode"></div>
+            <p>自购省钱,分享赚钱,玩赚同游</p>
+        </div>
+        <!--<span>微信扫一扫即可购买</span>-->
+    </div>
+</div>
+<!--海报加载-->
+<div id="loading">
+    <p>海报生成中......</p>
+</div>
+<!--前往首页的悬浮窗-->
+<a id="indexMall" href="index.html">
+    <img src="static/img/public/indexMall.png" alt="">
+</a>
+
+</body>
+</html>
+<script type="text/javascript" src="static/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="static/js/ajaxTool.js"></script>
+<script type="text/javascript" src="static/js/public.js"></script>
+<script type="text/javascript" src="static/js/localStorage.js"></script>
+<script type="text/javascript" src="static/js/qrcode.min.js"></script>
+<script type="text/javascript" src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/calendarPlug.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript" src="static/js/html2canvas.min.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="static/js/md5.js"></script>
+<script type="text/javascript" src="static/js/phone.js"></script>
+<script src="plug-in/swiper/swiper-4.2.0.min.js"></script>
+
+<script>
+    /*此处是页面tab相关*/
+    var dis = $('.package-tab').offset().top;        //tab
+    var disB;   //产品详情
+    var disC;     //评论
+
+    var latitude, longitude, provinceName, address;
+    //接收产品页面传递的值
+    var productId;          //产品Id
+    var clientId,endId;       //接受app传送过来的
+    var clientType;     //接受app传送过来的
+    var productPackageId,shareUrl;
+
+
+    var str = "您还未绑定手机号，分享将无法获取佣金，绑定后分享成交订单才有奖励可拿哦！请前往个人中心进行手机号绑定";
+    var token, isMobile = true;
+
+    var salePrice, retailPrice;
+    var startTime, endTime, endSale, endSaleTime;
+    var usertId;
+
+    var coverImg;   //海报的图片
+    $(function () {
+        getToken();
+        //获取身份iid
+        clientId = GetQueryString("clientId");
+        endId = GetQueryString("endId");
+        //获取身份
+        clientType = GetQueryString("clientType");
+        //获取产品Id
+        productId = GetQueryString("productId");
+        //套餐id
+        productPackageId = GetQueryString("productPackageId");
+        var this_shareHref=location.href.replace("packageDetail.html","packageDetailShare.html");
+
+        //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+        token=getLocal("token");
+
+
+        if (clientType) {
+            $("#clientHead").hide();
+            $("#clientFoot").hide();
+
+            $("#indexMall").hide();
+        } else {
+            var token = getLocal("token");
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + '/ty_api/user/getDetail',
+                type: "POST",
+                sync: false,
+                success: function (res) {
+                    if (res.errorCode == 200) {
+                        //平台业务员身份的分享
+                        usertId = res.data.userId;
+                        var headImg = baseImgUrl + res.data.headImg + ".jpg";
+                        $("#shareName").html("[" + res.data.nickName + "]");
+                        $("#shareHeadImg").attr("src", headImg);
+                        if(clientId==null){
+                            // shareUrl = this_shareHref + "&clientId=" + usertId+"&type=PACKAGE_CODE_URL";
+                            shareUrl = oneselfUrl+"packageDetailShare.html?productId="+productId + "&clientId=" + usertId+"&type=PACKAGE_CODE_URL&productPackageId="+productPackageId;
+                        }else{
+                            shareUrl = oneselfUrl+"packageDetailShare.html?productId="+productId + "&clientId=" + clientId+"&type=PACKAGE_CODE_URL&productPackageId="+productPackageId+ "&endId=" + usertId;
+                        }
+                        //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+                        if (res.data.mobile == null) {
+                            isMobile = false;
+                        }
+
+                        //海报的二维码
+                        var qrcode = new QRCode('qrcode', {
+                            text: shareUrl,
+                            width: 80,
+                            height: 80,
+                            colorDark: '#000000',
+                            colorLight: '#ffffff',
+                            correctLevel: QRCode.CorrectLevel.L
+                        });
+                    }
+                }
+            });
+
+        }
+
+
+        //微信相关设置分享
+        wxInitConfigFn(wxcallback);
+        function wxcallback(){
+            //微信分享
+            var shareData = {
+                title: sharProductName, // 分享标题
+                desc: sharProductTitle, // 分享描述
+                link: shareUrl, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                imgUrl: sharPicture, // 分享图标
+                type: '', // 分享类型,music、video或link，不填默认为link
+                dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                trigger: function (res) {
+                    // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+
+                    if (!isMobile) {
+                        alert(str);
+                    }
+
+                },
+                complete: function (res) {
+                    //分享成功与否都会调用
+                    // alert(JSON.stringify(res));
+                },
+                success: function () {
+                    // 用户确认分享后执行的回调函数
+                    publicAjaxToken(baseAjaxUrl + "/ty_api/agent/count/update", "POST", {
+                        "type": "LINK",
+                    }, getAgentCall);
+                },
+                cancel: function () {
+                    // 用户取消分享后执行的回调函数
+                }
+            };
+            wx.onMenuShareAppMessage(shareData);
+            wx.onMenuShareTimeline(shareData);
+            wx.onMenuShareQQ(shareData);
+            wx.onMenuShareWeibo(shareData);
+            wx.onMenuShareQZone(shareData);
+        }
+        //地图点击导航
+        $("#navAddress").click(function () {
+            console.log(latitude);
+            console.log(longitude);
+            wx.openLocation({
+                latitude: latitude, // 纬度，浮点数，范围为90 ~ -90
+                longitude: longitude, // 经度，浮点数，范围为180 ~ -180。
+                name: provinceName, // 位置名
+                address: address, // 地址详情说明
+                scale: 15, // 地图缩放级别,整形值,范围从1~28。默认为最大
+                infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+            });
+        });
+
+        //获取轮播图
+        publicAjax(baseAjaxUrl + "/ty_api/product/picture/getListByProductId", "POST", {
+            "productId": productId,
+            "pageNum": 1,
+            "pageSize": 3
+        }, goodsSwiperCall);
+        //获取产品基础信息
+        publicAjax(baseAjaxUrl + "/ty_api/product/queryBaseInfoById", "POST", {
+            "productId": productId
+        }, productDetailCall);
+        /*获取套餐信息*/
+        publicAjax(baseAjaxUrl + "/ty_api/product/package/getDetail", "POST", {"productPackageId": productPackageId}, getPackageDetailCall);
+        //获取评论相关
+        publicAjax(baseAjaxUrl + "/ty_api/product/comment/queryProductComment", "POST", {"productId": productId}, getProductCommentCall);
+        /*获取产品的富文本*/
+        publicAjax(baseAjaxUrl + "/ty_api/product/getProductDetail", "POST", {"productId": productId}, getProductDetailCall);
+
+
+    });
+
+
+    //轮播内容的回调
+    function goodsSwiperCall(e) {
+        /*用于存放轮播内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            sharPicture = baseImgUrl + data[0].pictureUrl + "_small.jpg";
+            for (var i = 0; i < data.length; i++) {
+                innerHtml +=
+                    '<div class="swiper-slide">\n' +
+                    '   <img src="' + baseImgUrl + data[i].pictureUrl + '.jpg" alt="">\n' +
+                    '</div>\n';
+            }
+            $(".swiper-wrapper").html(innerHtml);
+            lunbo();
+        }
+    }
+
+    //产品基础信息的回调
+    function productDetailCall(e) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data;
+            $("#productBaseName").text(data.productName);
+            $("#productBaseInfo").text(data.productTitle);
+            $("#productBaseAdd").text(data.address);
+            latitude = data.latitude; // 纬度，浮点数，范围为90 ~ -90
+            longitude = data.longitude; // 经度，浮点数，范围为180 ~ -180。
+            provinceName = data.provinceName;
+            address = data.address;
+            sharProductName = data.productName;
+            sharProductTitle = data.productTitle;
+
+        }
+    }
+    //获取套餐回调
+    function getPackageDetailCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+
+            //分享海报相关——商家上传的海报图片
+            coverImg = res.data.coverImg;
+            var imgurl = baseImgUrl + res.data.coverImg + ".jpg";
+            $("#shareImg img").attr("src", imgurl);
+            // $("#shareImg img").attr("src","data:image/png;base64,"+res.data.packageType);
+            $(".package-title").html(res.data.packageName);
+
+            saleDateType = res.data.saleDateType;
+            //这里、——商家默认时间未选择
+            if (res.data.saleDateType == "NONE") {
+                $(".package-data").html("有效日期：永久有效");
+                startTime = getThisDay();
+                endTime = (new Date().getFullYear()) + "-12-31";
+            } else if (res.data.saleDateType == "RANGE") {//这里选择是日期范围
+                var startDate = timeTransformation(res.data.startDate, "dateCount");
+                var endDate = timeTransformation(res.data.endDate, "dateCount");
+                $(".package-data").html("有效日期：" + startDate + " 至 " + endDate);
+                startTime = timeTransformation(res.data.startDate);
+                endTime = timeTransformation(res.data.endDate);
+            } else if (res.data.saleDateType == "WEEK") {//这里选择是日期范围
+                $(".package-data").html("有效日期：周期内有效");
+                // startTime = getThisDay();
+                // endTime = (new Date().getFullYear()) + "-12-31";
+                startTime = timeTransformation(res.data.startDate);
+                endTime = timeTransformation(res.data.endDate);
+                weekData = res.data.weekItem
+            } else if(res.data.saleDateType == "TODAY") {
+                $(".package-data").html("有效日期：当天有效");
+                startTime = getThisDay();
+                endTime = (new Date().getFullYear() + 1) + "-12-31";
+            }
+
+            if (res.data.refundType == "NO_REFUND") {
+                $(".refundType").html("概不退款");
+            } else if (res.data.refundType == "REFUND") {
+                $(".refundType").html("条件退");
+            }
+            endSale = timeTransformation(res.data.endSale, "time");
+            $(".endsale").html("截止售票时间：" + endSale);
+            if(clientId==null){
+                $(".promote-price").html("推：￥" + res.data.defaultAgentCommission + "&nbsp&nbsp享：￥" + res.data.defaultSaleCommission);
+            }else{
+                $(".promote").hide();
+            }
+            $("#packageDetail").html(res.data.detail);
+            $(".package-price p").html("￥" + res.data.salePrice);
+            $(".package-price s").html("门市价：￥" + res.data.retailPrice);
+            sharProductName = res.data.packageName; //分享的产品名
+            // sharProductTitle = res.data.packageName; //分享的描述
+            sharPicture = baseImgUrl + res.data.coverImg + '_small.jpg';          //分享的套餐图片
+            salePrice = res.data.salePrice;         //售价
+            retailPrice = res.data.retailPrice;     //门市价
+            endSaleTime = res.data.endSale;
+
+            /*此方法用来解决，微信H5图片点击放大*/
+            /*用来判断机型，android和ios*/
+            var u = navigator.userAgent, app = navigator.appVersion;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isIOS) {
+                var imgObj = $("#packageDetailBox img"); //这里改成相应的对象
+                funcReadImgInfo(imgObj);
+            }
+        }
+    }
+
+    /*评论相关的回调*/
+    function getProductCommentCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            var data = res.data.list;
+            var innerHtml = '';
+            var starsLevel = 5;   //星星最高等级
+            if (data.length != 0) {
+                for (var i = 0; i < data.length; i++) {
+                    var starsHtml = '';   //星星的img标签
+                    var merchants = '';   //商家回复
+                    var pictureHtml = ''; //评价图片
+                    //是否有商家回复
+                    if (data[i].revertContent != null) {
+                        merchants =
+                            '<div class="merchants-discuss">\n' +
+                            '   <p>商家回复:</p>\n' +
+                            '   <p>' + data[i].revertContent + '</p>\n' +
+                            '</div>\n';
+                    }
+                    //星星评分
+                    var solidStars = data[i].score;
+                    var emptyStars = starsLevel - solidStars;
+                    for (var j = 0; j < solidStars; j++) {
+                        starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+                    }
+                    for (var n = 0; n < emptyStars; n++) {
+                        starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+                    }
+
+                    //循环评价的图片
+                    for (var m = 0; m < data[i].pictureList.length; m++) {
+                        pictureHtml +=
+                            '            <div class="img-item">\n' +
+                            '                <img src="' + baseImgUrl + data[i].pictureList[m].pictureUrl + '_small.jpg" alt="">\n' +
+                            '            </div>\n';
+                    }
+                    innerHtml +=
+                        '               <div class="discuss-item">\n' +
+                        '                    <div class="discuss-item-head">\n' +
+                        '                        <div class="discuss-head-left">\n' +
+                        '                            <img src="' + baseImgUrl + data[i].headImg + '_small.jpg" alt="">\n' +
+                        '                            <span class="userName">' + data[i].userName + '</span>\n' +
+                        '                        </div>\n' +
+                        '                        <div class="discuss-head-right">\n' +
+                        '                            <p class="starsImg">' + starsHtml + '</p>\n' +
+                        '                            <p class="createTime">' + timeTransformation(data[i].createTime, "dateCount") + '</p>\n' +
+                        '                        </div>\n' +
+                        '                    </div>\n' +
+                        '                    <div class="discuss-item-com">\n' +
+                        '                        <div class="img-prview">' + pictureHtml + '</div>\n' +
+                        '                        <div class="commentContent">' + data[i].commentContent + '</div>' +
+                        '                          ' + merchants +
+                        '                    </div>\n' +
+                        '                </div>'
+                }
+            } else {
+                innerHtml += "<p style='color:#7e7e7e;margin: 0.1rem 0;'>暂无更多评论！</p>"
+            }
+
+            $(".discuss").html(innerHtml);
+        }
+    }
+
+    //产品富文本回调
+    function getProductDetailCall(res) {
+        if (res.errorCode == 200) {
+            //$("#productDetail").html(res.data.productDetail.detail);
+            $("#publicImg").before(res.data.productDetail.detail);
+
+            /*此方法用来解决，微信H5图片点击放大*/
+            /*用来判断机型，android和ios*/
+            var u = navigator.userAgent, app = navigator.appVersion;
+            var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+            var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+            if (isIOS) {
+                var imgObj = $("#productDetailBox img"); //这里改成相应的对象
+                funcReadImgInfo(imgObj);
+            }
+        }
+    }
+
+    //点击预定的弹窗
+    $("#packageSubmit").click(function () {
+
+        if (saleDateType == "WEEK") {
+            var orderDay = choseDayWeek(startTime, endTime, endSaleTime, weekData);
+        } else {
+            var orderDay = choseDay(startTime, endTime, endSaleTime);
+        }
+        //弹出订单的半截信息
+        layer.open({
+            type: 1,
+            content:
+            '<div class="package-options">\n' +
+            '    <p class="package-lay-head">' + sharProductName + '</p>\n' +
+            '    <p class="package-lay-price">\n' +
+            '        <span><span>￥</span>' + salePrice + '</span>/张\n' +
+            '        <span>票面价：<s>￥' + retailPrice + '</s></span>\n' +
+            '    </p>\n' +
+            '    <p class="package-lay-number">\n' +
+            '        购买数量\n' +
+            '        <span>\n' +
+            '            <button id="jian" onclick="orderJian()">-</button>\n' +
+            '            <span class="purchase-quantity">1</span>\n' +
+            '            <button id="add" onclick="orderAdd()">+</button>\n' +
+            '        </span>\n' +
+            '    </p>\n' +
+            '    <div class="package-data-select">\n' +
+            '        <p>日期选择</p>\n' +
+            '        <ul class="package-data-box">' + orderDay + '' +
+            '        </ul>\n' +
+            '    </div>\n' +
+            '    <p class="package-message">需要在游玩当天' + endSale + '前预定</p>\n' +
+            '</div>\n' +
+            '    <a href="javascript:;" class="package-reservation" onclick="nowReady(' + productPackageId + ')">\n' +
+            '        立即预定\n' +
+            '    </a>\n'
+            ,
+            anim: 'up'
+            ,
+            style: 'position:fixed; bottom:0; left:0; width: 100%; height: 5.3rem; padding-top:0.3rem; border:none;box-sizing:border-box;',
+            end: function () {
+                stopBodyScroll(false);
+            }, success: function () {
+            }
+        });
+
+        //前面陈列的前三个日期
+        $(".package-data-item.com").eq(0).addClass("selected");
+        $(".package-data-item.com").each(function (i, v) {
+            $(v).click(function () {
+                $(".package-data-item.com").removeClass("selected");
+                $(this).addClass("selected");
+                if (!$(".package-data-item.other").hasClass("selected")) {
+                    $(".package-data-item.other").html("其他日期");
+                }
+            })
+        });
+
+        //点击其他日期
+        $(".other").click(function () {
+            var pageii = layer.open({
+                type: 1,
+                className: "secondLay",
+                content: '<header>\n' +
+                '            <div class="navigation" id="playDays" onclick="returnGoods()">\n' +
+                '                <img src="static/img/public/return2@2x.png" alt="">\n' +
+                '                游玩日期\n' +
+                '            </div>\n' +
+                '        </header>\n' +
+                '        <main>\n' +
+                '            <div class="calendar-container">\n' +
+                '                <div class="calendar-box">\n' +
+                '                    <ul class="calendar-week-box">\n' +
+                '                        <li class="calendar-week-item">日</li>\n' +
+                '                        <li class="calendar-week-item">一</li>\n' +
+                '                        <li class="calendar-week-item">二</li>\n' +
+                '                        <li class="calendar-week-item">三</li>\n' +
+                '                        <li class="calendar-week-item">四</li>\n' +
+                '                        <li class="calendar-week-item">五</li>\n' +
+                '                        <li class="calendar-week-item">六</li>\n' +
+                '                    </ul>\n' +
+                '                    <ul class="calendar-day-box">\n' +
+                '                    </ul>\n' +
+                '                </div>\n' +
+                '            </div>\n' +
+                '        </main>'
+                ,
+                anim: 'up'
+                ,
+                style: 'position:fixed; left:0; top:0; width:100%; height:100%; border: none; -webkit-animation-duration: .5s; animation-duration: .5s;overflow: scroll;box-sizing: border-box;background:#f7f7f7;',
+                success: function () {
+
+
+                    if (saleDateType == "WEEK") {
+                        var innerEmpty = priceCalendarWeek(startTime, endTime, endSaleTime, salePrice, weekData);
+                    } else {
+                        var innerEmpty = priceCalendar(startTime, endTime, endSaleTime, salePrice);
+                    }
+
+                    $(".calendar-day-box").append(innerEmpty);
+
+
+                    //其他日期中的选中日期
+                    $(".calendar-days-item.new").each(function (i, v) {
+                        $(v).click(function () {
+                            $(".calendar-days-item.new").removeClass("active");
+                            $(this).addClass("active");
+                            setTimeout("returnGoods()", 300);
+                        })
+                    });
+
+
+                }
+            });
+        });
+    });
+
+    //从日历选择跳回这里
+    function returnGoods() {
+        if ($(".calendar-days-item.active").length == 0) {
+            $(".package-data-item.other").html('<p class="lay-calendar">其他日期</p>');
+        } else {
+            var day = $(".calendar-days-item.active>.days").text();
+            console.log("hahhah" + day);
+            if (Number(day) < 10) {
+                day = '0' + day;
+            }
+            var month = $(".calendar-days-item.active>.days").attr("data-month");
+            var year = $(".calendar-days-item.active>.days").attr("data-year");
+            if (Number(month) < 10) {
+                month = '0' + month;
+            }
+            $(".package-data-item.other.selected").html('<p class="lay-calendar" data-year="' + year + '">' + month + '月' + day + '日' + '</p>');
+        }
+
+
+        var index = $(".secondLay").parent(".layui-m-layersection").parent(".layui-m-layermain").parent(".layui-m-layer1").attr("index");
+        layer.close(index);
+    }
+
+    //立即预定跳转确认订单页
+    function nowReady(productPackageId) {
+        var packageNumber = $(".purchase-quantity").text();
+        var packageDay = $(".package-data-item.selected .lay-calendar").text();
+        var packageYear = $(".package-data-item.selected .lay-calendar").attr("data-year");
+        if (packageDay == "其他日期" || packageDay == "") {
+            layMessage("请选择游玩日期");
+            return false;
+        }
+
+        var token = getLocal("token");
+        //此处验证是否绑定手机号，用于合并微信和ios的账户数据
+        $.ajax({
+            beforeSend: function (xhr) {
+                //发送ajax请求之前向http的head里面加入验证信息
+                xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+            },
+            url: baseAjaxUrl + "/ty_api/user/getDetail",
+            type: "POST",
+            async: false,
+            data: {},
+            success: function (res) {
+                if (res.data.mobile == null) {
+                    layer.open({
+                        content:
+                        '   <section style="padding: 0;margin: 0;" class="bind-mobile">\n' +
+                        '        <div class="item">\n' +
+                        '            <label for="phone">手机号</label>\n' +
+                        '            <input type="number" id="phone" placeholder="请输入绑定手机号">\n' +
+                        '        </div>\n' +
+                        '        <div class="item" style="border: none;">\n' +
+                        '            <label for="phone">验证码</label>\n' +
+                        '            <input type="number" id="code" placeholder="请输入验证码">\n' +
+                        '            <div id="checkCode">\n' +
+                        '                获取验证码\n' +
+                        '            </div>\n' +
+                        '            <div class="mask"></div>\n' +
+                        '        </div>\n' +
+                        '    </section>'
+                        , btn: '确  定',
+                        style: 'box-sizing: border-box;',
+                        success: function () {
+                            $("#checkCode").click(function () {
+                                var phone = $("#phone").val();
+                                if (phone == '') {
+                                    layMessage("请输入手机号！", 1);
+                                    return false;
+                                }
+                                if (!mobileReg(phone)) {
+                                    layMessage("手机格式不正确", 1);
+                                    return false;
+                                }
+
+                                clearTimeout(aa);//清除延迟
+                                settime();
+                                $(".mask").show();
+
+                                var code = $.md5(phone + "APP_20!$_TY_HZ");
+                                console.log(code);
+                                //向手机发送验证码
+                                publicAjax(baseAjaxUrl + "/ty_api/user/sendMessage", "POST", {
+                                    "code": code,
+                                    "mobile": phone
+                                }, sendInfoCall);
+
+                            });
+                        },
+                        yes: function (index) {
+                            var phone = $("#phone").val();
+                            var code = $("#code").val();
+                            // publicAjaxToken(baseAjaxUrl+"/ty_api/user/bindingMobile","POST",{"mobile":phone,"verificationCode":code},bindingMobileCall);
+                            $.ajax({
+                                beforeSend: function (xhr) {
+                                    //发送ajax请求之前向http的head里面加入验证信息
+                                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                                },
+                                url: baseAjaxUrl + "/ty_api/user/bindingMobile",
+                                type: "post",
+                                data: {"mobile": phone, "verificationCode": code},
+                                success: function (res) {
+                                    if (res.errorCode == 200) {
+                                        layMessage(res.message);
+                                        if (clientId) {
+                                            if (endId) {
+                                                location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear + "&clientId=" + clientId + "&endId=" + endId;
+                                            }else{
+                                                location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear + "&clientId=" + clientId;
+                                            }
+                                        } else {
+                                            location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear;
+                                        }
+                                        // return false;
+                                    } else {
+                                        layMessage(res.message);
+                                        return false;
+                                    }
+                                }
+                            })
+
+                        }
+                    });
+                } else {
+                    if (clientId) {
+                        if (endId) {
+                            location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear + "&clientId=" + clientId + "&endId=" + endId;
+                        }else{
+                            location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear + "&clientId=" + clientId;
+                        }
+                    } else {
+                        location.href = "reservation.html?productPackageId=" + productPackageId + "&packageNumber=" + packageNumber + "&packageDay=" + packageDay + "&packageYear=" + packageYear;
+                    }
+                }
+            }
+        });
+
+
+    }
+
+    /*购买产品数加减*/
+    //加
+    function orderAdd() {
+        var number = $(".purchase-quantity").html();
+        number++;
+        $(".purchase-quantity").html(number);
+    }
+
+    //减
+    function orderJian() {
+        var number = $(".purchase-quantity").html();
+        if (number <= 1) {
+            $(".purchase-quantity").html(1);
+        } else {
+            number--;
+            $(".purchase-quantity").html(number);
+        }
+    }
+
+    /*封装禁止滚动函数*/
+    var bodyEl = document.body;
+    var laytop = 0;
+
+    function stopBodyScroll(isFixed) {
+        if (isFixed) {
+            laytop = window.scrollY;
+            bodyEl.style.position = 'fixed';
+            bodyEl.style.top = -laytop + 'px';
+        } else {
+            bodyEl.style.position = '';
+            bodyEl.style.top = '';
+            window.scrollTo(0, laytop) // 回到原先的top
+        }
+    }
+
+    /*tab切换*/
+    $(".package-tab-item").each(function (i, v) {
+        $(v).click(function () {
+            $(v).addClass("active").siblings().removeClass("active");
+            $(".package-tab-con").eq(i).addClass("active").siblings().removeClass("active");
+        })
+    });
+
+    // 海报分享相关
+    $("#promote").click(function () {
+        if (coverImg == '') {
+            layMessage("商家未上传套餐海报图片，无法生成分享海报");
+            return false;
+        }
+
+        //没有绑定手机号时给的提示
+        if (!isMobile) {
+            layer.open({
+                content: str
+                , btn: ['继续分享', '前往绑定'],
+                yes: function () {
+                    /*分享*/
+                    htmlCanvas();
+                    publicAjaxToken(baseAjaxUrl + "/ty_api/agent/count/update", "POST", {
+                        "type": "POSTER",
+                    }, getAgentCall);
+                },
+                no: function () {
+                    location.href = "bindingPhone.html";
+                }
+            });
+        } else {
+            htmlCanvas();
+            publicAjaxToken(baseAjaxUrl + "/ty_api/agent/count/update", "POST", {
+                "type": "POSTER",
+            }, getAgentCall);
+        }
+    });
+    function getAgentCall(res) {
+        if (res.errorCode == 200) {
+            console.log("yes");
+        }else{
+            console.log("no");
+        }
+    }
+
+    $("#shareLink").click(function () {
+        $(this).hide();
+    });
+
+    // //利用插件将html代码绘制成一张图
+    // function htmlCanvas() {
+    //     $("#loading").css("display", "-webkit-flex");
+    //     $("#loading").css("display", "flex");
+    //
+    //     //此处用到html2canvas插件
+    //     var canvas2 = document.createElement("canvas");
+    //     let _canvas = document.querySelector('#shareImgBox');
+    //     var w = parseInt(window.getComputedStyle(_canvas).width);
+    //     var h = parseInt(window.getComputedStyle(_canvas).height);
+    //     console.log(w, h);
+    //     //将canvas画布放大若干倍，然后盛放在较小的容器内，就显得不模糊了
+    //     canvas2.width = w * 2;
+    //     canvas2.height = h * 2;
+    //     canvas2.style.width = w + "px";
+    //     canvas2.style.height = h + "px";
+    //
+    //     //可以按照自己的需求，对context的参数修改,translate指的是偏移量
+    //     var context = canvas2.getContext("2d");
+    //     context.scale(2, 2);
+    //     context.translate(0, 0);
+    //     html2canvas(document.querySelector('#shareImgBox'), {
+    //         canvas: canvas2,
+    //         taintTest: true, //在渲染前测试图片(没整明白有啥用)
+    //         useCORS: true, //使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
+    //         background: "#fff",
+    //         onclone: function (document) {
+    //             hiddenDiv = document.getElementById('shareImgBox');
+    //             hiddenDiv.style.display = 'block'; //  这里，设置display为block
+    //         }
+    //     }).then(function (canvas) {
+    //         imgBlob = canvas.toDataURL('image/png', 1.0);
+    //         layer.open({
+    //             className: "share-laybox",
+    //             content: '<img src="' + imgBlob + '" alt="" id="posters">',
+    //             success: function () {
+    //                 $("#loading").css("display", "none");
+    //             }
+    //         });
+    //     });
+    // }
+
+</script>
+<script>
+    $(function () {
+        window.onscroll = function () {
+            disA = $("#packageDetailBox").offset().top;
+            disB = $("#productDetailBox").offset().top;
+            disC = $("#productDiscuss").offset().top;
+            if ($(window).scrollTop() >= dis) {
+                $('.package-tab').addClass("active");
+            } else {
+                $('.package-tab').removeClass("active");
+            }
+            /*监听滚动距离，实现切换*/
+            if ($(window).scrollTop() >= 0) {
+                $('.package-tab-item').eq(0).addClass("active");
+                $('.package-tab-item').eq(0).siblings().removeClass("active");
+            } else {
+                $('.package-tab-item').eq(0).removeClass("active");
+            }
+            if ($(window).scrollTop() >= disB) {
+                $('.package-tab-item').eq(1).addClass("active");
+                $('.package-tab-item').eq(1).siblings().removeClass("active");
+            } else {
+                $('.package-tab-item').eq(1).removeClass("active");
+            }
+            if ($(window).scrollTop() >= disC) {
+                $('.package-tab-item').eq(2).addClass("active");
+                $('.package-tab-item').eq(2).siblings().removeClass("active");
+            } else {
+                $('.package-tab-item').eq(2).removeClass("active");
+            }
+
+
+        }
+    })
+</script>

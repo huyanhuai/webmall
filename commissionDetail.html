@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>佣金明细</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/setting.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        .commission-tab {
+            width: 100%;
+            height: 0.7rem;
+            background-color: #ffffff;
+            font-size: 0.28rem;
+            position: relative;
+            border-top: 0.01rem solid #d2d2d2;
+        }
+
+        .commission-tab div {
+            width: 50%;
+            height: 100%;
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            color: #a5a5a5;
+        }
+
+        .commission-tab div.active {
+            color: #f79628;
+        }
+
+        .commission-tab::after {
+            content: "";
+            display: block;
+            width: 0.021rem;
+            height: 0.46rem;
+            background-color: #bfbfbf;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .commission-main {
+            width: 100%;
+            height: auto;
+            /*overflow: hidden;*/
+            display: none;
+        }
+
+        .commission-main.active {
+            display: block;
+        }
+
+        .count {
+            width: 7.5rem;
+            height: 0.7rem;
+            background-color: #ffffff;
+            border-top: 0.01rem solid #dfdfdf;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: space-between;
+            padding: 0 0.45rem;
+            font-size: 0.24rem;
+        }
+
+        .count .price {
+            color: #f79628;
+        }
+
+        .commission-detail {
+            width: 100%;
+            height: auto;
+            /*overflow: hidden;*/
+            padding-top: 0.4rem;
+        }
+
+        .commission-item {
+            width: 100%;
+            height: 2.3rem;
+        }
+
+        .com-left {
+            width: 25%;
+            height: 100%;
+            float: left;
+            position: relative;
+            padding-left: 0.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: center;
+        }
+
+        .com-left::after {
+            content: '';
+            display: block;
+            width: 0.01rem;
+            height: 100%;
+            background-color: #dcdcdc;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0.34rem;
+            z-index: -1;
+        }
+
+        .head-img {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: flex-end;
+            margin-bottom: 0.2rem;
+        }
+
+        .head-img img {
+            display: block;
+            width: 0.68rem;
+            height: 0.67rem;
+            background-color: #ffffff;
+            border: solid 0.01rem #f25574;
+            border-radius: 50%;
+        }
+
+        .time-box {
+            color: #a5a5a5;
+            font-size: 0.22rem;
+        }
+
+        .com-right {
+            width: 75%;
+            float: left;
+            height: 100%;
+            padding-right: 0.25rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            display: -webkit-flex;
+            -webkit-align-items: flex-start;
+            -webkit-justify-content: flex-end;
+        }
+
+        .com-info {
+            width: 5rem;
+            height: 1.94rem;
+            background-color: #ffffff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: space-around;
+            padding: 0.15rem 0;
+        }
+
+        .com-info::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-right: 0.24rem solid #fff;
+            border-top: 0.2rem solid transparent;
+            border-bottom: 0.2rem solid transparent;
+            position: absolute;
+            top: 0.4rem;
+            left: -0.23rem;
+        }
+
+        .com-info p {
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            padding: 0 0.24rem;
+        }
+
+        .people-name, .commission-price {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: space-between;
+        }
+
+        .people-name span:first-child {
+            width: 90%;
+            font-size: 0.26rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #494949;
+        }
+
+        .people-name span:last-child {
+            width: 0.64rem;
+            height: 0.32rem;
+            background-color: #ffffff;
+            border-radius: 0.05rem;
+            border: solid 0.01rem #47bfc5;
+            font-size: 0.2rem;
+            color: #47bfc5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .product-name {
+            font-size: 0.22rem;
+            color: #5b5b5b;
+        }
+
+        .product-name span:first-child {
+            max-width: 90%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #5b5b5b;
+        }
+
+        .product-name span:last-child {
+            font-size: 0.24rem;
+            color: #a5a5a5;
+            margin-left: 0.15rem;
+        }
+
+        .commission-price span:first-child {
+            font-size: 0.22rem;
+            color: #5b5b5b;
+        }
+
+        .commission-price span:last-child {
+            font-size: 0.24rem;
+            color: #f79628;
+        }
+        #mescroll{
+            position: fixed;
+            bottom: 0;
+            top: 1.6rem;
+            height: auto!important;
+        }
+    </style>
+</head>
+<body>
+<header class="forbidScrollIos">
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        佣金明细
+    </div>
+</header>
+<main style="margin-top: 0;">
+    <div class="commission-tab forbidScrollIos">
+        <div class="already-gold active">已分配佣金</div>
+        <div class="not-gold">未分配佣金</div>
+    </div>
+    <div class="mescroll" id="mescroll">
+
+        <div class="commission-main active">
+            <div class="count">
+                <span>总计:</span>
+                <span class="price">154.00元</span>
+            </div>
+            <div class="commission-detail content" id="alreadyMain">
+
+            </div>
+        </div>
+        <div class="commission-main">
+            <div class="count">
+                <span>总计:</span>
+                <span class="price">154.00元</span>
+            </div>
+            <div class="commission-detail content" id="notMain">
+
+            </div>
+        </div>
+
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        Already();
+    });
+
+    function Already() {
+        var url = baseAjaxUrl + "/ty_api/order/commission/queryCommissionDetail";
+        var data = {"status": "CLSD"};
+        upLoading1(url, data, getAlreadyComCall, false);
+    }
+
+    function Notready() {
+        var url = baseAjaxUrl + "/ty_api/order/commission/queryCommissionDetail";
+        var data = {"status": "ASSIGNED"};
+        upLoading1(url, data, getNotreadyComCall, false);
+    }
+
+
+    $(".commission-tab div").each(function (i, v) {
+        $(v).click(function () {
+            $(this).addClass("active").siblings("div").removeClass("active");
+            $(".commission-main").eq(i).addClass("active").siblings(".commission-main").removeClass("active");
+            if (i == 0) {
+                clearDown();
+                Already();
+            } else if (i == 1) {
+                clearDown();
+                Notready();
+            }
+        })
+    });
+
+
+    //fun
+    function getAlreadyComCall(res) {
+        // console.log(res);
+        // if (res.errorCode == 200) {
+        var listDom = $("#alreadyMain");
+        $(".price").html(res.data.sumCommission + "元");
+        var data = res.data.orderCommissionList.list;
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            var dateCount = timeTransformation(data[i].createTime, "dateCount");
+            var timeCount = timeTransformation(data[i].createTime, "timeCount");
+            innerHtml +=
+                '           <div class="commission-item">\n' +
+                '                <div class="com-left">\n' +
+                '                    <div class="head-img">\n' +
+                '                        <img src="' + baseImgUrl + data[i].headImg + '_small.jpg" alt="">\n' +
+                '                    </div>\n' +
+                '                    <div class="time-box">\n' +
+                '                        <span class="data">' + dateCount + '</span>\n' +
+                '                        <span class="time">' + timeCount + '</span>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '                <div class="com-right">\n' +
+                '                    <div class="com-info">\n' +
+                '                        <p class="people-name">\n' +
+                '                            <span>' + data[i].nickName + '</span>\n' +
+                '                            <span>本级</span>\n' +
+                '                        </p>\n' +
+                '                        <p class="product-name">\n' +
+                '                            <span>' + data[i].packageName + '</span>\n' +
+                '                            <span>x' + data[i].buySum + '</span>\n' +
+                '                        </p>\n' +
+                '                        <p class="commission-price">\n' +
+                '                            <span>预计佣金：</span>\n' +
+                '                            <span>' + data[i].commissionPrice + '元</span>\n' +
+                '                        </p>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        // }
+    }
+
+    function getNotreadyComCall(res) {
+        // console.log(res);
+        // if (res.errorCode == 200) {
+        var listDom = $("#notMain");
+        $(".price").html(res.data.sumCommission + "元");
+        var data = res.data.orderCommissionList.list;
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            var dateCount = timeTransformation(data[i].createTime, "dateCount");
+            var timeCount = timeTransformation(data[i].createTime, "timeCount");
+            innerHtml +=
+                '           <div class="commission-item">\n' +
+                '                <div class="com-left">\n' +
+                '                    <div class="head-img">\n' +
+                '                        <img src="' + baseImgUrl + data[i].headImg + '_small.jpg" alt="">\n' +
+                '                    </div>\n' +
+                '                    <div class="time-box">\n' +
+                '                        <span class="data">' + dateCount + '</span>\n' +
+                '                        <span class="time">' + timeCount + '</span>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '                <div class="com-right">\n' +
+                '                    <div class="com-info">\n' +
+                '                        <p class="people-name">\n' +
+                '                            <span>' + data[i].nickName + '</span>\n' +
+                '                            <span>本级</span>\n' +
+                '                        </p>\n' +
+                '                        <p class="product-name">\n' +
+                '                            <span>' + data[i].packageName + '</span>\n' +
+                '                            <span>x' + data[i].buySum + '</span>\n' +
+                '                        </p>\n' +
+                '                        <p class="commission-price">\n' +
+                '                            <span>预计佣金：</span>\n' +
+                '                            <span>' + data[i].commissionPrice + '元</span>\n' +
+                '                        </p>\n' +
+                '                    </div>\n' +
+                '                </div>\n' +
+                '            </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+        // }
+    }
+</script>
+<!--另外把分页摘出来一个特殊的-->
+<script>
+    var mescroll;
+
+    function upLoading1(url, ajaxData, setListData, isReset, type) {
+        //创建MeScroll对象
+
+
+        var obj = {
+            down: {
+                isLock: true   //锁定下拉刷新
+//                callback: downCallback, //下拉刷新的回调
+            },
+            up: {
+                isBounce: false,//与ios有关
+                auto: false, //是否在初始化时以上拉加载的方式自动加载第一页数据; 默认false
+                callback: upCallback, //上拉回调,此处可简写; 相当于 callback: function (page) { upCallback(page); }
+                loadFull: {
+                    use: false, //列表数据过少,是否自动加载下一页,直到满屏或者无更多数据为止;默认false
+                    delay: 1000 //延时执行的毫秒数; 延时是为了保证列表数据或占位的图片都已初始化完成,且下拉刷新上拉加载中区域动画已执行完毕;
+                },
+                page: {
+                    num: 0,
+                    size: 10,
+                    time: null
+                },
+                toTop: { //配置回到顶部按钮
+                    src: "static/img/public/mescroll-totop.png", //默认滚动到1000px显示,可配置offset修改
+                    offset: 1000
+                },
+                htmlNodata: '<p class="upwarp-nodata">-- 无更多数据 --</p>',
+                empty: {
+                    warpId: "mescroll",
+                    icon: "static/img/public/nodata.png",
+                    tip: "暂无相关数据~",
+                    btntext: "",
+                    btnClick: null,
+                    supportTap: false
+                }
+            }
+        };
+
+        console.log(isReset);
+        if (isReset) {
+            mescroll.destroy();
+            mescroll = new MeScroll("mescroll", obj);
+            console.log("这里重置")
+        } else {
+            mescroll = new MeScroll("mescroll", obj);
+            console.log("这里未重置")
+        }
+
+        /*上拉加载的回调 page = {num:1, size:10}; num:当前页 从1开始, size:每页数据条数 */
+        function upCallback(page) {
+
+            getListDataFromNet(page.num, page.size, function (res) {
+                if (res.errorCode == 200) {
+                    var data = res;
+                    //联网成功的回调,隐藏下拉刷新和上拉加载的状态;
+                    //mescroll会根据传的参数,自动判断列表如果无任何数据,则提示空;列表无下一页数据,则提示无更多数据;
+
+                    //方法一(推荐): 后台接口有返回列表的总页数 totalPage
+                    mescroll.endByPage(res.data.orderCommissionList.size, res.data.orderCommissionList.pages);//必传参数(当前页的数据个数, 总页数)
+
+                    //设置列表数据
+                    // setListData(data, true);
+                    setListData(data);
+                }
+            }, function () {
+                //联网失败的回调,隐藏下拉刷新和上拉加载的状态;
+                mescroll.endErr();
+            });
+        }
+
+
+        var type = type ? type : 'post';
+
+        function getListDataFromNet(pageNum, pageSize, successCallback, errorCallback) {
+            console.log("pageNum====" + pageNum);
+            ajaxData.pageNum = pageNum;
+            console.log(ajaxData);
+            var token = getLocal("token");
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: url,
+                data: ajaxData,
+                type: type,
+                dataType: 'json',
+                success: successCallback,
+                error: errorCallback
+            })
+        }
+
+
+    }
+
+</script>

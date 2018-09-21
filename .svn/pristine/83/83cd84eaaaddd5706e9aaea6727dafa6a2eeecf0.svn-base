@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代理申请审核中</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <style>
+        .review-box{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+        .review-top{
+            width: 7.5rem;
+            height: 4rem;
+            background-color: #ffffff;
+            padding: 0.5rem;
+        }
+        .review-icon{
+            width: 100%;
+            height: 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+        .review-icon>img{
+            height: 1.3rem;
+        }
+        .review-title{
+            width: 100%;
+            font-size: 0.3rem;
+            color: #494949;
+            margin-top: 0.4rem;
+            text-align: center;
+        }
+        .review-msg{
+            width: 100%;
+            font-size: 0.26rem;
+            color: #bfbfbf;
+            margin-top: 0.48rem;
+            text-align: center;
+        }
+        .review-middle{
+            width: 100%;
+            padding: 0.4rem 0.5rem;
+        }
+        .review-middle>p{
+            width: 100%;
+            font-size: 0.24rem;
+            color: #bfbfbf;
+            margin-bottom: 0.24rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+        }
+        .review-middle>p>img{
+            width: 0.26rem;
+            height: 0.26rem;
+            font-size: 0.24rem;
+            margin-right: 0.16rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        代理申请
+    </div>
+</header>
+<main>
+    <div class="review-box">
+        <div class="review-top">
+            <div class="review-icon">
+                <img src="static/img/public/review.png" alt="">
+            </div>
+            <p class="review-title">申请审核中</p>
+            <p class="review-msg">申请正在审核，请耐心等待</p>
+        </div>
+        <div class="review-middle">
+            <p><img src="static/img/public/tishi.png" alt="">温馨提示：</p>
+            <p>代理审核成功后，我们将以短信的形式通知到您！</p>
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/public.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>

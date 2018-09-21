@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>消息推送</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        .infoMessage {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding: 0 0.2rem;
+            margin-top: 0.24rem;
+            background: #fff;
+        }
+
+        .infoMessage .info-item:last-child {
+            border: none;
+        }
+
+        .info-item {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            border-bottom: 0.01rem solid #d2d2d2;
+            padding: 0.1rem 0;
+        }
+
+        .info-left {
+            width: 10%;
+            float: left;
+            height: auto;
+            padding: 0.15rem;
+        }
+
+        .info-left img {
+            width: 0.34rem;
+        }
+
+        .info-right {
+            width: 90%;
+            float: left;
+        }
+
+        .info-right p {
+            margin-top: 0.1rem;
+        }
+
+        .info-title {
+            font-size: 0.3rem;
+            color: #323232;
+        }
+
+        .info-con {
+            font-size: 0.24rem;
+            color: #909090;
+        }
+
+        .info-time {
+            font-size: 0.24rem;
+            color: #909090;
+        }
+
+        #mescroll{
+            position: fixed;
+            top: 0.9rem;
+            bottom: 0;
+            height: auto!important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation forbidScrollIos">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        我的消息
+    </div>
+</header>
+<main>
+    <div class="mescroll" id="mescroll">
+        <section class="infoMessage content" id="content">
+
+        </section>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+
+        var url = baseAjaxUrl + "/ty_api/system/push/queryHistorySystemPust";
+        var data = {"pageNum": 1, "pageSize": 10};
+        upLoading(url, data, getSystemInfoCall, false);
+
+        //获取信息的回调
+        function getSystemInfoCall(data) {
+            var listDom = $("#content");
+            var innerHtml = '';
+            for (var i = 0; i < data.length; i++) {
+                var msgTitle='';
+                var hrefUrl='';
+                switch (data[i].pushType){
+                    case "NOTICE":
+                        msgTitle="系统公告";
+                        hrefUrl='javascript:;';
+                        break;
+                    case "PRODUCT":
+                        msgTitle="产品推送";
+                        hrefUrl='goods.html?productId='+data[i].param;
+                        break;
+                    case "ACTIVITY":
+                        msgTitle="活动消息";
+                        hrefUrl=data[i].param;
+                        break;
+                }
+                innerHtml +=
+                    '       <div class="info-item">\n' +
+                '               <a href="'+hrefUrl+'">'+
+                    '               <div class="info-left">\n' +
+                    '                    <img src="static/img/public/systemmessage.png" alt="">\n' +
+                    '               </div>\n' +
+                    '               <div class="info-right">\n' +
+                    '                   <p class="info-title">'+msgTitle+'</p>\n' +
+                    '                   <p class="info-con">' + data[i].pushContent + '</p>\n' +
+                    '                   <p class="info-time">' + timeTransformation(data[i].createTime) + '</p>\n' +
+                    '               </div>\n' +
+                '               </a>'+
+                    '        </div>'
+            }
+            listDom.append(innerHtml);//加在列表的后面,上拉加载
+        }
+    })
+</script>

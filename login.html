@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        body{
+            background-color: #fff;
+        }
+        .login-header{
+            /* height: 3rem; */
+        }
+        .login-header img{
+            width: 1.5rem;
+            height: 1.5rem;
+            clear: both; 
+            display: block; 
+            margin: auto; 
+            margin-top: 0.8rem;
+        }
+        section{
+            width: 100%;
+            height: auto;
+            overflow:hidden;
+            padding: 0 0.2rem;
+            margin-top: 0.24rem;
+            background: #fff;
+        }
+        .item{
+            width: 100%;
+            height: 0.8rem;
+            border-bottom: 0.01rem solid #cfcfcf;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            position: relative;
+        }
+        .item label{
+            width: 20%;
+            height: 100%;
+            line-height: 0.8rem;
+        }
+        #phone{
+            width: 55%;
+            height: 70%;
+            line-height: 0.56rem;
+            font-size: 0.28rem;
+        }
+        .code{
+            width: 55%;
+            height: 70%;
+            line-height: 0.56rem;
+            font-size: 0.28rem;
+        }
+        #checkCode{
+            width: 24%;
+            height: 80%;
+            border-left: 0.01rem solid #cfcfcf;
+            color: #fff;
+            background: #47bfc5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            position: relative;
+        }
+        .mask{
+            width: 24%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            display: none;
+        }
+        #submit{
+            margin: 0 0.2rem;
+            height: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin-top: 0.5rem;
+            background: #47bfc5;
+            color: #fff;
+            font-size: 0.3rem;
+        }
+        input[type="number" i]:disabled{
+            background: #fff;
+        }
+        #password{
+            display: flex;
+        }
+        #verification{
+            display: none;
+        }
+        .remark{
+            margin: 0.2rem 0.2rem;
+            font-size: 0.25rem;
+        }
+        .remark a{
+            color: #7a7979;
+        }
+        .remark-right{
+            float: right;
+        }
+    </style>
+</head>
+<body>
+<header>
+        <div class="navigation">
+            <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+            登录
+        </div>
+</header>
+<main>
+    <div class="login-header">
+        <a href="index.html">
+            <img src="static/img/public/logo.jpg" alt="">
+        </a>
+    </div>
+    <section>
+        <div class="item">
+            <label for="phone">手机号</label>
+            <input type="number" id="phone" placeholder="请输入手机号">
+            <div id="checkCode"> 验证码登录</div>
+        </div>
+        <div id="password" class="item hidetag" >
+            <label for="phone">密码</label>
+            <input type="password" class="code" id="loginPassword" placeholder="请输入密码">
+        </div>
+        <div id="verification" class="item hidetag" >
+            <label for="phone">验证码</label>
+            <input type="number" class="code" id="code" placeholder="请输入验证码">
+        </div>
+    </section>
+    <div id="submit" class="hidetag">登 录</div>
+    <div class="remark"><span><a href="register.html">注册账号</a> </span><span class="remark-right"><a href="forgetPassword.html">忘记密码？</a> </span></div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/md5.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        
+    });
+    var mima = 0;
+    $("#checkCode").click(function () {
+        if(mima == 0) {
+            var phone=$("#phone").val();
+            if(phone==''){
+                layMessage("请输入手机号！");
+                return false;
+            }
+            if(!mobileReg(phone)){
+                layMessage("手机格式不正确");
+                return false;
+            }
+            $("#password").hide();
+            $("#verification").show();
+            $("#verification").css("display","flex");
+
+            var code=$.md5(phone+"APP_20!$_TY_HZ");
+            console.log(code);
+            //向手机发送验证码
+            publicAjax(baseAjaxUrl+"/ty_api/user/sendMessage","POST",{"code":code,"mobile":phone},sendInfoCall);
+            $("#checkCode").html("账号登录")
+            mima = 1;
+        }else{
+            $("#password").show();
+            $("#verification").hide();
+            $("#checkCode").html("验证码登录")
+            mima = 0;
+        }
+
+    });
+    //发送短信的回调
+    function sendInfoCall(res) {
+        if(res.errorCode==200){
+            layMessage(res.message,1);
+        }else{
+            layMessage(res.message,1);
+        }
+    }
+    $("#submit").click(function () {
+        var phone=$("#phone").val();
+        if(mima == 1) {
+            // 验证码登录
+            var code=$("#code").val();
+            if(code==""){
+                layMessage("请输入验证码");
+                return false;
+            }
+            publicAjaxToken(baseAjaxUrl+"/ty_api/user/verificationCodeLogin","POST",{"mobile":phone,"verificationCode":code},
+            verificationCodeCall);
+        }else if(mima == 0) {
+            // 密码登录
+            var password = $("#loginPassword").val();
+            if(password == ""){
+                layMessage("请输入密码");
+                return false;
+            }
+            password = $.md5(password);
+            publicAjaxToken(baseAjaxUrl+"/ty_api/user/doLogin","POST",
+            {"mobile":phone,"password":password},
+            passwordCall);
+        }
+    });
+    function verificationCodeCall(res) {
+        if(res.errorCode==200){
+            var token = res.data.token;
+            setLocal("token", token);
+            getUser();
+            layMessage(res.message);
+            setTimeout("openHtml();",500);
+        }else{
+            layMessage(res.message);
+            // setTimeout("WeixinJSBridge.call('closeWindow');",2000);
+        }
+    }
+    function passwordCall(res) {
+        if(res.errorCode==200){
+            console.log(res);
+            var token = res.data.token;
+            setLocal("token", token);
+            getUser();
+            layMessage(res.message);
+            setTimeout("openHtml();",500);
+            // location.href = "index.html";
+        }else{
+            layMessage(res.message);
+        }
+    }
+    function openHtml() {
+        // historyUtils.back();
+        window.history.back(-1);
+        // window.location.href = "index.html";
+    }
+</script>

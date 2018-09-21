@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专属二维码</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        body {
+            background: url("static/img/public/background2.png") center center no-repeat;
+            background-size: 100%;
+        }
+
+        .personal-head {
+            width: 100%;
+            height: 1rem;
+            padding-left: 0.5rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+        }
+
+        .personal-head > img {
+            width: 0.95rem;
+            height: 0.95rem;
+            border-radius: 50%;
+            margin-right: 0.2rem;
+            background-color: #c2c2c2;
+        }
+
+        .personal-head-right {
+            width: 4.72rem;
+            height: 0.9rem;
+            background-color: rgba(125, 125, 125, 0.1);
+            border-radius: 0.45rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            display: -webkit-flex;
+            -webkit-flex-direction: column;
+            -webkit-justify-content: space-around;
+            font-size: 0.24rem;
+            color: #313131;
+            padding: 0.1rem 0.4rem;
+        }
+
+        .personal-head-right p:first-child span {
+            color: #f79628;
+        }
+
+        .qr-code-box {
+            width: 4.3rem;
+            height: 4.3rem;
+            background-color: rgba(125, 125, 125, 0.1);
+            border-radius: 0.1rem;
+            margin: 0.4rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        .qr-code-box #qrcode {
+            width: 3.5rem;
+            height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+        }
+
+        #qrcode2{
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 2.3rem;
+            height: 2.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            opacity: 0;
+        }
+
+        .fingerprint {
+            width: 2.3rem;
+            height: 2.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .fingerprint img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .message {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .message p {
+            width: 100%;
+            text-align: center;
+        }
+
+        .message p:nth-child(1) {
+            font-size: 0.3rem;
+            color: #f152ce;
+            margin-top: 0.2rem;
+        }
+
+        .message p:nth-child(2) {
+            font-size: 0.3rem;
+            color: #313131;
+        }
+
+        .message p:nth-child(3) {
+            font-size: 0.36rem;
+            color: #313131;
+            margin-top: 0.2rem;
+        }
+
+        .message p:nth-child(4) {
+            font-size: 0.24rem;
+            color: #777777;
+        }
+
+    </style>
+</head>
+<body>
+<header class="hideHead">
+    <div class="navigation" style="background: rgba(255,255,255,0.51);">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        专属二维码
+    </div>
+</header>
+<main>
+    <div class="personal-head">
+        <img src="static/img/personal/userimg.png" alt="" class="nickImg">
+        <div class="personal-head-right">
+            <p>我是 <span class="nickName">游客</span></p>
+            <!--<p>为自己代言</p>-->
+        </div>
+    </div>
+    <div class="qr-code-box">
+        <div id="qrcode"></div>
+    </div>
+    <div class="fingerprint">
+        <img src="static/img/public/fingerprint.png" alt="">
+        <div id="qrcode2"></div>
+    </div>
+    <div class="message">
+        <p>长按指纹 识别图中二维码购买</p>
+        <p>关注我们 加入有礼品 关注有惊喜</p>
+        <p>专业旅游代言平台</p>
+        <p>24小时咨询热线：0571-86982889</p>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/qrcode.min.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var userId,clientType;
+    $(function () {
+        //获取用户信息
+        userId=GetQueryString("userId");
+        clientType=GetQueryString("clientType");
+        if(clientType==1){
+            $(".hideHead").hide();
+        }
+        publicAjax(baseAjaxUrl+"/ty_api/user/getSimpleDetail","POST",{"userId":userId},getUserInfoCall)
+    });
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        // var url="http://2y0640281b.imwork.net:48474/myRepresentShop.html?userType=personal&type=ME_CODE_URL&userId=" + userId;
+        var url=oneselfUrl+"myRepresentShop.html?userType=personal&type=ME_CODE_URL&userId=" + userId;
+        if (res.errorCode == 200) {
+            $(".nickName").html(res.data.nickName);
+            $(".nickImg").attr("src",baseImgUrl+res.data.headImg+"_small.jpg");
+            var qrcode = new QRCode('qrcode', {
+                text: url,
+                width: 165,
+                height: 165,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.Q
+            });
+            var qrcode2 = new QRCode('qrcode2', {
+                text: url,
+                width: 120,
+                height: 120,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.Q
+            });
+        }
+    }
+</script>

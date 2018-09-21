@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>app下载</title>
+    <link rel="stylesheet" href="static/css/base.css?ver=20110905">
+    <style>
+        .android{
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+        .android a{
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: url("static/img/public/AndroidApk.jpg")center center no-repeat;
+            background-size: cover;
+        }
+        .android img{
+            width: 7rem;
+            margin: 0 auto;
+            margin-top: 2rem;
+        }
+        .android p{
+            margin: 0 auto;
+            margin-top: 2rem;
+            text-align: center;
+            color: #555555;
+        }
+    </style>
+</head>
+<body>
+<div class="android">
+    <!--<a href="http://file.tongyoutrip.com/app/tongyoutrip.apk"></a>-->
+    <img src="static/img/public/kaifa.png" alt="">
+    <p>APP待开发中，敬请期待！</p>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="static/js/jquery-3.2.1.min.js?ver=20110905"></script>
+<script>
+    $(function () {
+        var u = navigator.userAgent, app = navigator.appVersion;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //g
+        var isIOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        if (isAndroid) {
+            // alert("安卓")
+            $(".android").show();
+            
+        }
+        if (isIOS) {
+            // alert("ios")
+            location.href="https://itunes.apple.com/cn/app/同游旅游/id1392881833";
+        }
+    });
+</script>

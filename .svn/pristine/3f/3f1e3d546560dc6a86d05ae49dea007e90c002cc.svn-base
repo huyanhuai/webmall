@@ -1,0 +1,164 @@
+/*banner*/
+.banner {
+    width: 100%;
+    height: 3.75rem;
+    position: relative;
+}
+
+.nav {
+    position: absolute;
+    top: 0.3rem;
+    left: 0.33rem;
+    right: 0.33rem;
+    margin: auto;
+    height: 0.6rem;
+    z-index: 10;
+}
+
+.nav > img {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+}
+
+.return {
+    float: left;
+}
+
+.share {
+    float: right;
+    margin-left: 0.25rem;
+}
+
+.collection {
+    float: right;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+
+.evaluation-box {
+    padding: 0.4rem;
+}
+
+.evaluation-title {
+    width: 100%;
+    height: 0.5rem;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    font-size: 0.3rem;
+    color: #494949;
+}
+
+#star {
+    width: 70% !important;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    margin-left: 0.2rem;
+}
+
+#star img {
+    width: 0.34rem;
+    margin-right: 0.1rem;
+}
+
+.your-eval {
+    margin: 0.1rem 0 0.2rem 0;
+}
+
+.eval-label {
+    display: block;
+    width: 100%;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    font-size: 0.3rem;
+    color: #494949;
+}
+
+#eval {
+    width: 100%;
+    height: 3rem;
+    border-radius: 0.05rem;
+    border: solid 0.01rem #bfbfbf;
+    background: #fff;
+    resize: none;
+    padding: 0.24rem 0.3rem;
+    color: #4c4c4c;
+    font-size: 0.26rem;
+}
+
+.img-upload {
+    margin: 0.1rem 0 0.2rem 0;
+}
+
+.img-upload > p {
+    display: block;
+    width: 100%;
+    height: 0.6rem;
+    line-height: 0.6rem;
+    font-size: 0.3rem;
+    color: #494949;
+}
+
+.img-preview {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+}
+
+.img-item {
+    width: 1.42rem;
+    height: 1.42rem;
+    background: #ffffff;
+    border-radius: 0.05rem;
+    margin: 0 0.34rem 0.4rem 0;
+    float: left;
+    position: relative;
+}
+
+.img-item:nth-child(4n) {
+    margin-right: 0;
+}
+
+.picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0.05rem;
+}
+
+.img-delete {
+    display: block;
+    width: 0.4rem;
+    height: 0.4rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+#upload {
+    width: 0;
+    height: 0;
+    overflow: hidden;
+}
+
+footer {
+    width: 100%;
+    height: 0.82rem;
+    position: fixed;
+    bottom: 0;
+    background: #fff;
+}

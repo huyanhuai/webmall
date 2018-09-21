@@ -1,0 +1,555 @@
+/*banner*/
+.banner {
+    width: 100%;
+    height: 3.75rem;
+    position: relative;
+}
+
+.nav {
+    position: absolute;
+    top: 0.3rem;
+    left: 0.33rem;
+    right: 0.33rem;
+    margin: auto;
+    height: 0.6rem;
+    z-index: 10;
+}
+
+.nav > img {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+}
+
+.return {
+    float: left;
+}
+
+.share {
+    float: right;
+    margin-left: 0.25rem;
+    /*display: none!important;*/
+}
+
+.collection {
+    float: right;
+}
+
+.swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.swiper-slide img {
+    display: block;
+    width: 100%;
+    /*height: 100%;*/
+}
+
+/*景点介绍*/
+.scenic-detail {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background: #fff;
+    padding: 0 0.33rem 0.2rem 0.33rem;
+    border-bottom: 0.01rem solid #e5e5e5;
+    position: relative;
+}
+
+.scenic-detail-left {
+    width: 90%;
+    height: 100%;
+    float: left;
+}
+
+.scenic-detail-left p:nth-child(1) {
+    width: 100%;
+    font-size: 0.3rem;
+    color: #2a2a2a;
+    margin-top: 0.2rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.scenic-detail-left p:nth-child(1) > img {
+    width: 0.34rem;
+    float: left;
+    margin-right: 0.12rem;
+    margin-top: 0.04rem;
+}
+
+.scenic-detail-left p:nth-child(2) {
+    width: 100%;
+    font-size: 0.24rem;
+    color: #b7b7b7;
+    line-height: 0.39rem;
+    padding-left: 0.46rem;
+    margin-top: 0.16rem;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.scenic-detail-right {
+    width: 10%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    position: absolute;
+    right: 0;
+}
+
+.scenic-detail-right img {
+    width: 0.22rem;
+}
+
+/*地址*/
+.scenic-address {
+    width: 100%;
+    height: 1.13rem;
+    padding: 0 0.33rem;
+    line-height: 1.2rem;
+    font-size: 0.3rem;
+    color: #2a2a2a;
+    background: url("../img/goods/map.png") center center no-repeat;
+    background-size: 100%;
+}
+
+.scenic-address span{
+    width: 85%;
+    float: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.scenic-address .icon {
+    width: 0.34rem;
+    float: left;
+    margin-right: 0.12rem;
+    margin-top: 0.35rem;
+}
+
+.scenic-address .more {
+    width: 0.22rem;
+    float: right;
+    margin-top: 0.45rem;
+}
+
+/*票务*/
+.ticket-box {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    background: #fff;
+    margin-top: 0.24rem;
+}
+
+.ticket-head {
+    height: 0.67rem;
+    margin: 0 0.1rem;
+    border-bottom: 0.01rem solid #e5e5e5;
+    padding: 0 0.23rem;
+    font-size: 0.32rem;
+    color: #2a2a2a;
+    line-height: 0.7rem;
+}
+
+.ticket-head .icon {
+    width: 0.35rem;
+    margin-top: 0.19rem;
+    float: left;
+    margin-right: 0.12rem;
+}
+
+.ticket-head .arrow {
+    width: 0.34rem;
+    margin-top: 0.25rem;
+    float: right;
+    transition: 0.5s;
+}
+
+/*票务套餐*/
+.ticket-con {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding: 0 0.22rem;
+    /*transition: 0.5s;*/
+}
+
+.ticket-item {
+    width: 100%;
+    height: 1.6rem;
+    border-bottom: 0.01rem solid #e5e5e5;
+    padding: 0.2rem 0;
+}
+
+.ticket-item:last-child {
+    border-bottom: none;
+}
+
+.ticket-item-left {
+    width: 80%;
+    height: 100%;
+    float: left;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    justify-content: center;
+    -webkit-justify-content: center;
+}
+
+.ticket-item-left p {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    /*margin-bottom: 0.15rem;*/
+}
+
+.ticket-item-title {
+    font-size: 0.3rem;
+    color: #2a2a2a;
+}
+
+.ticket-item-detail {
+    font-size: 0.26rem;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    color: #919191;
+}
+
+.ticket-item-detail > span {
+    border-radius: 0.05rem;
+    border: solid 0.01rem #ff0000;
+    font-size: 0.22rem;
+    padding: 0.02rem 0.08rem;
+    margin-right: 0.2rem;
+    color: #ff0000;
+}
+
+.ticket-flag {
+    font-size: 0.22rem;
+    color: #919191;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    margin-top: 0.25rem;
+}
+
+.ticket-flag > span {
+    /*width: 2rem;*/
+    height: 0.42rem;
+    border: solid 0.01rem #f79628;
+}
+.ticket-flag > span:first-child{
+    margin-right: 0.3rem;
+}
+.ticket-flag > span i{
+    font-style:normal;
+    text-align: center;
+
+}
+.ticket-flag > span > i:first-child{
+    /*width: 1.3rem;*/
+    padding: 0 0.2rem;
+    height: 0.42rem;
+    background-color: #f79628;
+    float: left;
+    color: #ffffff;
+    line-height: 0.42rem;
+    text-align: center;
+}
+.ticket-flag > span > i:last-child{
+    /*width: 0.6rem;*/
+    padding: 0 0.1rem;
+    height: 0.42rem;
+    float: left;
+    color: #f79628;
+    line-height: 0.42rem;
+    text-align: center;
+}
+
+.ticket-item-right {
+    width: 20%;
+    height: 100%;
+    float: right;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: space-around;
+}
+
+.present-price {
+    font-size: 0.38rem;
+    color: #f79628;
+    text-align: center;
+}
+
+.old-price {
+    font-size: 0.26rem;
+    color: #bfbfbf;
+    text-align: center;
+}
+
+.present-price > span, .old-price > span {
+    font-size: 0.26rem;
+}
+
+.reservation {
+    width: 1.2rem;
+    height: 0.5rem;
+    background: #47bfc5;
+    border-radius: 0.05rem;
+    text-align: center;
+    color: #fff;
+    font-size: 0.28rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+
+/*同类推荐，部分应用hot.css样式*/
+.recommend {
+    width: 100%;
+    height: auto;
+    background: #fff;
+    margin-top: 0.24rem;
+}
+
+.recommend-head {
+    width: 100%;
+    height: 0.74rem;
+    padding: 0 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-between;
+    border-bottom: 0.01rem solid #e5e5e5;
+}
+
+.recommend-head a:nth-child(1) {
+    font-size: 0.3rem;
+    color: #2a2a2a;
+}
+
+.recommend-head a:nth-child(2) {
+    font-size: 0.26rem;
+    color: #bfbfbf;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+}
+
+.recommend-head a:nth-child(2) > img {
+    display: inline-block;
+    width: 0.18rem;
+    float: right;
+    margin-left: 0.1rem;
+
+}
+
+/*预定时的弹窗样式*/
+.layui-m-layercont .package-options {
+    width: 100%;
+    height: 100%;
+    padding: 0 0.3rem;
+    box-sizing: border-box;
+}
+.package-options>p{
+    margin:  0.1rem 0;
+}
+
+.package-lay-head {
+    width: 100%;
+    font-size: 0.3rem;
+    color: #2a2a2a;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.package-lay-price {
+    width: 100%;
+    color: #bfbfbf;
+    font-size: 0.24rem;
+}
+
+.package-lay-price > span:nth-child(1) {
+    font-size: 0.36rem;
+    color: #f79628;
+}
+
+.package-lay-price > span:nth-child(1) > span {
+    font-size: 0.28rem;
+    color: #f79628;
+}
+
+.package-lay-price > span:nth-child(2) {
+    margin-left: 0.6rem;
+}
+
+.package-lay-number {
+    width: 100%;
+    font-size: 0.28rem;
+    color: #2a2a2a;
+}
+
+.package-lay-number > span {
+    float: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-between;
+}
+
+.package-lay-number > span button {
+    width: 0.5rem;
+    height: 0.4rem;
+    background-color: #eeeeee;
+    font-size: 0.28rem;
+    color: #696969;
+}
+
+.purchase-quantity {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.4rem;
+    font-size: 0.28rem;
+    color: #202020;
+    text-align: center;
+    background-color: #ffffff;
+    border: solid 0.01rem #bfbfbf;
+}
+
+.package-data-select > p {
+    font-size: 0.28rem;
+    color: #2a2a2a;
+}
+
+.package-data-box {
+    width: 100%;
+    height: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-between;
+}
+
+.package-data-item {
+    width: 1.5rem;
+    height: 0.7rem;
+    border-radius: 0.05rem;
+    background: #ffffff;
+    border: solid 0.01rem #bfbfbf;
+}
+
+.package-data-item > p {
+    width: 100%;
+    height: 50%;
+    text-align: center;
+}
+
+.package-data-item > p:nth-child(1) {
+    font-size: 0.26rem;
+    color: #3a3a3a;
+}
+
+.package-data-item > p:nth-child(2) {
+    font-size: 0.22rem;
+    color: #8b8b8b;
+}
+
+.package-data-item.invalid {
+    background: #f7f7f7;
+    border: solid 0.01rem #eeeeee;
+}
+
+.package-data-item.invalid > p {
+    color: #cdcdcd;
+}
+
+.package-data-item.selected {
+    background-color: #47bfc5;
+    border: none;
+}
+.package-data-item.other.selected{
+    color: #fff;
+}
+
+.package-data-item.selected > p {
+    color: #fff;
+}
+.package-data-item.other {
+    font-size: 0.26rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+.package-message{
+    width: 100%;
+    font-size: 0.22rem;
+    color: #777;
+}
+.package-agreement{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+    margin: 0.15rem 0;
+}
+.package-agreement>img{
+    display: block;
+    width: 0.25rem;
+    height: 0.25rem;
+    margin-right: 0.2rem;
+}
+.package-agreement>a{
+    font-size: 0.24rem;
+    color: #2a2a2a;
+}
+.package-reservation{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0.82rem;
+    background: #47bfc5;
+    font-size: 0.36rem;
+    color: #fff;
+    text-align: center;
+    line-height: 0.85rem;
+}

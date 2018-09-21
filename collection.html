@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的收藏</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <style>
+        #mescroll{
+            position: fixed;
+            bottom: 0;
+            top: 0.9rem;
+            height: auto!important;
+        }
+        .hot-title{
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            padding-bottom: 0!important;
+            white-space: normal!important;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .hot-title img{
+            display: inline-block;
+            height: 0.25rem;
+            margin-right: 0.1rem;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        我的收藏
+    </div>
+</header>
+<main>
+    <div class="mescroll" id="mescroll">
+        <div class="hot-con content" id="content">
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var starsLevel = 5;   //星星最高等级_评分
+    $(function () {
+        getToken();
+
+        init();
+    });
+    //初始化
+    function init() {
+        var url = baseAjaxUrl + "/ty_api/product/collection/queryCollectionByUserIdV2";
+        var data = {};
+        upLoading(url, data, collectCall, false);
+    }
+
+    //全部收藏的回调
+    function collectCall(data) {
+        var listDom = $("#content");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            //标签
+            if(data[i].type=="HOTEL"){
+                var tagImg = '<img src="static/img/hotel/hotelTag.png" alt="">';
+                var imgFlag='<img src="static/img/public/collection3@2x.png" alt="" class="collection" onclick="collectionHotelFlag(this)" data-collection="1" data-productId="' + data[i].productId + '">';
+                var jumpUrl='hotel/hotelDetail.html?hotelId=' + data[i].productId ;
+
+            }else if(data[i].type=="SCENE"){
+                var tagImg = '<img src="static/img/hotel/scienceTag.png" alt="">';
+                var imgFlag='<img src="static/img/public/collection3@2x.png" alt="" class="collection" onclick="collectionSceneFlag(this)" data-collection="1" data-productId="' + data[i].productId + '">';
+                var jumpUrl='goods.html?productId=' + data[i].productId ;
+            }
+
+            var starsHtml = '';    //星星的img标签
+            //星星评分
+            var solidStars = data[i].score;
+            var emptyStars = starsLevel - solidStars;
+            for (var j = 0; j < solidStars; j++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            innerHtml += '<div class="hot-item">\n' +
+                '            <a href="'+jumpUrl+'">\n' +
+                '                <div class="hot-left">\n' +
+                '                    <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt="">\n' +
+                '                </div>\n' +
+                '                <div class="hot-right">\n' +
+                '                    <div class="hot-p">\n' +
+                '                        <p class="hot-title">' + tagImg+data[i].productName + '</p>\n' +
+                '                        <p class="hot-stars">\n' +
+                '                            <span class="stars">\n' +
+                                                starsHtml+
+                '                            </span>\n' +
+                '                            <span>' + (data[i].commentNum == null ? "0" : data[i].commentNum) + '条评论</span>\n' +
+                '                        </p>\n' +
+                '                        <p class="hot-detail">' + data[i].productAddress + '</p>\n' +
+                '                    </div>\n' +
+                '           </a>\n' +
+                '                   <div class="hot-icon">\n' +
+                                        imgFlag+
+                '                       <p><span>￥</span>' + data[i].minPrice + '</p>\n' +
+                '                   </div>\n' +
+                '               </div>\n' +
+                '        </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+</script>
+<script>
+    /*景点取消收藏*/
+    function collectionSceneFlag(e) {
+        var token = getLocal("token");
+        var collectionIsFlag = $(e).attr("data-collection");
+        var productId = $(e).attr("data-productId");
+        console.log(productId);
+        if (collectionIsFlag == "1") {//有——》无
+            //询问框
+            layer.open({
+                content: '您确定要取消收藏该产品吗？'
+                ,btn: ['确定', '不要']
+                ,yes: function(index){
+                    layer.close(index);
+                    $.ajax({
+                        beforeSend: function (xhr) {
+                            //发送ajax请求之前向http的head里面加入验证信息
+                            xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                        },
+                        url: baseAjaxUrl + "/ty_api/product/collection/cancelCollection",
+                        type: "POST",
+                        data: {"productId": productId},
+                        success: function (res) {
+                            if (res.errorCode == 200) {
+                                layMessage(res.message);
+                                $(e).attr("src", "static/img/public/collection2@2x.png");
+                                $(e).attr("data-collection", "0");
+                                clearDown();
+                                init();
+                            }
+                        }
+                    })
+                }
+            });
+
+        }
+    }
+    /*酒店取消收藏*/
+    function collectionHotelFlag(e) {
+        var token = getLocal("token");
+        var collectionIsFlag = $(e).attr("data-collection");
+        var hotelId = $(e).attr("data-productId");
+        console.log(hotelId);
+        if (collectionIsFlag == "1") {//有——》无
+            //询问框
+            layer.open({
+                content: '您确定要取消收藏该产品吗？'
+                ,btn: ['确定', '不要']
+                ,yes: function(index){
+                    layer.close(index);
+                    $.ajax({
+                        beforeSend: function (xhr) {
+                            //发送ajax请求之前向http的head里面加入验证信息
+                            xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                        },
+                        url: baseAjaxUrl + "/ty_api/hotel/collection/cancelCollectionHotel",
+                        type: "POST",
+                        data: {"hotelId": hotelId},
+                        success: function (res) {
+                            if (res.errorCode == 200) {
+                                layMessage(res.message);
+                                $(e).attr("src", "static/img/public/collection2@2x.png");
+                                $(e).attr("data-collection", "0");
+                                clearDown();
+                                init();
+                            }
+                        }
+                    })
+                }
+            });
+
+        }
+    }
+
+</script>

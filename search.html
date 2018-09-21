@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜索页面</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/hot.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        body {
+            background: #fff;
+        }
+
+        .navigation {
+            justify-content: flex-end;
+            -webkit-justify-content: flex-end;
+            border-bottom: 0.01rem solid #f6f6f6;
+        }
+
+        .search-box {
+            width: 90%;
+            height: 98%;
+            float: right;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            position: relative;
+        }
+
+        #searchText {
+            width: 100%;
+            height: 0.54rem;
+            border-radius: 0.2rem;
+            background: #f6f6f6;
+            padding: 0 0.2rem;
+            font-size: 0.24rem;
+            color: rgba(140, 140, 140, 0.8);
+        }
+
+        .search-box > img {
+            width: 0.3rem;
+            height: 0.29rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0.2rem;
+            margin: auto;
+        }
+
+        #searchMessage {
+            padding: 0.2rem 0.3rem;
+        }
+
+        .search-kind {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+        }
+
+        .search-title {
+            width: 100%;
+            font-size: 0.25rem;
+            color: rgba(140, 140, 140, 0.6);
+            margin: 0.2rem 0;
+            position: relative;
+        }
+
+        .search-title img {
+            width: 0.33rem;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            margin: auto;
+        }
+
+        .search-tag {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-flex-wrap: wrap;
+            padding-left: 0.1rem;
+        }
+
+        .search-tag > span, .search-right > span {
+            height: 0.5rem;
+            padding: 0 0.2rem;
+            border-radius: 0.2rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            margin-right: 0.2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .search-tag > span {
+            background: #f6f6f6;
+        }
+
+        .search-right > span {
+            background: #fff;
+            border: solid 0.01rem #e5e5e5;
+        }
+
+        .search-hot {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding-left: 0.1rem;
+        }
+
+        .search-left {
+            width: 15%;
+            float: left;
+            height: 100%;
+        }
+
+        .search-left > img {
+            width: 0.5rem;
+            height: 0.5rem;
+        }
+
+        .search-right {
+            width: 85%;
+            float: left;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        <div class="search-box">
+            <input type="text" id="searchText" placeholder="搜索目的地/酒店/旅游/景点">
+            <img src="static/img/public/seachblue.png" alt="" id="searchBtn">
+        </div>
+    </div>
+</header>
+<main>
+    <section id="searchMessage">
+        <div class="search-kind">
+            <p class="search-title">最近搜索 <img src="static/img/public/delete.png" alt="" id="deleteLocal"></p>
+            <p class="search-tag">
+
+            </p>
+        </div>
+        <div class="search-kind">
+            <p class="search-title">热门搜索</p>
+            <div class="search-hot">
+                <div class="search-left">
+                    <img src="static/img/public/scenicspot.png" alt="">
+                </div>
+                <div class="search-right">
+
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var hotSearch;
+    $(function () {
+        //热门搜索
+        publicAjax(baseAjaxUrl+"/ty_api/index/push/searchHot","POST",{},getHotCall);
+        //热门搜索的回调
+        function getHotCall(res){
+            console.log(res);
+            if(res.errorCode==200){
+                var innerHotHtml='';
+                for(var m=0;m<res.data.length;m++){
+                    innerHotHtml+='<span onclick="tapSearch(this)">'+res.data[m]+'</span>';
+                }
+                $(".search-right").html(innerHotHtml)
+            }
+        }
+
+        //删除搜索记录
+        $("#deleteLocal").click(function () {
+            //询问框
+            layer.open({
+                content: '确定删除全部历史记录？'
+                ,btn: ['确认', '取消']
+                ,yes: function(index){
+                    delLocal("hotSearch");
+                    location.reload();
+                    layer.close(index);
+                }
+            });
+        });
+
+
+        //本地搜索的内容
+        hotSearch=getLocal("hotSearch");
+        if(!hotSearch){
+            hotSearch=[];
+        }else{
+            hotSearch=hotSearch.split(",").reverse();
+        }
+        var tagHtml='';
+        for(var i=0;i<hotSearch.length;i++){
+            tagHtml+='<span class="search-item" onclick="tapSearch(this)">'+hotSearch[i]+'</span>';
+        }
+        $(".search-tag").html(tagHtml);
+
+        $("#searchBtn").click(function () {
+            var searchText = $("#searchText").val();
+            searchFn(searchText,hotSearch);
+        });
+
+
+    });
+
+    //点击下面的热门搜索
+    function tapSearch(e){
+        var searchText = $(e).html();
+        searchFn(searchText,hotSearch);
+    }
+
+    function searchFn(searchText,hotSearch) {
+        console.log(searchText);
+        if (searchText == '') {
+            layMessage("请输入搜索内容");
+        } else {
+            if($.inArray(searchText,hotSearch)==-1){
+                hotSearch.push(searchText);
+            }
+            setLocal("hotSearch",hotSearch);
+            location.href = "searchCon.html?searchText=" + searchText;
+        }
+    }
+</script>

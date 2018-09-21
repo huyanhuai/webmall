@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+    <meta http-equiv="Pragma" content="no-cache"/>
+    <meta http-equiv="Expires" content="0"/>
+    <title>同游旅游</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/swiper/swiper-4.2.0.min.css">
+    <link rel="stylesheet" href="static/css/index.css">
+    <link rel="stylesheet" href="plug-in/dropload/dropload.css">
+    <style>
+        .dropload-down {
+            width: 100%;
+        }
+
+        body {
+            background: #fff !important;
+        }
+    </style>
+</head>
+<body>
+<!--banner图-->
+<header>
+    <div class="banner">
+        <div class="swiper-container">
+            <div class="swiper-wrapper">
+
+            </div>
+        </div>
+        <a class="search" href="search.html">
+            <img src="static/img/index/seach@2x.png" alt="">
+            搜索目的地/酒店/旅游/景点
+        </a>
+    </div>
+</header>
+<!--查询分类-->
+<section>
+    <div class="scenic-search">
+        <ul class="scenic-search-ul">
+
+        </ul>
+    </div>
+</section>
+<!--模块分类-->
+<section id="productBox">
+    <!--热门目的地-->
+    <div class="hot-destination">
+        <div class="hot-head">
+            <img src="static/img/index/title@2x.png" alt="" class="hot-icon">
+            热门目的地
+            <a href="hotDesCategory.html">
+                <img src="static/img/index/more@2x.png" alt="" class="hot-more">
+            </a>
+        </div>
+        <div class="hot-con" id="hotDes">
+
+        </div>
+    </div>
+    <!--热门专题-->
+    <div class="hot-destination">
+        <div class="hot-head">
+            <img src="static/img/index/title@2x.png" alt="" class="hot-icon">
+            热门专题
+            <a href="hotTopicCategory.html">
+                <img src="static/img/index/more@2x.png" alt="" class="hot-more">
+            </a>
+        </div>
+        <div class="hot-con" id="hotTopic">
+
+        </div>
+    </div>
+    <!--酒店-->
+    <div class="hot-destination hotel">
+        <div class="hot-head">
+            <img src="static/img/index/title@2x.png" alt="" class="hot-icon">
+            酒店
+            <a href="hotel/hotelSearch.html">
+                <img src="static/img/index/more@2x.png" alt="" class="hot-more">
+            </a>
+        </div>
+        <div class="hot-con" id="hotelProduct">
+
+        </div>
+    </div>
+    <!--附近景点-->
+    <div class="hot-destination">
+        <div class="hot-head">
+            <img src="static/img/index/title@2x.png" alt="" class="hot-icon">
+            附近景点
+            <a href="moreProduct.html?typeName=附近景点">
+                <img src="static/img/index/more@2x.png" alt="" class="hot-more">
+            </a>
+        </div>
+        <div class="hot-con" id="nearProduct">
+
+        </div>
+    </div>
+    <!--最新上线-->
+    <div class="hot-destination new" id="newProductBox">
+        <div class="hot-head">
+            <img src="static/img/index/title@2x.png" alt="" class="hot-icon">
+            最新上线
+            <a href="moreProduct.html?typeName=最新上线">
+                <img src="static/img/index/more@2x.png" alt="" class="hot-more">
+            </a>
+        </div>
+        <div class="hot-con new" id="newProduct">
+
+        </div>
+    </div>
+</section>
+<!--底部-->
+<footer>
+    <ul class="foot">
+        <li class="foot-item">
+            <a href="index.html">
+                <div class="foot-img">
+                    <img src="static/img/index/homepage2@2x.png" alt="">
+                </div>
+                <p class="foot-p active">首页</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="order.html">
+                <div class="foot-img">
+                    <img src="static/img/index/order@2x.png" alt="">
+                </div>
+                <p class="foot-p">订单</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="representCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/endorsement@2x.png" alt="">
+                </div>
+                <p class="foot-p">代言</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="personalCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/personal@2x.png" alt="">
+                </div>
+                <p class="foot-p">我的</p>
+            </a>
+        </li>
+    </ul>
+</footer>
+</body>
+</html>
+<script type="text/javascript" src="static/js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="plug-in/swiper/swiper-4.2.0.min.js"></script>
+<script type="text/javascript" src="static/js/public.js"></script>
+<script type="text/javascript" src="static/js/ajaxTool.js"></script>
+<script type="text/javascript" src="static/js/localStorage.js"></script>
+<script type="text/javascript" src="plug-in/layer_mobile/layer.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script type="text/javascript" src="plug-in/dropload/dropload.js"></script>
+<script>
+    var longitude;
+    var latitude;
+    $(function () {
+        //获取token
+        getToken();
+        var token = getLocal("token");
+        latitude = getSess("latitude");     //纬度
+        longitude = getSess("longitude");   // 经度，浮点数，范围为180 ~ -180。
+        /*顶部广告位*/
+        publicAjax(baseAjaxUrl + "/ty_api/exhibition/getList", "POST", {
+            "site": "CLIENT_BANNER",
+            "pageSize": "3",
+            "pageNum": "1"
+        }, swiperCallback);
+        /*banner下方的类型*/
+        publicAjax(baseAjaxUrl + "/ty_api/product/package/type/getList", "POST", {
+            "pageSize": "10",
+            "pageNum": "1"
+        }, bannerBotTypeCall);
+        /*酒店产品*/
+        publicAjax(baseAjaxUrl + "/ty_api/hotel/getSubjectHotel", "POST", {
+            "pageSize": "3",
+            "pageNum": "1"
+        }, hotelCallback);
+        /*热门信息*/
+        publicAjax(baseAjaxUrl + "/ty_api/subject/getMap", "POST", {
+            "pageSize": "3",
+            "pageNum": "1"
+        }, hotDesCallback);
+        //获取用户信息
+        getUser();
+
+
+        if (latitude == null && longitude == null) {
+
+            wxInitConfigFn(wxcallback);
+
+            function wxcallback() {
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        setSess("latitude", latitude);
+                        setSess("longitude", longitude);
+
+                        /*获取附近景点*/
+                        publicAjaxToken(baseAjaxUrl + "/ty_api/product/queryByAddress", "POST", {
+                            "pageSize": "3",
+                            "pageNum": "1",
+                            "longitude": longitude,
+                            "latitude": latitude
+                        }, getNearCall);
+                    }
+                });
+
+                //微信分享
+                var shareData = {
+                    title: "东游  西游  不如同游！", // 分享标题
+                    desc: "", // 分享描述
+                    link: window.location.href, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+                    imgUrl: "http://image.tongyoutrip.com/static/logo.png", // 分享图标
+                    type: '', // 分享类型,music、video或link，不填默认为link
+                    dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+                    ready: function () {
+                        // 你可以在这里对分享的数据进行重组
+                        // alert("准备分享");
+                    },
+                    success: function () {
+                        // 用户确认分享后执行的回调函数
+                        // alert("分享成功")
+                    },
+                    cancel: function () {
+                        // 用户取消分享后执行的回调函数
+                        // alert("取消分享")
+                    }
+                };
+                wx.onMenuShareAppMessage(shareData);
+                wx.onMenuShareTimeline(shareData);
+                wx.onMenuShareQQ(shareData);
+                wx.onMenuShareWeibo(shareData);
+                wx.onMenuShareQZone(shareData);
+            }
+
+
+        } else {
+            /*获取附近景点*/
+            publicAjaxToken(baseAjaxUrl + "/ty_api/product/queryByAddress", "POST", {
+                "pageSize": "3",
+                "pageNum": "1",
+                "longitude": longitude,
+                "latitude": latitude
+            }, getNearCall);
+        }
+
+
+        /*最新上线分页*/
+        // 页数
+        var page = 0;    // 每页展示5个
+        var size = 10;    // dropload调用
+        $('#newProductBox').dropload({
+            scrollArea: window,
+            loadDownFn: function (me) {
+                page++;            // 拼接HTML
+                var innerHtml = '';
+                $.ajax({
+                    beforeSend: function (xhr) {
+                        //发送ajax请求之前向http的head里面加入验证信息
+                        xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                    },
+                    url: baseAjaxUrl + "/ty_api/product/queryNewProduct",
+                    data: {
+                        "pageNum": page,
+                        "pageSize": size
+                    },
+                    type: "post",
+                    dataType: 'json',
+                    success: function (res) {
+                        var data = res.data.list;
+                        var arrLen = data.length;
+                        if (arrLen > 0) {
+                            for (var i = 0; i < arrLen; i++) {
+                                if (data[i].pictureUrl == null) {
+                                    var pictureUrl = "static/img/index/defaultImg.png";
+                                } else {
+                                    var pictureUrl = baseImgUrl + data[i].pictureUrl + '_small.jpg';
+                                }
+                                innerHtml +=
+                                    '<div class="surround-content-item">\n' +
+                                    '   <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                                    '       <div style="background: url(\''+pictureUrl+'\')center center;background-size: cover">\n' +
+                                    // '           <img src="' + pictureUrl + '" alt="">\n' +
+                                    '       </div>\n' +
+                                    '       <p class="p1">' + data[i].productName + '</p>\n' +
+                                    '       <p class="p2"><span>￥</span>' + data[i].minPrice + '<span>' + data[i].score + '分</span></p>\n' +
+                                    '    </a>\n' +
+                                    '</div>';
+                            }                    // 如果没有数据
+                        } else {                        // 锁定
+                            me.lock();                        // 无数据
+                            me.noData();
+                        }
+                        // 插入数据到页面，放到最后面
+                        $('#newProduct').append(innerHtml);                        // 每次数据插入，必须重置
+                        me.resetload();
+
+                    },
+                    error: function (xhr, type) {
+                        // alert('Ajax error!');                    // 即使加载出错，也得重置
+                        me.resetload();
+                    }
+                });
+            }
+        });
+
+    });
+
+    //请求轮播成功的回调
+    function swiperCallback(e) {
+        /*用于存放轮播内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            var linkUrl;
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].type = "PRODUCT") {
+                    linkUrl = "goods.html?productId=" + data[i].param;
+                } else {
+                    linkUrl = data[i].linkUrl;
+                }
+                innerHtml +=
+                    '<div class="swiper-slide">\n' +
+                    '   <a href="' + linkUrl + '">\n' +
+                    '      <img src="' + baseImgUrl + data[i].img + '.jpg" alt="">\n' +
+                    '   </a>\n' +
+                    '</div>\n';
+            }
+            $(".swiper-wrapper").html(innerHtml);
+            lunbo();
+        }
+    }
+
+    //banner下的类型查询回调
+    function bannerBotTypeCall(res) {
+        if (res.errorCode == 200) {
+            var innerHtml = '';
+            var data = res.data.list;
+            for (var i = 0; i < data.length; i++) {
+
+                if (data[i].packageType == "HOTEL") {
+                    innerHtml +=
+                        '   <li class="scenic-search-li" onclick="location.href=\'hotel/hotelSearch.html\'">\n' +
+                        '       <div class="scenic-img">\n' +
+                        '           <img src="' + baseImgUrl + data[i].iconUrl + '_small.jpg" alt="">\n' +
+                        '       </div>\n' +
+                        '       <p class="scenic-p">' + data[i].typeName + '</p>\n' +
+                        '   </li>';
+                } else {
+                    innerHtml +=
+                        '   <li class="scenic-search-li" onclick="jumpMore(' + data[i].productPackageTypeId + ',\'' + data[i].typeName + '\')">\n' +
+                        '       <div class="scenic-img">\n' +
+                        '           <img src="' + baseImgUrl + data[i].iconUrl + '_small.jpg" alt="">\n' +
+                        '       </div>\n' +
+                        '       <p class="scenic-p">' + data[i].typeName + '</p>\n' +
+                        '   </li>';
+                }
+            }
+            $(".scenic-search-ul").html(innerHtml);
+        }
+    }
+
+    //banner下方点击查询，更多相关
+    function jumpMore(productPackageTypeId, typeName) {
+        location.href = "moreThemeProduct.html?productPackageTypeId=" + productPackageTypeId;
+    }
+
+    // //酒店产品的回调
+    function hotelCallback(e) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (e.errorCode == 200) {
+            var data = e.data.list;
+            innerHtml +=
+                '   <div class="hp-left">\n' +
+                '       <a href="/hotel/hotelDetail.html?hotelId=' + data[0].hotelId + '">\n' +
+                '           <img src="' + baseImgUrl + data[0].pictureUrl + '_small.jpg" alt="">\n' +
+                '           <p>' +
+                '               <span style="font-size:0.28rem;font-weight:700;">' + data[0].hotelName + '</span>' +
+                '               <span><span>￥</span>' + data[0].minPrice + '<span>起</span></span>' +
+                '           </p>\n' +
+                '       </a>\n' +
+                '   </div>\n' +
+                '   <div class="hp-right">\n' +
+                '       <div class="hpr-item">\n' +
+                '           <a href="/hotel/hotelDetail.html?hotelId=' + data[1].hotelId + '">\n' +
+                '               <img src="' + baseImgUrl + data[1].pictureUrl + '_small.jpg" alt="">\n' +
+                '               <p class="hpr-p">' +
+                '                   <span>' + data[1].hotelName + '</span>' +
+                '               </p>\n' +
+                '           </a>\n' +
+                '       </div>\n' +
+                '       <div class="hpr-item">\n' +
+                '           <a href="/hotel/hotelDetail.html?hotelId=' + data[2].hotelId + '">\n' +
+                '               <img src="' + baseImgUrl + data[2].pictureUrl + '_small.jpg" alt="">\n' +
+                '               <p class="hpr-p">' +
+                '                   <span>' + data[2].hotelName + '</span>' +
+                '               </p>\n' +
+                '           </a>\n' +
+                '       </div>\n' +
+                '   </div>';
+            $("#hotelProduct").html(innerHtml);
+        }
+    }
+
+    //热门信息回调
+    function hotDesCallback(e) {
+        /*用于存放内容*/
+        var innerDesHtml = '';
+        var innerTopicHtml = '';
+        if (e.errorCode == 200) {
+            var data1 = e.data.hotAddress.list;
+            var data2 = e.data.hotSubject.list;
+            for (var i = 0; i < data1.length; i++) {
+                data1[i].subjectTitle = (data1[i].subjectTitle == null ? "暂无简介" : data1[i].subjectTitle);
+                innerDesHtml +=
+                    '<div class="hot-item">\n' +
+                    '   <a href="hotDestination.html?subjectId=' + data1[i].subjectId + '&subjectTitle=' + data1[i].subjectTitle + '&pictureUrl=' + data1[i].pictureUrl + '">\n' +
+                    '       <div class="hot-img" style="background: url(\'' + baseImgUrl + data1[i].pictureUrl + '_small.jpg\')center center;background-size: cover">' +
+                    // '           <img src="' + baseImgUrl + data1[i].pictureUrl + '_small.jpg" alt=" ' + data1[i].subjectName + ' ">\n' +
+                    '       </div>' +
+                    '       <p class="hot-p1">' + data1[i].subjectName + '</p>\n' +
+                    '       <p class="hot-p2">' + data1[i].subjectTitle + '</p>\n' +
+                    '   </a>\n' +
+                    '</div>';
+
+            }
+            for (var j = 0; j < data2.length; j++) {
+                data2[j].subjectTitle = (data2[j].subjectTitle == null ? "暂无简介" : data2[j].subjectTitle);
+                innerTopicHtml +=
+                    '<div class="hot-item">\n' +
+                    '   <a href="hotTopic.html?subjectId=' + data2[j].subjectId + '&subjectTitle=' + data2[j].subjectTitle + '&pictureUrl=' + data2[j].pictureUrl + '">\n' +
+                    '       <div class="hot-img" style="background: url(\'' + baseImgUrl + data2[j].pictureUrl + '_small.jpg\')center center;background-size: cover">' +
+                    // '           <img src="' + baseImgUrl + data2[j].pictureUrl + '_small.jpg" alt=" ' + data2[j].subjectName + ' ">\n' +
+                    '       </div>' +
+                    '       <p class="hot-p1">' + data2[j].subjectName + '</p>\n' +
+                    '       <p class="hot-p2">' + data2[j].subjectTitle + '</p>\n' +
+                    '   </a>\n' +
+                    '</div>';
+
+            }
+            $("#hotDes").html(innerDesHtml);
+            $("#hotTopic").html(innerTopicHtml);
+        }
+    }
+
+    //附近景点回调
+    function getNearCall(res) {
+        /*用于存放内容*/
+        var innerHtml = '';
+        if (res.errorCode == 200) {
+            var data = res.data.list;
+            for (var i = 0; i < data.length; i++) {
+                data[i].productTitle = (data[i].productTitle == null ? "暂无简介" : data[i].productTitle);
+                innerHtml +=
+                    '<div class="hot-item">\n' +
+                    '   <a href="goods.html?productId=' + data[i].productId + '">\n' +
+                    '       <div class="hot-img" style="background: url(\'' + baseImgUrl + data[i].pictureUrl + '_small.jpg\')center center;background-size: cover">' +
+                    // '           <img src="' + baseImgUrl + data[i].pictureUrl + '_small.jpg" alt=" ' + data[i].productName + ' ">\n' +
+                    '       </div>' +
+                    '       <p class="hot-p1">' + data[i].productName + '</p>\n' +
+                    '       <p class="hot-p2">' + data[i].productTitle + '</p>\n' +
+                    '   </a>\n' +
+                    '</div>';
+
+            }
+            $("#nearProduct").html(innerHtml);
+
+        }
+    }
+
+
+</script>

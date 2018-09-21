@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>酒店介绍</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <style>
+        .content{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.24rem;
+            background: #fff;
+        }
+        .hotel-info{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #fff;
+        }
+        .facility-item-msg{
+            width: 100%;
+            height: 0.89rem;
+            background: url("../static/img/hotel/hotelFacilityMsg.png")center center no-repeat;
+            background-size: 100%;
+            text-align: center;
+            line-height: 0.89rem;
+            font-family: PingFang-SC-Bold;
+            font-size: 0.32rem;
+            color: #1e1e1e;
+        }
+
+        .hotel-phone{
+            width: 2.5rem;
+            height: 0.45rem;
+            border-radius: 0.1rem;
+            border: solid 0.02rem #45bec3;
+            margin: 0 auto;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+            padding: 0 0.1rem;
+        }
+        .hotel-phone img{
+            width: 0.27rem;
+        }
+        .hotel-phone a{
+            font-family: PingFang-SC-Regular;
+            font-size: 0.26rem;
+            color: #1e1e1e;
+        }
+        .hotel-detail{
+            width: 100%;
+            padding: 0.4rem 0.58rem;
+            font-family: PingFang-SC-Regular;
+            font-size: 0.28rem;
+            color: #1e1e1e;
+            text-align: justify;
+        }
+        #hotelFacility{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #f7f7f7;
+        }
+        .facility-item{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #fff;
+            margin-top: 0.18rem;
+        }
+        .facility-item-ul{
+            width: 100%;
+            padding: 0.2rem 0.58rem;
+            height: auto;
+            overflow: hidden;
+        }
+        .facility-item-ul .facility-item-li:nth-child(3n){
+            width: 20%;
+        }
+        .facility-item-li{
+            width: 38%;
+            margin-right: 2%;
+            float: left;
+            margin-bottom: 0.2rem;
+            font-family: PingFang-SC-Regular;
+            font-size: 0.22rem;
+            color: #585858;
+        }
+        .facility-item-ul .facility-item-li:nth-child(3n){
+            margin-right: 0;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="../static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        全部设施
+    </div>
+</header>
+<main>
+    <section class="content">
+        <div class="hotel-info">
+            <div class="facility-item-msg">酒店设施</div>
+            <div class="hotel-phone">
+                <img src="../static/img/hotel/hotelPhone.png" alt="">
+                <a id="hotelPhone" href="javascript:;"></a>
+            </div>
+            <div class="hotel-detail" id="hotelDetail">
+
+            </div>
+        </div>
+        <div id="hotelFacility">
+
+        </div>
+    </section>
+</main>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="../static/js/history.js"></script>
+<script>
+    $(function () {
+        var hotelId=GetQueryString("hotelId");
+        var clientType=GetQueryString("clientType");
+        console.log(hotelId);
+        if(clientType){
+            $(".navigation").hide();
+        }
+        //获取酒店信息
+        publicAjax(baseAjaxUrl+"/ty_api/hotel/queryItems","POST",{"hotelId":hotelId},getFacInfoCall);
+    });
+    //获取酒店信息的回调
+    function getFacInfoCall(res) {
+        if(res.errorCode==200){
+            var data=res.data.items;
+            var innerHtml='';
+            for(var i=0;i<data.length;i++){
+                var itemHtml='';
+                for(var j=0;j<data[i].hotelItems.length;j++){
+                    itemHtml+='<li class="facility-item-li">'+data[i].hotelItems[j].itemName+'</li>';
+                }
+                innerHtml+=
+                    '<div class="facility-item">\n' +
+                    '   <div class="facility-item-msg">'+data[i].msg+'</div>\n' +
+                    '   <ul class="facility-item-ul">\n' +
+                            itemHtml+
+                    '   </ul>\n' +
+                    '</div>'
+            }
+            $("#hotelFacility").html(innerHtml);
+            $("#hotelPhone").attr("onClick","tel('"+res.data.hotel.hotelPhone+"')");
+            $("#hotelPhone").html(res.data.hotel.hotelPhone);
+            if(res.data.hotel.intro!=null){
+                $("#hotelDetail").html(res.data.hotel.intro);
+            }else{
+                $("#hotelDetail").html("暂无简介");
+            }
+
+        }
+    }
+    function tel(phone) {
+        window.location.href = 'tel://' + phone;
+    }
+</script>

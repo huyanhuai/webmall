@@ -1,0 +1,214 @@
+/*顶部导航*/
+.nav-menu {
+    width: 100%;
+    height: 0.7rem;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-around;
+}
+
+.nav-menu-item {
+    height: 100%;
+    padding: 0 0.25rem;
+    font-size: 0.26rem;
+    color: #494949;
+    line-height: 0.75rem;
+}
+
+.nav-menu-item.active {
+    color: #47bfc5;
+    border-bottom: 0.06rem solid #47bfc5;
+}
+
+/*内容*/
+.container {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    display: none;
+    /*margin-bottom: 1rem;*/
+}
+
+.container.active {
+    display: block;
+}
+
+.order-item {
+    width: 100%;
+    height: 3.7rem;
+    background: #fff;
+    margin-top: 0.2rem;
+}
+
+.order-item-head {
+    width: 100%;
+    height: 0.68rem;
+    border-bottom: 0.01rem solid #d2d2d2;
+    font-size: 0.26rem;
+    color: #494949;
+    line-height: 0.7rem;
+    padding: 0 0.45rem;
+}
+
+.order-number {
+    float: left;
+}
+
+.order-time {
+    float: right;
+}
+
+.order-item-con {
+    /*width: 100%;*/
+    height: 2.26rem;
+    margin: 0 0.25rem;
+    padding: 0 0.2rem;
+    border-bottom: 0.01rem solid #d2d2d2;
+
+}
+
+.order-item-con-head {
+    width: 100%;
+    height: 0.66rem;
+    display: flex;
+    align-items: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    font-size: 0.26rem;
+    color: #b5b5b5;
+}
+
+.order-item-con-head > img {
+    width: 0.28rem;
+    height: 0.28rem;
+    margin-right: 0.15rem;
+}
+
+.order-container {
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    padding-bottom: 0.2rem;
+}
+
+.order-goods {
+    display: inline-block;
+    width: 35%;
+    height: 1.4rem;
+    border-radius: 0.05rem;
+    float: left;
+    overflow: hidden;
+}
+
+.order-goods > img {
+    width: 100%;
+    /*height: 100%;*/
+    border-radius: 0.05rem;
+}
+
+.order-item-right {
+    width: 60%;
+    height: 1.4rem;
+    float: right;
+    padding: 0.15rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    display: -webkit-flex;
+    -webkit-flex-direction: column;
+    -webkit-justify-content: space-between;
+}
+
+.order-product-name {
+    width: 100%;
+    font-size: 0.26rem;
+    color: #5b5b5b;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/*.order-product-price {*/
+    /*width: 100%;*/
+    /*font-size: 0.26rem;*/
+    /*color: #a5a5a5;*/
+    /*display: flex;*/
+    /*align-items: center;*/
+    /*justify-content: space-between;*/
+    /*display: -webkit-flex;*/
+    /*-webkit-align-items: center;*/
+    /*-webkit-justify-content: space-between;*/
+/*}*/
+
+.order-item-foot {
+    width: 100%;
+    height: 0.75rem;
+    padding: 0 0.45rem;
+    font-size: 0.26rem;
+}
+
+/*全部*/
+.all-order > span {
+    color: #f79628;
+}
+
+.all-order {
+    text-align: right;
+    color: #a5a5a5;
+    font-size: 0.26rem;
+}
+
+/*待付款、评价*/
+.payment-order, .evaluation-order, .check-order, .complete-order {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: flex-end;
+}
+
+.payment-order > span {
+    display: inline-block;
+    width: 1.3rem;
+    height: 0.6rem;
+    margin-left: 0.3rem;
+    font-size: 0.26rem;
+    line-height: 0.65rem;
+    text-align: center;
+}
+
+.payment-order > span:nth-child(2) {
+    background: #47bfc5;
+    border-radius: 0.05rem;
+    color: #fff;
+
+}
+
+.payment-order > span:nth-child(1) {
+    background: #ffffff;
+    border-radius: 0.05rem;
+    border: solid 0.01rem #47bfc5;
+    color: #47bfc5;
+}
+
+.evaluation-order > span, .check-order > span, .complete-order > span {
+    display: inline-block;
+    width: 1.3rem;
+    height: 0.6rem;
+    margin-left: 0.3rem;
+    font-size: 0.26rem;
+    line-height: 0.65rem;
+    text-align: center;
+    background: #ffffff;
+    border-radius: 0.05rem;
+    border: solid 0.01rem #47bfc5;
+    color: #47bfc5;
+}

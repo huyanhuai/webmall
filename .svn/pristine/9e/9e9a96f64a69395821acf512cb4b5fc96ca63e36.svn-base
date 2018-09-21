@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>酒店查询</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../static/css/hotelDate.css">
+    <style>
+        .banner {
+            width: 100%;
+            height: 3rem;
+            background: url("../static/img/represent/shop_bg.png");
+            background-size: 100%;
+            position: relative;
+        }
+
+        .navigation {
+            background: none;
+            color: #fff;
+            position: relative;
+        }
+
+        .search-box {
+            height: auto;
+            overflow: hidden;
+            padding: 0.53rem 0.13rem;
+            margin: 0 0.25rem;
+            background: #fff;
+            margin-top: -0.53rem;
+            box-shadow: 0 0.02rem 0.18rem 0 rgba(209, 209, 209, 0.76);
+            position: relative;
+            z-index: 10;
+        }
+
+        .search-item1 {
+            width: 100%;
+            height: 1.1rem;
+            border-bottom: 0.01rem solid #dedede;
+            padding: 0 0.2rem;
+        }
+
+        .search-item1-left {
+            width: 80%;
+            height: 100%;
+            float: left;
+        }
+
+        .search-item1-left p {
+            width: 100%;
+        }
+
+        .search-item1-left p:first-child {
+            color: rgba(48, 48, 48, 0.8);
+        }
+
+        .search-item1-left p:last-child {
+            color: #303030;
+            font-family: PingFang-SC-Bold;
+            font-size: 0.36rem;
+            margin-top: 0.1rem;
+        }
+
+        .search-item1-right {
+            width: 20%;
+            height: 100%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+        }
+
+        .search-item1-right img {
+            width: 0.52rem;
+        }
+
+        .search-item2 {
+            width: 100%;
+            height: 1.3rem;
+            border-bottom: 0.01rem solid #dedede;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            padding: 0 0.2rem;
+        }
+
+        .search-item2 div p:first-child {
+            color: rgba(48, 48, 48, 0.8);
+        }
+
+        .search-item2 div p:last-child {
+            font-family: PingFang-SC-Bold;
+            font-size: 0.32rem;
+            color: #303030;
+            margin-top: 0.1rem;
+        }
+
+        #liveNum {
+            width: 1rem;
+            height: 0.32rem;
+            border-radius: 0.16rem;
+            border: solid 0.01rem #a5a5a5;
+            font-family: PingFang-SC-Regular;
+            font-size: 0.22rem;
+            color: #303030;
+            text-align: center;
+            line-height: 0.32rem;
+        }
+
+        .search-item3 {
+            width: 100%;
+            height: 0.85rem;
+            border-bottom: 0.01rem solid #dedede;
+            padding: 0 0.2rem;
+            font-family: PingFang-SC-Regular;
+            font-size: 0.28rem;
+            color: rgba(48, 48, 48, 0.8);
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+        }
+
+        .search-item3 input {
+            width: 100%;
+            height: 100%;
+            font-family: PingFang-SC-Regular;
+            font-size: 0.28rem;
+            color: rgba(48, 48, 48, 0.8);
+        }
+        #searchBtn{
+            width: 100%
+            height: 0.84rem;
+            background-color: #36bfc4;
+            border-radius: 0.06rem;
+            font-family: PingFang-SC-Bold;
+            font-size: 0.36rem;
+            color: #ffffff;
+            text-align: center;
+            line-height: 0.84rem;
+            margin: 0.3rem 0;
+        }
+        .search-item4{
+            width: 100%;
+            height: 1rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-around;
+            -webkit-justify-content: space-around;
+        }
+        .search-item4-li{
+            text-align: center;
+        }
+        .search-item4 .search-item4-li p:first-child{
+            font-family: PingFang-SC-Regular;
+            font-size: 0.36rem;
+            color: #303030;
+        }
+        .search-item4 .search-item4-li p:last-child{
+            font-family: PingFang-SC-Regular;
+            font-size: 0.24rem;
+            color: rgba(48, 48, 48, 0.88);
+            margin-top: 0.06rem;
+        }
+        .search-item4-middle{
+            width: 0.02rem;
+            height: 0.53rem;
+            background-color: #dedede;
+        }
+        /*星级弹窗*/
+        #starBox {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding-bottom: 0.2rem;
+            background: #fff;
+            /*border-bottom: 0.01rem solid #eee;*/
+        }
+
+        .star-title {
+            width: 100%;
+            color: #b5b5b5;
+            margin-bottom: 0.2rem;
+        }
+
+        .star-tab {
+            width: 100%;
+            height: 1.5rem;
+        }
+
+        .star-item {
+            width: 30%;
+            height: 0.6rem;
+            border: 0.01rem solid #eee;
+            display: flex;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            align-items: center;
+            justify-content: center;
+            -webkit-justify-content: center;
+            color: #8f8f8f;
+            border-radius: 0.1rem;
+            margin-right: 3.33%;
+            margin-bottom: 0.2rem;
+            float: left;
+        }
+        .star-tab .star-item:nth-child(3n){
+            margin-right: 0;
+        }
+
+        .star-item.active {
+            color: #47bfc5;
+            border-color: #47bfc5;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <div class="banner">
+        <div class="navigation">
+            <img src="../static/img/public/return@2x.png" alt="" onclick="returnBack()">
+            酒店
+        </div>
+    </div>
+</header>
+<main>
+    <div class="search-box">
+        <div class="search-item1">
+            <div class="search-item1-left">
+                <p>目的地</p>
+                <p class="province">杭州</p>
+            </div>
+            <div class="search-item1-right">
+                <img src="../static/img/public/nav_icon.png" alt="">
+            </div>
+        </div>
+        <div class="search-item2" id="chooseData">
+            <div class="search-item2-left">
+                <p>入住</p>
+                <p id="stayDate">7月23日</p>
+            </div>
+            <div class="search-item2-middle">
+                <p></p>
+                <p id="liveNum">共1晚</p>
+            </div>
+            <div class="search-item2-right">
+                <p>离店</p>
+                <p id="leaveDate">7月24日</p>
+            </div>
+        </div>
+        <div class="search-item3">
+            <input type="text" placeholder="关键字/品牌/酒店名" id="hotelKeyWord">
+        </div>
+        <div class="search-item3" id="starChoose" data-starLevel="">
+            星级
+        </div>
+        <div id="searchBtn">
+            搜索
+        </div>
+        <div class="search-item4">
+            <a class="search-item4-li" href="../order.html">
+                <p>我的订单</p>
+                <p>支付·退改·点评</p>
+            </a>
+            <div class="search-item4-middle"></div>
+            <a class="search-item4-li" href="../collection.html">
+                <p>我的酒店</p>
+                <p>收藏·历史</p>
+            </a>
+        </div>
+    </div>
+    <!--日历插件-->
+    <div id="calendarBox">
+        <input type="text" id="startDate"/>
+        <input type="text" id="endDate"/>
+    </div>
+    <div class="calendar"></div>
+</main>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../static/js/history.js"></script>
+<script src="../static/js/data.js" charset="utf-8"></script>
+<script>
+    $(function () {
+        /*酒店日期插件*/
+        $('#chooseData').calendarSwitch({
+            selectors: {
+                sections: ".calendar"
+            },
+            index: 4,      //展示的月份个数
+            animateFunction: "toggle",        //动画效果
+            controlDay: false,//知否控制在daysnumber天之内，这个数值的设置前提是总显示天数大于90天
+            daysnumber: "90",     //控制天数
+            comeColor: "#47bfc5",       //入住颜色
+            outColor: "#47bfc5",      //离店颜色
+            comeoutColor: "#78e0e6",        //入住和离店之间的颜色
+            callback: function () {
+                console.log("callback")
+            },   //回调函数
+            comfireBtn: '.comfire',//确定按钮的class或者id
+            cancelBtn: '.cancelChoose'//确定按钮的class或者id
+        });
+        /*初始化入住日期*/
+        (function initStayLeaveDate() {
+            var b = new Date();
+            //b.setDate(a.getDate()+1)
+            var ye = b.getFullYear();
+            var mo = b.getMonth() + 1;
+            var da = b.getDate();
+            if (mo < 10) {
+                mo = "0" + mo;
+            }
+            if (da < 10) {
+                da = "0" + da;
+            }
+            $('#startDate').val(ye + '-' + mo + '-' + da);
+            b = new Date(b.getTime() + 24 * 3600 * 1000);
+            var ye = b.getFullYear();
+            var mo = b.getMonth() + 1;
+            var da = b.getDate();
+            if (mo < 10) {
+                mo = "0" + mo;
+            }
+            if (da < 10) {
+                da = "0" + da;
+            }
+            $('#endDate').val(ye + '-' + mo + '-' + da);
+
+
+            var oldStartDate = $("#startDate").val();
+            var oldEndDate = $("#endDate").val();
+            $("#stayDate").text(replaceSeparator(oldStartDate));
+            $("#leaveDate").text(replaceSeparator(oldEndDate));
+
+            $(".comfire").click(function () {
+                console.log("oldStartDate" + oldStartDate);
+                console.log("oldEndDate" + oldEndDate);
+                var newStartDate = $('#startDate').val();
+                var newEndDate = $('#endDate').val();
+                if (newStartDate != oldStartDate || newEndDate != oldEndDate) {
+                    oldStartDate = newStartDate;
+                    oldEndDate = newEndDate;
+                    $("#stayDate").text(replaceSeparator(oldStartDate));
+                    $("#leaveDate").text(replaceSeparator(oldEndDate));
+                    $("#liveNum").html("共" + $(".hover").html() + "晚");
+                }
+            })
+        })()
+    });
+
+    //选择星级
+    $("#starChoose").click(function () {
+        //页面层
+        layer.open({
+            type: 1
+            ,content:
+                '   <div id="starBox">\n' +
+                '        <p class="star-title">星级筛选</p>\n' +
+                '        <ul class="star-tab">\n' +
+                '            <li class="star-item active" data-starLevel="">\n' +
+                '                不限\n' +
+                '            </li>\n' +
+                '            <li class="star-item" data-starLevel="2">\n' +
+                '                二星/经济型\n' +
+                '            </li>\n' +
+                '            <li class="star-item" data-starLevel="3">\n' +
+                '                三星/舒适\n' +
+                '            </li>\n' +
+                '            <li class="star-item" data-starLevel="4">\n' +
+                '                四星/高档\n' +
+                '            </li>\n' +
+                '            <li class="star-item" data-starLevel="5">\n' +
+                '                五星/豪华\n' +
+                '            </li>\n' +
+                '        </ul>\n' +
+                '    </div>'
+            ,anim: 'up'
+            ,style: 'position:fixed; bottom:0; left:0; width: 100%; height: auto; padding:10px; border:none; box-sizing: border-box;',
+            success:function () {
+                /*酒店星级价格的点击切换*/
+                $(".star-item").each(function (i, v) {
+                    $(v).click(function () {
+                        starLevel = $(v).attr("data-starLevel");
+                        $(v).addClass("active").siblings().removeClass("active");
+                        $("#starChoose").html($(this).html());
+                        $("#starChoose").attr("data-starLevel",starLevel);
+                        layer.closeAll()
+                    })
+                });
+            }
+        });
+    });
+    $("#searchBtn").click(function () {
+        var search=$("#hotelKeyWord").val();
+        var starLevel=$("#starChoose").attr("data-starLevel");
+        var startDate=$('#startDate').val();
+        var endDate=$('#endDate').val();
+        var liveNum=$("#liveNum").html();
+        console.log(search,starLevel,startDate,endDate);
+        var hotelSearchInfo = {};
+        hotelSearchInfo.search=search;
+        hotelSearchInfo.starLevel=starLevel;
+        hotelSearchInfo.startDate=startDate;
+        hotelSearchInfo.endDate=endDate;
+        hotelSearchInfo.liveNum=liveNum;
+        setSess("hotelSearchInfo", JSON.stringify(hotelSearchInfo));
+        location.href="hotelIndex.html"
+    })
+
+</script>

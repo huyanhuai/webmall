@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>评价页</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/evaluation.css">
+    <link rel="stylesheet" href="static/css/loader.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        .lodbox {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.4);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        评价
+    </div>
+</header>
+<main>
+    <div class="evaluation-box">
+        <div class="evaluation-title">
+            星级评价
+            <span id="star"></span>
+            <input type="hidden" id="evalNum">
+        </div>
+        <div class="your-eval">
+            <label for="eval" class="eval-label">您的评价</label>
+            <textarea name="" id="eval" placeholder="请输入您的评价"></textarea>
+        </div>
+        <div class="img-upload">
+            <p>添加照片 ( 最多6张 )</p>
+            <div class="img-preview" id="evelPicture">
+                <div class="img-item">
+                    <img src="static/img/public/addto@2x.png" alt="" class="picture"
+                         onclick="getElementById('upload').click()">
+                    <input type="file" id="upload" name="imgUpload" multiple>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <div class="submit-btn" id="submitEval">
+        确认评价
+    </div>
+</footer>
+<div class="lodbox">
+    <div class="loader">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+</div>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="plug-in/stars/jquery.raty.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+
+<script>
+    //放最后提交的图片组合
+    var imgInfo = [];
+    var orderId,orderType;
+    var pictureNum = 0;
+    var imgUrlArr = [];
+    $(function () {
+        orderId = GetQueryString("orderId");
+        orderType = GetQueryString("orderType");
+    });
+    //评星级
+    $('#star').raty({
+        // half: true,
+        click: function (score, evt) {
+            $("#evalNum").val(score);
+            console.log("score:" + score)
+//            alert('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt);
+        }
+    });
+
+
+    $("#upload").change(function () {
+        var files = $(this)[0].files;
+        var maxSize = 1024 * 1024 * 10;
+        console.log(files);
+        //图片是否超出长度
+        if (files.length > 6) {
+            layMessage("最多上传6张，请重新选择");
+            return false;
+        }
+        var maxLength = imgInfo.length + files.length;
+        if (maxLength > 6) {
+            layMessage("最多上传6张，请重新选择");
+            return false;
+        }
+        //图片是否超出大小
+        for (var v of files) {
+            if (v.size > maxSize) {
+                layMessage(v.name + " 超出限制!");
+                files.length == 0;
+                return false;
+            }
+        }
+        imgInfo = [...imgInfo, ...files];
+        console.log(imgInfo);
+
+
+        var imgHtml = '';
+        for (var i = 0; i < files.length; i++) {
+            // imgUrlArr.push(window.URL.createObjectURL(files[i]));
+            imgUrlArr.push(getObjectURL(files[i]));
+            imgHtml += '<div class="img-item">\n' +
+                '           <img src="' + getObjectURL(files[i]) + '" alt="" class="picture">\n' +
+                '           <img src="static/img/public/close@2x.png" alt="" class="img-delete" data-path="' + files[i].path + '">\n' +
+                '       </div>';
+        }
+        $("#evelPicture").prepend(imgHtml);
+        deleteImg();
+    });
+
+    //删除图片
+    function deleteImg() {
+        $(".img-delete").each(function (i, v) {
+            $(v).click(function () {
+                var path = $(v).attr("data-path");
+                console.log(path);
+                $(v).parent(".img-item").remove();
+                imgInfo = $.map(imgInfo, function (n) {
+                    return n.path != path ? n : null;
+                });
+            })
+        });
+    }
+
+
+    //确认提交的时候
+    $("#submitEval").click(function () {
+        $(".lodbox").show();
+        var score = $("#evalNum").val();
+        var commentContent = $("#eval").val();
+
+        if (score == '') {
+            layMessage("请您评分");
+            return false;
+        }
+        if (commentContent == '') {
+            layMessage("请输入您的评论");
+            return false;
+        }
+        console.log(orderId);
+        //提交评论
+        if(orderType=="HOTEL"){
+            publicAjaxToken(baseAjaxUrl + "/ty_api/hotel/comment/insert", "POST", {
+                "score": score,
+                "orderId": orderId,
+                "commentContent": commentContent
+            }, pinglunHotelCall);
+        }else{
+            publicAjaxToken(baseAjaxUrl + "/ty_api/product/comment/insert", "POST", {
+                "score": score,
+                "orderId": orderId,
+                "commentContent": commentContent
+            }, pinglunCall);
+        }
+
+
+
+    });
+
+    //酒店评论的回调
+    function pinglunHotelCall(res) {
+        if (res.errorCode == 200) {
+            for (var n = 0; n < imgInfo.length; n++) {
+                console.log(imgInfo[n]);
+                var num = Number(n + 1);
+                var form = new FormData();
+                form.append("sort", num);
+                form.append("hotelCommentId", res.data.hotelCommentId);
+                form.append("orderId", orderId);
+                form.append("commentPicture", imgInfo[n]);
+                publicAjaxFormdata(baseAjaxUrl + "/ty_api/hotel/comment/picture/uploadCommentPicture", "POST", form, pictureHotelCall);
+                // uploadImage(imgUrlArr[n], imgInfo[n], num, res.data.productCommentId, orderId, pictureCall)
+            }
+        }
+    }
+    //酒店图片的回调
+    function pictureHotelCall(res) {
+        if (res.errorCode == 200) {
+            pictureNum++;
+            console.log(pictureNum);
+            if(pictureNum==imgInfo.length){
+                $(".lodbox").hide();
+                layMessage("评论成功");
+                setTimeout(function () {
+                    returnBack();
+                }, 1000)
+            }
+        }else{
+            if(pictureNum>0&&pictureNum<imgInfo.length){
+                $(".lodbox").hide();
+                layMessage("评论成功，部分图片上传失败");
+                setTimeout(function () {
+                    returnBack();
+                }, 1000)
+            }
+        }
+    }
+
+
+    //评论的回调
+    function pinglunCall(res) {
+        if (res.errorCode == 200) {
+            for (var n = 0; n < imgInfo.length; n++) {
+                console.log(imgInfo[n]);
+                var num = Number(n + 1);
+                var form = new FormData();
+                form.append("sn", num);
+                form.append("productCommentId", res.data.productCommentId);
+                form.append("orderId", orderId);
+                form.append("commentPicture", imgInfo[n]);
+                publicAjaxFormdata(baseAjaxUrl + "/ty_api/product/comment/picture/uploadCommentPicture", "POST", form, pictureCall);
+                // uploadImage(imgUrlArr[n], imgInfo[n], num, res.data.productCommentId, orderId, pictureCall)
+            }
+        }
+    }
+    //图片的回调
+    function pictureCall(res) {
+        if (res.errorCode == 200) {
+            pictureNum++;
+            console.log(pictureNum);
+            if(pictureNum==imgInfo.length){
+                $(".lodbox").hide();
+                layMessage("评论成功");
+                setTimeout(function () {
+                    returnBack();
+                }, 1000)
+            }
+        }else{
+            if(pictureNum>0&&pictureNum<imgInfo.length){
+                $(".lodbox").hide();
+                layMessage("评论成功，部分图片上传失败");
+                setTimeout(function () {
+                    returnBack();
+                }, 1000)
+            }
+        }
+    }
+
+
+
+</script>
+<script>
+    /*图片压缩*/
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+
+    //压缩图片
+    function compress(image) {
+        var height = image.height;
+        var width = image.width;
+        var canvas = document.createElement('canvas');
+        //height、 width 和图片实际的高、宽一致时，直接赋值canvas的宽高为上述宽高
+        canvas.width = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#FFF';//绘制背景色
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        //0.5为压缩的质量比例，范围是0~1。
+
+        var imgBase = canvas.toDataURL("image/jpeg", 0.5);
+        //转成Blob对象，以ajax的方式上传
+        var formData = new FormData();
+        var arr = imgBase.split(",");
+        var mime = arr[0].match(/:(.*?);/)[1];
+        var bstr = atob(arr[1]);
+        var n = bstr.length;
+        var u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        var obj = new Blob([u8arr], {type: mime});
+
+        formData.append("commentPicture", obj, obj.type);
+        return formData;
+        //这里是用了toDataURL,然后再转成了blob，直接用canvas.toBlob不知道好不好使。
+    }
+
+    //上传方法
+    function uploadImage(objUrl, fileImg, sn, productCommentId, orderId, callback) {
+        var token = getLocal("token");
+        var image = new Image();
+        image.src = objUrl;
+        image.onload = function () {
+            var formData = new FormData();
+            //必须以这种方式获取，以JQuery的方式获取不到
+            var file = fileImg;
+            console.log("size" + file.size);
+            if (file.size > 1024 * 1024 * 2) {
+                //大于1M的时候压缩
+                formData = compress(image);
+                formData.append("sn", sn);
+                formData.append("productCommentId", productCommentId);
+                formData.append("orderId", orderId);
+            } else {
+                formData.append("commentPicture", fileImg);
+                formData.append("sn", sn);
+                formData.append("productCommentId", productCommentId);
+                formData.append("orderId", orderId);
+            }
+            $.ajax({
+                beforeSend: function (xhr) {
+                    //发送ajax请求之前向http的head里面加入验证信息
+                    xhr.setRequestHeader("token", token); // 请求发起前在头部附加token
+                },
+                url: baseAjaxUrl + "/ty_api/product/comment/picture/uploadCommentPicture",
+                type: "POST",
+                data: formData,
+                async: false,
+                processData: false,  // 不处理数据
+                contentType: false,  // 不设置内容类型
+                success: callback
+            })
+        }
+    }
+</script>

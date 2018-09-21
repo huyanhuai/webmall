@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>个人中心</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/personal.css">
+    <script src="static/js/rem.js"></script>
+</head>
+<body>
+<!--头部-->
+<header>
+    <div class="personal-head">
+        <div class='pTop-left'>
+            <img src='static/img/personal/userimg.png' class="userImg" id="setUserImg"/>
+        </div>
+        <div class='pTop-right'>
+            <div class='nicheng'></div>
+            <div class='pnav'>
+                <a href="javascript:;">
+                    <p class="orderNum">0</p>
+                    <p>订单</p>
+                </a>
+                <a href="myEvaluation.html">
+                    <p class="commentNum">0</p>
+                    <p>点评</p>
+                </a>
+                <a href="collection.html">
+                    <p class="collectionNum">0</p>
+                    <p>收藏</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</header>
+<!--各项设置-->
+<main>
+    <ul class="select-menu">
+        <li class="menu-item">
+            <div class="menu-item-left">
+                <img src="static/img/personal/myorder@2x.png" alt="">
+            </div>
+            <a href="order.html" class="menu-item-right">
+                我的订单
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item">
+            <div class="menu-item-left">
+                <img src="static/img/personal/news2@2x.png" alt="">
+            </div>
+            <a href="infoPushed.html" class="menu-item-right">
+                我的消息
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item">
+            <div class="menu-item-left">
+                <img src="static/img/personal/contacts.png" alt="">
+            </div>
+            <a href="contact.html" class="menu-item-right">
+                我的联系人
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item">
+            <div class="menu-item-left">
+                <img src="static/img/personal/bindingcellphone@2x.png" alt="">
+            </div>
+            <a href="bindingPhone.html" class="menu-item-right" style="border-bottom: none;">
+                绑定手机
+                <span id="bindMobile"></span>
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item" style="margin-top: 0.2rem;">
+            <div class="menu-item-left">
+                <img src="static/img/personal/setup@2x.png" alt="">
+            </div>
+            <a href="SetupInformation.html" class="menu-item-right" style="border-bottom: none;">
+                设置
+                <!--<span>个人信息，安全设置等</span>-->
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <!-- <li class="menu-item" style="margin-top: 0.2rem;" id="clearCache">
+            <div class="menu-item-left">
+                <img src="static/img/personal/delete.png" alt="">
+            </div>
+            <a href="javascript:;" class="menu-item-right" style="border-bottom: none;">
+                清除缓存
+                
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item" style="margin-top: 0.2rem;">
+            <div class="menu-item-left">
+                <img src="static/img/personal/opinion@2x.png" alt="">
+            </div>
+            <a href="feedback.html" class="menu-item-right" style="border-bottom: none;">
+                意见反馈
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li>
+        <li class="menu-item" style="margin-top: 0.2rem;">
+            <div class="menu-item-left">
+                <img src="static/img/personal/we.png" alt="">
+            </div>
+            <a href="aboutUs.html" class="menu-item-right" style="border-bottom: none;">
+                关于我们
+                <img src="static/img/index/more@2x.png" alt="">
+            </a>
+        </li> -->
+    </ul>
+</main>
+<!--底部-->
+<footer>
+    <ul class="foot">
+        <li class="foot-item">
+            <a href="index.html">
+                <div class="foot-img">
+                    <img src="static/img/index/homepage@2x.png" alt="">
+                </div>
+                <p class="foot-p">首页</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="order.html">
+                <div class="foot-img">
+                    <img src="static/img/index/order@2x.png" alt="">
+                </div>
+                <p class="foot-p">订单</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="representCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/endorsement@2x.png" alt="">
+                </div>
+                <p class="foot-p">代言</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="personalCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/personal2@2x.png" alt="">
+                </div>
+                <p class="foot-p active">我的</p>
+            </a>
+        </li>
+    </ul>
+</footer>
+
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script>
+    $(function () {
+        // getToken();
+        //获取用户信息
+        var token = getLocal("token");
+        if(token == null || token == undefined){
+            layMessage("请先登录！");
+            setTimeout("openHtml();",1000);
+        }
+        getUser();
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+        //获取头部的数据
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/getNum", "POST", {}, getNumCall);
+    });
+    function openHtml() {
+        window.location.href = "login.html";
+    }
+    //获取头部的展示数据的回调
+    function getNumCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //收藏数据
+            $(".collectionNum").html(res.data.collectionNum);
+            $(".commentNum").html(res.data.commentNum);
+            $(".orderNum").html(res.data.orderNum);
+        }
+    }
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            //收藏数据
+            $(".nicheng").html(res.data.nickName);
+            $(".userImg").attr("src", baseImgUrl + res.data.headImg + '_small.jpg');
+            if (res.data.mobile != null) {
+                $("#bindMobile").html(res.data.mobile);
+                $("#bindMobile").parent("a").attr("href", "javascript:;");
+            }
+        }
+    }
+
+    $("#setUserImg").click(function () {
+        location.href = "setting.html";
+    });
+
+    $("#clearCache").click(function () {
+        layer.open({
+            content: '您确定要清除缓存吗？'
+            , btn: ['确定', '不要']
+            , yes: function (index) {
+                layer.close(index);
+                delLocal("token");
+                if (getLocal("token") == null) {
+                    layMessage("缓存已清除", 1)
+                }
+            }
+        });
+    })
+</script>

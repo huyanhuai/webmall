@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>全部点评</title>
+    <link rel="stylesheet" href="../static/css/base.css">
+    <link rel="stylesheet" href="../static/css/public.css">
+    <link rel="stylesheet" href="../plug-in/meScroll/mescroll.min.css">
+    <style>
+        #mescroll {
+            width: 100%;
+            height: auto;
+            position: fixed;
+            top: 0.9rem;
+            bottom: 0;
+            background: #fff;
+            padding: 0 0.2rem;
+        }
+
+        #evaluation {
+            width: 100%;
+        }
+
+        .eitem {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            padding-top: 0.1rem;
+            padding-bottom: 0.2rem;
+            border-bottom: 0.01rem dashed #eee;
+        }
+
+        .eitem-left {
+            width: 15%;
+            float: left;
+            padding-top: 0.1rem;
+        }
+
+        .eitem-left img {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
+
+        .eitem-right {
+            padding-top: 0.2rem;
+            width: 82%;
+            float: right;
+        }
+
+        .user-info {
+            width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            justify-content: space-between;
+            -webkit-justify-content: space-between;
+        }
+
+        .user-info span:first-child {
+            color: #47bfc5;
+            font-size: 0.26rem;
+        }
+
+        .user-info span:last-child {
+            color: #959595;
+        }
+
+        .sort {
+            width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            margin-top: 0.1rem;
+        }
+
+        .sort img {
+            width: 0.2rem;
+            margin-left: 0.1rem;
+        }
+
+        .discuss {
+            margin-top: 0.1rem;
+        }
+
+        .discussImg {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.1rem;
+        }
+
+        .discussImg img {
+            width: 24%;
+            height: 1.4rem;
+            background: #47bfc5;
+            border-radius: 0.05rem;
+            float: left;
+            margin-right: 1.3%;
+            margin-bottom: 0.1rem;
+        }
+
+        .discussImg img:nth-child(4n) {
+            margin-right: 0;
+        }
+
+        .discussData {
+            margin-top: 0.1rem;
+            color: #959595;
+        }
+
+        .merchantsReply {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.1rem;
+        }
+
+        .mr-left {
+            width: 10%;
+            float: left;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            -webkit-align-items: center;
+            margin-top: 0.1rem;
+        }
+        .mr-left img{
+            width: 0.3rem;
+
+        }
+        .mr-right {
+            width: 90%;
+            float: left;
+        }
+        .mr-right span{
+            color: #959595;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation" style="border-bottom: 0.01rem solid #eeeeee;">
+        <img src="../static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        查看点评
+    </div>
+</header>
+<main>
+    <div class="evaluation-con mescroll" id="mescroll">
+        <div class="content" id="evaluation">
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/localStorage.js"></script>
+<script src="../static/js/ajaxTool.js"></script>
+<script src="../static/js/public.js"></script>
+<script src="../plug-in/layer_mobile/layer.js"></script>
+<script src="../plug-in/meScroll/mescroll.min.js"></script>
+<script src="../static/js/upLoading.js"></script>
+<script type="text/javascript" src="../static/js/history.js"></script>
+<script>
+    $(function () {
+        var clientType=GetQueryString("clientType");
+        var hotelId=GetQueryString("hotelId");
+        if(clientType){
+            $(".navigation").hide();
+        }
+        //获取酒店评论
+        var url = baseAjaxUrl + "/ty_api/hotel/comment/getList";
+        var data = {"hotelId": hotelId};
+        upLoading(url, data, getHotelCommentCall, false);
+    });
+    /*酒店评论的回调*/
+    function getHotelCommentCall(data) {
+        console.log(data);
+        var listDom = $("#evaluation");
+        var innerHtml = '';
+        for (var i = 0; i < data.length; i++) {
+            var scoreHtml='';//评分
+            var commentPictures='';//评论图片
+            var revertContent='';//评论图片
+            /*循环评分*/
+            for(var j=1;j<=data[i].score;j++){
+                scoreHtml+='<img src="../static/img/goods/stars2@3x.png" alt="">';
+            }
+            /*循环评论图*/
+            for(var m=0;m<data[i].hotelCommentPictures.length;m++){
+                commentPictures+='<img src="'+baseImgUrl+data[i].hotelCommentPictures[m].pictureUrl+'_small.jpg" alt="">';
+            }
+            /*商家回复*/
+            if(data[i].revertContent!=null){
+                revertContent=
+                    '   <div class="merchantsReply">\n' +
+                    '       <div class="mr-left">\n' +
+                    '           <img src="../static/img/hotel/mreply.png" alt="">\n' +
+                    '       </div>\n' +
+                    '       <div class="mr-right">\n' +
+                    '           <span>商家回应：</span>' +
+                                data[i].revertContent+
+                    '       </div>\n' +
+                    '   </div>\n';
+            }
+            innerHtml +=
+                '           <div class="eitem">\n' +
+                '                <div class="eitem-left">\n' +
+                '                    <img src="'+baseImgUrl+data[i].headImg+'_small.jpg" alt="">\n' +
+                '                </div>\n' +
+                '                <div class="eitem-right">\n' +
+                '                    <p class="user-info">\n' +
+                '                        <span class="userName">'+data[i].nickName+'</span>\n' +
+                '                        <span class="userHouse">'+data[i].roomName+'</span>\n' +
+                '                    </p>\n' +
+                '                    <p class="sort">\n' +
+                '                        打分\n' +
+                                         scoreHtml+
+                '                    </p>\n' +
+                '                    <p class="discuss">\n' +
+                                        data[i].commentContent+
+                '                    </p>\n' +
+                '                    <div class="discussImg">\n' +
+                                        commentPictures+
+                '                    </div>\n' +
+                '                    <p class="discussData">\n' +
+                '                        '+timeTransformation(data[i].startDate,"dateCount")+'入住，'+timeTransformation(data[i].createTime,"dateCount")+'发表\n' +
+                '                    </p>\n' +
+                                revertContent+
+                '                </div>\n' +
+                '            </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+</script>

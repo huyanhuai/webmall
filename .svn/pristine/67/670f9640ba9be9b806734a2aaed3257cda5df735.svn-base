@@ -1,0 +1,125 @@
+body {
+    background: #f7f7f7;
+}
+/*个人头部开始*/
+.personal-head {
+    width: 100%;
+    height: 2.34rem;
+    background: url("../img/personal/background@2x.png") center center no-repeat;
+    background-size: 100%;
+    padding-top: 0.76rem;
+}
+.pTop-left {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-justify-content: center;
+    float: left;
+}
+
+.pTop-left>img {
+    width: 1.4rem;
+    height: 1.4rem;
+    margin: 0 0.42rem;
+    border-radius: 50%;
+}
+
+.pTop-right {
+    width: 70%;
+    float: left;
+    height: 100%;
+    padding-left: 0.2rem;
+}
+
+.nicheng {
+    width: 100%;
+    color: #fff;
+    padding: 0.08rem 0;
+    font-size: 0.3rem;
+}
+
+.pnav {
+    width: 80%;
+    height: auto;
+    overflow: hidden;
+    margin-top: 0.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: space-around;
+}
+
+.pnav>a {
+    width: 1.4rem;
+    float: left;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-flex-direction: column;
+}
+
+.pnav>a>p {
+    text-align: center;
+    display: block;
+    width: 100%;
+    color: #fff;
+    font-size: 0.24rem;
+}
+/*各项设置*/
+.select-menu{
+    width: 100%;
+    margin-top: 0.2rem;
+    height: auto;
+    overflow: hidden;
+}
+.menu-item{
+    width: 100%;
+    height: 0.8rem;
+    background: #fff;
+}
+.menu-item-left{
+    width: 15%;
+    float: left;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    display: -webkit-flex;
+    -webkit-align-items: center;
+    -webkit-justify-content: center;
+}
+.menu-item-left>img{
+    width: 0.52rem;
+    height: 0.52rem;
+}
+.menu-item-right{
+    display: block;
+    width: 85%;
+    float: left;
+    height: 100%;
+    border-bottom: 0.01rem solid #e5e5e5;
+    font-size: 0.3rem;
+    color: #5e5e5e;
+    line-height: 0.85rem;
+    position: relative;
+    padding-right: 0.78rem;
+}
+.menu-item-right>img{
+    height: 0.26rem;
+    position: absolute;
+    top:0;
+    bottom: 0;
+    right:0.33rem;
+    margin:auto;
+}
+.menu-item-right>span{
+    font-size: 0.26rem;
+    color: #c5c5c5;
+    float: right;
+}

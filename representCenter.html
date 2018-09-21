@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>代言中心</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="static/css/represent.css">
+    <script src="static/js/rem.js"></script>
+    <style>
+        #agentShow {
+            display: none;
+        }
+        #representShop {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class='pTop'>
+        <div class='pTop-left'>
+            <img src="static/img/personal/userimg.png" alt="" class="userImg"/>
+        </div>
+        <div class='pTop-right'>
+            <div class='nicheng'>游客</div>
+            <div class='pnav'>
+                < <span class="roleType">游客</span> >
+            </div>
+        </div>
+    </div>
+</header>
+<main>
+    <div class='content'>
+        <div class='commission'>
+            <div class='com-item'>
+                <div class='com-item-top'>
+                    <img src="static/img/represent/alreadypresent@2x.png" alt="">
+                    账户余额（元）
+                </div>
+                <div class='com-item-bot' id="alreadymoney">
+                    <p class='allowtext' id="balance">0.0</p>
+                </div>
+            </div>
+            <div class='com-item'>
+                <div class='com-item-top'>
+                    <img src="static/img/represent/freezingamount.png" alt="">
+                    冻结金额（元）
+                </div>
+                <div class='com-item-bot' id="alreadymoney">
+                    <p class='allowtext' id="freezonBalance">0.0</p>
+                </div>
+            </div>
+            <div class='com-item'>
+                <div class='com-item-top'>
+                    <img src="static/img/represent/availablecash@2x.png" alt="">
+                    可提现佣金（元）
+                </div>
+                <div class='com-item-bot' id="allowmoney">
+                    <p class='allowtext' id="validBalance">0.0</p>
+                    <p id='withdrawal'>佣金提现</p>
+                </div>
+            </div>
+        </div>
+        <div class='moneyMenu' style="margin-bottom: 1rem;">
+            <div class='money-item right' id="commission">
+                <img src="static/img/represent/commission@2x.png" alt="">
+                <p>佣金明细</p>
+            </div>
+            <div class='money-item bottom right' id="balanceHtml">
+                <img src="static/img/represent/withdrawals@2x.png" alt="">
+                <p>余额明细</p>
+            </div>
+            <div class='money-item bottom' id="organize">
+                <img src="static/img/represent/team@2x.png" alt="">
+                <p>我的组织</p>
+            </div>
+            <div class='money-item right top bottom' id="applyAgent">
+                <img src="static/img/represent/applyAgent.png" alt="">
+                <p>申请代理</p>
+            </div>
+            <div class='money-item bottom right' id="representShop">
+                <img src="static/img/represent/mine@2x.png" alt="">
+                <p>推广商品</p>
+            </div>
+            <div class='money-item bottom' id="agentShow">
+                <img src="static/img/represent/mybusiness.png" alt="">
+                <p>我的代理</p>
+            </div>
+        </div>
+    </div>
+</main>
+<footer>
+    <ul class="foot">
+        <li class="foot-item">
+            <a href="index.html">
+                <div class="foot-img">
+                    <img src="static/img/index/homepage@2x.png" alt="">
+                </div>
+                <p class="foot-p">首页</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="order.html">
+                <div class="foot-img">
+                    <img src="static/img/index/order@2x.png" alt="">
+                </div>
+                <p class="foot-p">订单</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="representCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/endorsement2@2x.png" alt="">
+                </div>
+                <p class="foot-p active">代言</p>
+            </a>
+        </li>
+        <li class="foot-item">
+            <a href="personalCenter.html">
+                <div class="foot-img">
+                    <img src="static/img/index/personal@2x.png" alt="">
+                </div>
+                <p class="foot-p">我的</p>
+            </a>
+        </li>
+    </ul>
+</footer>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    var userId;
+    $(function () {
+        // getToken();
+        var token = getLocal("token");
+        if(token == null || token == undefined){
+            layMessage("请先登录！");
+            setTimeout("openHtml();",1000);
+        }
+        getUser();
+        //获取用户信息
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/getDetail", "POST", {}, getUserInfoCall);
+
+        //获取佣金相关
+        publicAjaxToken(baseAjaxUrl + "/ty_api/user/account/getDetail", "POST", {}, getAccountCall);
+    });
+    function openHtml() {
+        window.location.href = "login.html";
+    }
+
+    //获取用户信息的展示数据的回调
+    function getUserInfoCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            userId = res.data.userId;
+            //收藏数据
+            $(".nicheng").html(res.data.nickName);
+            $(".userImg").attr("src", baseImgUrl + res.data.headImg + '_small.jpg');
+            //判断角色类型
+            if (res.data.isAgent == "1") {
+                if (res.data.isSale == "1") {
+                    $(".roleType").html("代理商 & 业务员");
+                    $("#representShop").css("display","flex");
+                    $("#representShop").css("display","-webkit-flex");
+                } else {
+                    $(".roleType").html("代理商");
+                    $("#agentShow").addClass("right");
+                }
+                $("#agentShow").css("display", "flex");
+                $("#agentShow").css("display", "-webkit-flex");
+            } else {
+                if (res.data.isSale == "1") {
+                    $(".roleType").html("业务员");
+                    $("#representShop").css("display","flex");
+                    $("#representShop").css("display","-webkit-flex");
+                } else {
+                    $(".roleType").html("游客");
+                }
+            }
+        }
+
+    }
+
+    //获取佣金的回调
+    function getAccountCall(res) {
+        console.log(res);
+        if (res.errorCode == 200 && res.data != null) {
+            $("#balance").html(res.data.balance);
+            $("#validBalance").html(res.data.validBalance);
+            $("#freezonBalance").html(res.data.freezonBalance);
+        }
+    }
+
+    $("#agentShow").click(function () {
+        location.href = "myAgentShop.html";
+    });
+    $("#representShop").click(function () {
+        location.href = "myRepresentShop.html";
+    });
+    $("#commission").click(function () {
+        location.href = "commissionDetail.html";
+    });
+    $("#organize").click(function () {
+        location.href = "myOrganize.html";
+    });
+    $("#applyAgent").click(function () {
+        location.href = "merchantsList.html";
+    });
+    $("#balanceHtml").click(function () {
+        location.href = "balanceDetail.html";
+    });
+    $("#withdrawal").click(function () {
+        location.href = "withdrawal.html";
+    })
+</script>

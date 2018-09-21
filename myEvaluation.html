@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的评价</title>
+    <link rel="stylesheet" href="static/css/base.css">
+    <link rel="stylesheet" href="static/css/public.css">
+    <link rel="stylesheet" href="plug-in/meScroll/mescroll.min.css">
+    <!--<script src="static/js/rem.js"></script>-->
+    <style>
+        .item {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.24rem;
+            padding: 0.2rem 0.25rem;
+            background: #fff;
+        }
+
+        .title {
+            width: 100%;
+            font-size: 0.3rem;
+            color: #5b5b5b;
+            padding: 0 0.1rem;
+        }
+
+        .stars {
+            width: 100%;
+            height: 0.3rem;
+            display: flex;
+            align-items: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            padding: 0 0.1rem;
+        }
+
+        .stars > img {
+            width: 0.18rem;
+            height: 0.18rem;
+            float: left;
+            margin-right: 0.1rem;
+        }
+
+        .img-prview {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 0.1rem;
+            padding: 0 0.1rem;
+        }
+
+        .img-item {
+            width: 1.4rem;
+            height: 1.4rem;
+            float: left;
+            margin-right: 0.4rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .img-prview .img-item:nth-child(4) {
+            margin: 0;
+        }
+
+        .img-item img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.05rem;
+        }
+
+        .fenge {
+            width: 100%;
+            height: 0.02rem;
+            background-color: #d2d2d2;
+            margin-bottom: 0.2rem;
+        }
+
+        .text {
+            width: 100%;
+            padding: 0 0.1rem;
+            font-size: 0.24rem;
+            color: #b0b0b0;
+            text-align: justify;
+        }
+
+        .merchants {
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin: 0.1rem 0;
+            padding: 0 0.1rem;
+        }
+
+        .merchants p {
+            width: 100%;
+        }
+
+        .merchants p:nth-child(1) {
+            font-size: 0.28rem;
+            color: #5b5b5b;
+            margin: 0.1rem 0;
+        }
+
+        .merchants p:last-child {
+            font-size: 0.24rem;
+            color: #b0b0b0;
+            text-align: justify;
+        }
+
+        .delete {
+            width: 100%;
+            padding: 0 0.1rem;
+            margin-top: 0.2rem;
+            height: 0.4rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: flex-end;
+        }
+
+        .delete-btn {
+            width: 1.2rem;
+            padding: 0.05rem;
+            float: right;
+            border-radius: 0.05rem;
+            border: solid 0.01rem #47bfc5;
+            font-size: 0.24rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: -webkit-flex;
+            -webkit-align-items: center;
+            -webkit-justify-content: center;
+            color: #47bfc5;
+        }
+        #mescroll{
+            position: fixed;
+            top: 0.9rem;
+            bottom: 0;
+            height: auto!important;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="navigation">
+        <img src="static/img/public/return2@2x.png" alt="" onclick="returnBack()">
+        我的评价
+    </div>
+</header>
+<main>
+    <div class="mescroll" id="mescroll">
+        <section id="myEvaluationHtml" class="content">
+
+        </section>
+    </div>
+</main>
+</body>
+</html>
+<script src="static/js/jquery-3.2.1.min.js"></script>
+<script src="static/js/public.js"></script>
+<script src="static/js/localStorage.js"></script>
+<script src="static/js/ajaxTool.js"></script>
+<script src="plug-in/layer_mobile/layer.js"></script>
+<script src="plug-in/meScroll/mescroll.min.js"></script>
+<script src="static/js/upLoading.js"></script>
+<script type="text/javascript" src="static/js/history.js"></script>
+<script>
+    $(function () {
+        // publicAjaxToken(baseAjaxUrl+"/ty_api/product/comment/queryAllComment","POST",{},getEvaluationCall);
+        init();
+    });
+    function init() {
+        var url = baseAjaxUrl + "/ty_api/product/comment/queryAllComment";
+        var data = {};
+        upLoading(url, data, getEvaluationCall, false);
+    }
+
+    //获取评论信息
+    function getEvaluationCall(data) {
+        var listDom = $("#myEvaluationHtml");
+        var innerHtml = '';
+        var starsLevel = 5;   //星星最高等级
+        for (var i = 0; i < data.length; i++) {
+            var starsHtml = '';   //星星的img标签
+            var merchants = '';   //商家回复
+            var pictureHtml = ''; //评价图片
+            //是否有商家回复
+            if (data[i].revertContent != null) {
+                merchants =
+                    '        <div class="merchants">\n' +
+                    '            <p class="merchants-msg">商家回复：</p>\n' +
+                    '            <p class="merchants-text">' + data[i].revertContent + '</p>\n' +
+                    '        </div>';
+            }
+            //星星评分
+            var solidStars = data[i].score;
+            var emptyStars = starsLevel - solidStars;
+            for (var j = 0; j < solidStars; j++) {
+                starsHtml += '<img src="static/img/goods/stars2@3x.png" alt="">';
+            }
+            for (var n = 0; n < emptyStars; n++) {
+                starsHtml += '<img src="static/img/goods/stars@3x.png" alt="">';
+            }
+
+            //循环评价的图片
+            for (var m = 0; m < data[i].pictureList.length; m++) {
+                pictureHtml +=
+                    '            <div class="img-item">\n' +
+                    '                <img src="' + baseImgUrl + data[i].pictureList[m].pictureUrl + '_small.jpg" alt="">\n' +
+                    '            </div>\n';
+            }
+
+            innerHtml +=
+                '   <div class="item">\n' +
+                '        <div class="title">' + data[i].packageName + '</div>\n' +
+                '        <div class="stars">' + starsHtml + '</div>\n' +
+                '        <div class="img-prview">' + pictureHtml + '</div>\n' +
+                '        <div class="fenge"></div>\n' +
+                '        <div class="text">' + data[i].commentContent + '</div>\n' + merchants + '' +
+                '        <div class="delete">\n' +
+                '            <span class="delete-btn" onclick="deleteEvaluation(' + data[i].productCommentId + ')">删除评价</span>\n' +
+                '        </div>\n' +
+                '    </div>'
+        }
+        listDom.append(innerHtml);//加在列表的后面,上拉加载
+    }
+
+    //删除评论
+    function deleteEvaluation(id) {
+        //询问框
+        layer.open({
+            content: '您确定要删除此评论吗？'
+            ,btn: ['确定', '不要']
+            ,yes: function(index){
+                publicAjaxToken(baseAjaxUrl + "/ty_api/product/comment/delete", "POST", {"productCommentId": id}, deleteEvaluationCall);
+                layer.close(index);
+            }
+        });
+    }
+
+    //删除评论的回调
+    function deleteEvaluationCall(res) {
+        console.log(res);
+        if (res.errorCode == 200) {
+            layMessage("评价已删除");
+            // publicAjaxToken(baseAjaxUrl + "/ty_api/product/comment/queryAllComment", "POST", {}, getEvaluationCall);
+            clearDown();
+            init();
+        }
+    }
+</script>
