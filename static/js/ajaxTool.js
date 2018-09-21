@@ -69,7 +69,6 @@ function getToken() {
     // alert(getLocal("token"));
     var token = getLocal("token");
     console.log("dsdffd" + token);
-    // alert(token)
     //用于判断获取微信的code
 
 }
